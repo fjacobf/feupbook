@@ -15,7 +15,7 @@
 
 ## Team
 
-* Group member 1 Filipe Jacob De Jesus Ferreira, up202102359@up.pt
+* Group member 1 Felipe Jacob De Jesus Ferreira, up202102359@up.pt
 * Group member 2 Luís Miguel Lima Tavares, up202108662@up.pt 
 * Group member 3 Miguel Martins Leitão, up202108851@up.pt
 * Group member 4 Rodrigo Campos Rodrigues, up202108847@up.pt 
