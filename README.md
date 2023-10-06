@@ -5,7 +5,7 @@ At the heart of our project vision for Feupbook is the unwavering commitment to 
 ## Project Components
 
 * [ER: Requirements Specification](https://git.fe.up.pt/lbaw/lbaw2324/lbaw23141/-/wikis/er)
-* [EBD: Database Specification](ebd)
+* [EBD: Database Specification](https://git.fe.up.pt/lbaw/lbaw2324/lbaw23141/-/wikis/ebd)
 * [EAP: Architecture Specification and Prototype](eap)
 * [PA: Product and Presentation](pa)
 
