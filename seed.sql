@@ -65,10 +65,23 @@ CREATE TABLE comment (
 CREATE TABLE notification (
     id INT PRIMARY KEY,
     date DATE NOT NULL CHECK (date <= CURRENT_DATE),
-    notified_user INT REFERENCES users(userId) NOT NULL,
-    emitter_user INT REFERENCES users(userId) NOT NULL,
-    viewed BOOLEAN DEFAULT false
+    notified_user INT NOT NULL,
+    notification_type VARCHAR(50) NOT NULL CHECK (
+        (notification_type IN ('liked_comment', 'reply_comment') AND post_id IS NULL AND group_id IS NULL) OR
+        (notification_type IN ('request_follow', 'started_following', 'accept_follow') AND comment_id IS NULL AND post_id IS NULL AND   group_id IS NULL) OR
+        (notification_type IN ('joined_group', 'group_invite') AND comment_id IS NULL AND post_id IS NULL) OR
+        (notification_type IN ('liked_post', 'comment_post') AND comment_id IS NULL AND group_id IS NULL)
+    ),
+    comment_id INT,
+    post_id INT,
+    group_id INT,
+    viewed BOOLEAN NOT NULL DEFAULT false,
+    FOREIGN KEY (notified_user) REFERENCES users(id),
+    FOREIGN KEY (comment_id) REFERENCES comment(id),
+    FOREIGN KEY (post_id) REFERENCES post(id),
+    FOREIGN KEY (group_id) REFERENCES group_chat(id)
 );
+
 
 -- R11: group_chat
 CREATE TABLE group_chat (
@@ -76,35 +89,6 @@ CREATE TABLE group_chat (
     owner_id INT REFERENCES users(userId) NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT
-);
-
-
--- R05: comment_notification
-CREATE TABLE comment_notification (
-    id INT PRIMARY KEY REFERENCES notification(id),
-    comment_id INT REFERENCES comment(id),
-    notification_type VARCHAR(255) NOT NULL CHECK (notification_type IN ('comment_notification_types'))
-);
-
--- R06: user_notification
-CREATE TABLE user_notification (
-    id INT PRIMARY KEY REFERENCES notification(id),
-    user_id INT REFERENCES users(userId),
-    notification_type VARCHAR(255) NOT NULL CHECK (notification_type IN ('user_notification_types'))
-);
-
--- R07: post_notification
-CREATE TABLE post_notification (
-    id INT PRIMARY KEY REFERENCES notification(id),
-    post_id INT REFERENCES post(postId) NOT NULL,
-    notification_type VARCHAR(255) NOT NULL CHECK (notification_type IN ('post_notification_types'))
-);
-
--- R08: group_notification
-CREATE TABLE group_notification (
-    id INT PRIMARY KEY REFERENCES notification(id),
-    group_id INT REFERENCES group_chat(group_id) NOT NULL,
-    notification_type VARCHAR(255) NOT NULL CHECK (notification_type IN ('group_notification_types'))
 );
 
 -- R09: message
@@ -155,24 +139,14 @@ CREATE TABLE mention (
     PRIMARY KEY (post_id, user_mentioned)
 );
 
--- R16: admin
-CREATE TABLE admin (
-    id INT PRIMARY KEY REFERENCES users(userId)
-);
-
--- R17: suspended
-CREATE TABLE suspended (
-    id INT PRIMARY KEY REFERENCES users(userId)
-);
-
--- R18: bookmarks
+-- R16: bookmarks
 CREATE TABLE bookmarks (
     bookmarked_post INT REFERENCES post(postId),
     user_id INT REFERENCES users(userId),
     PRIMARY KEY (bookmarked_post, user_id)
 );
 
--- R19: report
+-- R17: report
 CREATE TABLE report (
     id INT PRIMARY KEY,
     user_id INT REFERENCES users(userId),
