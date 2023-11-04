@@ -28,7 +28,12 @@ DROP TYPE IF EXISTS notification_types;
 DROP TYPE IF EXISTS report_types;
 DROP TYPE IF EXISTS request_status;
 
---TODO: DROP FUNCTIONS
+DROP FUNCTION IF EXISTS user_search_update CASCADE;
+DROP FUNCTION IF EXISTS post_search_update CASCADE;
+DROP FUNCTION IF EXISTS comment_search_update CASCADE;
+DROP FUNCTION IF EXISTS group_chat_search_update CASCADE;
+DROP FUNCTION IF EXISTS notify_friend_request CASCADE;
+DROP FUNCTION IF EXISTS reject_inappropriate_posts CASCADE;
 
 -- Create ENUM types
 CREATE TYPE user_types AS ENUM ('normal_user', 'admin', 'suspended');
