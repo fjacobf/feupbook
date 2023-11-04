@@ -1,152 +1,159 @@
-create schema if not exists lbaw2255;
+--
+-- Use a specific schema and set it as default - lbaw23141
+--
 
-SET DateStyle TO European;
+DROP SCHEMA IF EXISTS lbaw23141 CASCADE;
+CREATE SCHEMA IF NOT EXISTS lbaw23141;
+SET search_path TO lbaw23141;
 
------------------------------------------
--- Drop old schema
------------------------------------------
+--
+--DROP the old schema
+--
+DROP TABLE IF EXISTS notification CASCADE;
+DROP TABLE IF EXISTS message CASCADE;
+DROP TABLE IF EXISTS group_member CASCADE;
+DROP TABLE IF EXISTS group_chat CASCADE;
+DROP TABLE IF EXISTS report CASCADE;
+DROP TABLE IF EXISTS bookmarks CASCADE;
+DROP TABLE IF EXISTS mention CASCADE;
+DROP TABLE IF EXISTS comment_likes CASCADE;
+DROP TABLE IF EXISTS post_likes CASCADE;
+DROP TABLE IF EXISTS follow_request CASCADE;
+DROP TABLE IF EXISTS comment CASCADE;
+DROP TABLE IF EXISTS post CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
 
--- Drop Table Statements
-DROP TABLE IF EXISTS report;
-DROP TABLE IF EXISTS bookmarks;
-DROP TABLE IF EXISTS mention;
-DROP TABLE IF EXISTS comment_likes;
-DROP TABLE IF EXISTS post_likes;
-DROP TABLE IF EXISTS group_member;
-DROP TABLE IF EXISTS group_chat;
-DROP TABLE IF EXISTS follow_request;
-DROP TABLE IF EXISTS message;
-DROP TABLE IF EXISTS notification;
-DROP TABLE IF EXISTS comment;
-DROP TABLE IF EXISTS post;
-DROP TABLE IF EXISTS users;
+DROP TYPE IF EXISTS user_types;
+DROP TYPE IF EXISTS notification_types;
+DROP TYPE IF EXISTS report_types;
+DROP TYPE IF EXISTS request_status;
 
-------------------------------
--- Tables
-------------------------------
+--TODO: DROP FUNCTIONS
 
--- R01: users
+-- Create ENUM types
+CREATE TYPE user_types AS ENUM ('normal_user', 'admin', 'suspended');
+CREATE TYPE notification_types AS ENUM ('liked_comment', 'reply_comment', 'comment_tagging', 'request_follow', 'started_following', 'accepted_follow', 'joined_group', 'accept_join', 'liked_post', 'comment_post');
+CREATE TYPE report_types AS ENUM ('harassment', 'hate_speech', 'inappropriate_content', 'spam', 'self_harm');
+CREATE TYPE request_status AS ENUM ('accepted', 'rejected', 'waiting');
+
+-- Table: users (R01)
 CREATE TABLE users (
-    userId INT PRIMARY KEY,
+    user_id SERIAL PRIMARY KEY,
     username VARCHAR(255) UNIQUE NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
     bio TEXT,
-    private BOOLEAN DEFAULT false
+    private BOOLEAN NOT NULL DEFAULT false,
+    user_type VARCHAR(50) NOT NULL CHECK (user_type IN ('user_types'))
 );
 
--- R02: post
+-- Table: post (R02)
 CREATE TABLE post (
-    postId INT PRIMARY KEY,
-    owner_id INT REFERENCES users(userId) NOT NULL,
+    post_id SERIAL PRIMARY KEY,
+    owner_id INTEGER REFERENCES users(user_id) NOT NULL,
     image TEXT,
     content TEXT,
     date DATE NOT NULL CHECK (date <= CURRENT_DATE)
 );
 
--- R03: comment
+-- Table: comment (R03)
 CREATE TABLE comment (
-    id INT PRIMARY KEY,
-    author_id INT REFERENCES users(userId) NOT NULL,
-    post_id INT REFERENCES post(postId) NOT NULL,
+    comment_id SERIAL PRIMARY KEY,
+    author_id INTEGER REFERENCES users(user_id) NOT NULL,
+    post_id INTEGER REFERENCES post(post_id) NOT NULL,
     content TEXT,
     date DATE NOT NULL CHECK (date <= CURRENT_DATE),
-    previous INT DEFAULT NULL
+    previous INTEGER DEFAULT NULL
 );
 
--- R04: notification
-CREATE TABLE notification (
-    id INT PRIMARY KEY,
-    date DATE NOT NULL CHECK (date <= CURRENT_DATE),
-    notified_user INT NOT NULL,
-    notification_type VARCHAR(50) NOT NULL CHECK (
-        (notification_type IN ('liked_comment', 'reply_comment') AND post_id IS NULL AND group_id IS NULL) OR
-        (notification_type IN ('request_follow', 'started_following', 'accept_follow') AND comment_id IS NULL AND post_id IS NULL AND   group_id IS NULL) OR
-        (notification_type IN ('joined_group', 'group_invite') AND comment_id IS NULL AND post_id IS NULL) OR
-        (notification_type IN ('liked_post', 'comment_post') AND comment_id IS NULL AND group_id IS NULL)
-    ),
-    comment_id INT,
-    post_id INT,
-    group_id INT,
-    viewed BOOLEAN NOT NULL DEFAULT false,
-    FOREIGN KEY (notified_user) REFERENCES users(id),
-    FOREIGN KEY (comment_id) REFERENCES comment(id),
-    FOREIGN KEY (post_id) REFERENCES post(id),
-    FOREIGN KEY (group_id) REFERENCES group_chat(id)
-);
-
-
--- R11: group_chat
+-- Table: group_chat (R07)
 CREATE TABLE group_chat (
-    group_id INT PRIMARY KEY,
-    owner_id INT REFERENCES users(userId) NOT NULL,
+    group_id SERIAL PRIMARY KEY,
+    owner_id INTEGER REFERENCES users(user_id) NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT
 );
 
--- R09: message
+-- Table: message (R05)
 CREATE TABLE message (
-    id INT PRIMARY KEY,
-    emitter_id INT REFERENCES users(userId) NOT NULL,
-    group_id INT REFERENCES group_chat(group_id) NOT NULL,
+    message_id SERIAL PRIMARY KEY,
+    emitter_id INTEGER REFERENCES users(user_id) NOT NULL,
+    group_id INTEGER REFERENCES group_chat(group_id) NOT NULL,
     content TEXT NOT NULL,
     date DATE NOT NULL CHECK (date <= CURRENT_DATE),
-    viewed BOOLEAN DEFAULT false
+    viewed BOOLEAN NOT NULL DEFAULT false
 );
 
--- R10: follow_request
+-- Table: follow_request (R06)
 CREATE TABLE follow_request (
-    req_id INT REFERENCES users(userId) NOT NULL,
-    rcv_id INT REFERENCES users(userId) NOT NULL,
+    req_id INTEGER REFERENCES users(user_id) NOT NULL,
+    rcv_id INTEGER REFERENCES users(user_id) NOT NULL,
     date DATE NOT NULL CHECK (date <= CURRENT_DATE),
-    status VARCHAR(255) NOT NULL CHECK (status IN ('follow_request_status')),
-    PRIMARY KEY (req_id, rcv_id)
+    status VARCHAR(50) NOT NULL CHECK (status IN ('request_status'))
 );
 
 
--- R12: group_member
+
+-- Table: group_member (R08)
 CREATE TABLE group_member (
-    user_id INT REFERENCES users(userId),
-    group_id INT REFERENCES group_chat(group_id),
-    PRIMARY KEY (user_id, group_id)
+    user_id INTEGER REFERENCES users(user_id),
+    group_id INTEGER REFERENCES group_chat(group_id),
+    status VARCHAR(50) NOT NULL CHECK (status IN ('request_status'))
 );
 
--- R13: post_likes
+-- Table: post_likes (R09)
 CREATE TABLE post_likes (
-    user_id INT REFERENCES users(userId),
-    post_id INT REFERENCES post(postId),
+    user_id INTEGER REFERENCES users(user_id),
+    post_id INTEGER REFERENCES post(post_id),
     PRIMARY KEY (user_id, post_id)
 );
 
--- R14: comment_likes
+-- Table: comment_likes (R10)
 CREATE TABLE comment_likes (
-    user_id INT REFERENCES users(userId),
-    comment_id INT REFERENCES comment(id),
+    user_id INTEGER REFERENCES users(user_id),
+    comment_id INTEGER REFERENCES comment(comment_id),
     PRIMARY KEY (user_id, comment_id)
 );
 
--- R15: mention
+-- Table: mention (R11)
 CREATE TABLE mention (
-    post_id INT REFERENCES post(postId),
-    user_mentioned INT REFERENCES users(userId),
+    post_id INTEGER REFERENCES post(post_id),
+    user_mentioned INTEGER REFERENCES users(user_id),
     PRIMARY KEY (post_id, user_mentioned)
 );
 
--- R16: bookmarks
+-- Table: bookmarks (R12)
 CREATE TABLE bookmarks (
-    bookmarked_post INT REFERENCES post(postId),
-    user_id INT REFERENCES users(userId),
+    bookmarked_post INTEGER REFERENCES post(post_id),
+    user_id INTEGER REFERENCES users(user_id),
     PRIMARY KEY (bookmarked_post, user_id)
 );
 
--- R17: report
+-- Table: report (R13)
 CREATE TABLE report (
-    id INT PRIMARY KEY,
-    user_id INT REFERENCES users(userId),
-    post_id INT REFERENCES post(postId),
+    report_id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(user_id),
+    post_id INTEGER REFERENCES post(post_id),
     date DATE NOT NULL CHECK (date <= CURRENT_DATE),
-    report_type VARCHAR(255) NOT NULL CHECK (report_type IN ('report_types'))
+    report_type VARCHAR(50) NOT NULL CHECK (report_type IN ('report_types'))
+);
+
+-- Table: notification (R04)
+CREATE TABLE notification (
+    notification_id SERIAL PRIMARY KEY,
+    date DATE NOT NULL CHECK (date <= CURRENT_DATE),
+    notified_user INTEGER REFERENCES users(user_id) NOT NULL,
+    notification_type VARCHAR(50) NOT NULL CHECK (
+        (notification_type IN ('liked_comment', 'reply_comment') AND post_id IS NULL AND group_id IS NULL) OR
+        (notification_type IN ('request_follow', 'started_following', 'accept_follow') AND comment_id IS NULL AND post_id IS NULL AND group_id IS NULL) OR
+        (notification_type IN ('joined_group', 'group_invite') AND comment_id IS NULL AND post_id IS NULL) OR
+        (notification_type IN ('liked_post', 'comment_post') AND comment_id IS NULL AND group_id IS NULL)
+    ),
+    comment_id INTEGER REFERENCES comment(comment_id),
+    post_id INTEGER REFERENCES post(post_id),
+    group_id INTEGER REFERENCES group_chat(group_id),
+    viewed BOOLEAN NOT NULL DEFAULT false
 );
 
 ------------------------------
