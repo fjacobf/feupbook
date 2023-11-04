@@ -492,14 +492,14 @@ SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 -- Begin the transaction
 BEGIN;
 
--- Create the post and obtain the postId
+-- Create the post and obtain the post_id
 INSERT INTO post (owner_id, content, date)
 VALUES (:ownerId, :content, NOW())
-RETURNING postId INTO newPostId;
+RETURNING post_id INTO newpost_id;
 
 -- Create mention records for the post by extracting mentions from the content
 INSERT INTO mention (post_id, user_mentioned)
-SELECT newPostId, regexp_matches(:content, '@([A-Za-z0-9_]+)', 'g');
+SELECT newpost_id, regexp_matches(:content, '@([A-Za-z0-9_]+)', 'g');
 
 -- Commit the transaction if everything is successful
 COMMIT;
