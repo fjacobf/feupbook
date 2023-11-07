@@ -1,0 +1,613 @@
+openapi: 3.0.0
+
+info:
+ version: '1.0'
+ title: 'Feupbook Web API'
+ description: 'Web Resources Specification (A7) for Feupbook'
+
+servers:
+- url: https://lbaw23141.lbaw.fe.up.pt
+  description: Production server
+
+externalDocs:
+ description: Find more info here.
+ url: https://git.fe.up.pt/lbaw/lbaw2324/lbaw23141/-/wikis/eap
+
+tags:
+ - name: 'M01: Authentication'
+ - name: 'M02: Users'
+ - name: 'M03: Posts'
+ - name: 'M04: Search'
+ - name: 'M05: Administration'
+ - name: 'M06: Comments'
+
+paths:
+
+############################################ AUTENTICATION ############################################
+
+######### LOGIN #########
+
+  /login:
+
+    get:
+      operationId: R101
+      summary: 'R101: Login Form'
+      description: 'Provide login form. Access: VST'
+      tags:
+        - 'M01: Authentication'
+
+      responses:
+        '200':
+          description: 'OK. Show log-in UI'
+
+    post:
+      operationId: R102
+      summary: 'R102: Login Action'
+      description: 'Processes the login form submission. Access: VST'
+      tags:
+        - 'M01: Authentication'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urllencoded:
+            schema:
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+              required:
+                  - email
+                  - password
+
+      responses:
+        '302':
+          description: 'Redirect after processing the login credentials.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                homeRedirect:
+                  description: 'Successful authentication. Redirect to home page.'
+                  value: '/home'
+                loginRedirect:
+                  description: 'Failed authentication. Redirect to login form.'
+                  value: '/login'
+
+######### LOGOUT #########
+
+  /logout:
+
+    post:
+      operationId: R103
+      summary: 'R103 : Logout Action'
+      description: 'Logout the current authenticated user. Access: USR, ADM'
+      tags:
+        - 'M01: Authentication'
+
+      responses:
+        '302':
+          description: 'Redirect after processing logout.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                loginRedirect:
+                  description: 'Successful logout. Redirect to login form.'
+                  value: '/login'
+
+######### REGISTER #########
+
+  /register:
+
+    get:
+      operationId: R104
+      summary: 'R104 : Register Form'
+      description: 'Provide new user registration form. Access: VST'
+      tags:
+        - 'M01: Authentication'
+
+      responses:
+        '200':
+          description: 'Ok. Show Sign-Up UI.'
+
+    post:
+      operationId: R105
+      summary: 'R105 : Register Action'
+      description: 'Processes the new user registration form submission. Access: VST'
+      tags:
+        - 'M01: Authentication'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                confirm_password:
+                  type: string
+                  format: password
+              required:
+                - username
+                - name
+                - email
+                - password
+                - confirm_password;
+
+      responses:
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                  homeRedirect:
+                    description: 'Successful registration. Redirect to home page.'
+                    value: '/home'
+                  registerRedirect:
+                    description: 'Failed registration. Redirect to register form.'
+                    value: '/register'
+
+############################################ USERS ############################################
+
+######### HOME PAGE #########
+
+  /home:
+
+    get:
+      operationId: R201
+      summary: 'R201: View user home page'
+      description: 'Show user home page, Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+
+      responses:
+        '200':
+          description: 'OK. Show the home page for an individual user'
+        '401':
+          description: 'Unauthorized. The client must authenticate itself to get the requested response.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                  loginRedirect:
+                    description: 'Redirect to the login page due to unauthorized access.'
+                    value: '/login'
+
+######### PROFILE #########
+
+  /user/{id}:
+
+    get:
+      operationId: R202
+      summary: 'R202: View user profile'
+      description: 'Show the individual user profile, Access: USR, OWN, ADM'
+      tags:
+        - 'M02: Users'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '200':
+          description: 'OK. Show User profile UI.'
+        '302':
+          description: 'Redirect if user is not logged in.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                loginRedirect:
+                  description: 'Redirect to the login page due to unauthorized access.'
+                  value: '/login'
+        '404':
+          description: 'Not Found. The user does not exist.'
+
+######### EDIT PROFILE #########
+
+  /user/editProfile:
+
+    get:
+      operationId: R203
+      summary: 'R203: Edit user profile page.'
+      description: 'Shows the edit profile page of the user. Access: OWN'
+      tags:
+        - 'M02: Users'
+
+      responses:
+        '200':
+          description: 'Ok. Show edit profile UI.'
+        '401':
+          description: 'Unauthorized. You cannot edit this profile.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                401Success:
+                  description: 'Unauthorized. Redirect to user profile.'
+                  value: '/user/{id}'
+
+    post:
+      operationId: R204
+      summary: 'R204: Edit user profile action'
+      description: 'Processes and saves the changes made by user. Access: USR, OWN'
+      tags:
+        - 'M02: Users'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                bio:
+                  type: string
+                password:
+                  type: string
+                  format: password
+                confirm_password:
+                  type: string
+                  format: password
+                # image:
+                #   type: string
+                #   format: binary
+                private:
+                  type: boolean
+
+              required:
+              - name
+              - username
+              - email
+              - bio
+              - private
+
+      responses:
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Successful update. Redirect to user profile page.'
+                  value: '/user/{id}'
+                302Failure:
+                  description: 'Failed update. Redirect to edit profile page.'
+                  value: '/user/edit'
+          
+######### PROFILE DELETE #########
+
+  /user/deleteProfile:
+
+    post:
+      operationId: R204
+      summary: 'R204: Delete current user.'
+      description: 'Deletes the current user through the profile page. Access: OWN'
+      tags:
+        - 'M02: Users'
+      
+      responses:
+        '302':
+          description: 'Redirect after deleting user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Successful delete. Redirect to login page.'
+                  value: '/login'
+                302Failure:
+                  description: 'Failed delete. Redirect to user profile page.'
+                  value: '/user/{id}'
+
+######### DELETE #########
+
+  /user/{id}/delete:
+
+    post:
+      operationId: R205
+      summary: 'R205: Delete a user by ID.'
+      description: 'Allows an administrator to delete a user by ID Access: ADM'
+      tags:
+        - 'M02: Users'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '200':
+          description: 'Ok. Deleted the user information.'
+        '403':
+          description: 'Forbiden action.'
+
+######### REMOVE FOLLOWER #########
+
+  /user/removeFollower/{followerId}:
+
+    post:
+      operationId: R206
+      summary: 'R206: Remove a follower.'
+      description: 'Removes a follower from the user followers. Access: OWN'
+      tags:
+        - 'M02: Users'
+
+      parameters:
+        - in: path
+          name: followerId
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '200':
+          description: 'Ok. You removed a follower from your profile.'
+        '403':
+          description: 'Forbiden action.'
+        '404':
+          description: 'Not Found. The follower ID does not exist or is not a follower of the user.'
+
+
+######### FOLLOW #########
+
+  /user/follow/{id}:
+
+    post:
+      operationId: R207
+      summary: 'R207: Follow a user.'
+      description: 'Follows a user. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '200':
+          description: 'Ok. You followed a user.'
+        '403':
+          description: 'Forbiden action.'
+        '404':
+          description: 'Not Found. The user ID does not exist or is already a follower of the user.'
+
+######### UNFOLLOW #########
+
+  /user/unfollow/{id}:
+
+    post:
+      operationId: R208
+      summary: 'R208: Unfollow a user.'
+      description: 'Unfollows a user. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '200':
+          description: 'Ok. You unfollowed a user.'
+        '403':
+          description: 'Forbiden action.'
+        '404':
+          description: 'Not Found. The user ID does not exist or is not a follower of the user.'
+
+######### FOLLOW REQUEST #########
+
+  /user/followRequest/{id}:
+
+    post:
+      operationId: R209
+      summary: 'R209: Send follow request to a user.'
+      description: 'Sends a notification with a follow request to a user. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '200':
+          description: 'Ok. Sent a follow request to a user.'
+        '403':
+          description: 'Forbiden action.'
+        '404':
+          description: 'Not Found. The user ID does not exist or is already a follower of the user.'
+
+
+######### CANCEL FOLLOW REQUEST #########
+
+  /user/cancelFollowRequest/{id}:
+
+    post:
+      operationId: R210
+      summary: 'R210: Cancel a follow request.'
+      description: 'Removes the notification of the follow request to a user. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '200':
+          description: 'Ok. You cancelled a follow request.'
+        '403':
+          description: 'Forbiden action.'
+        '404':
+          description: 'Not Found. The user ID does not exist or is not a follower of the user.'
+
+
+######### ACCEPT FOLLOW REQUEST #########
+
+  /user/acceptFollowRequest/{id}:
+
+    post:
+      operationId: R211
+      summary: 'R211: Accept a follow request.'
+      description: 'Accepts a follow request from a user. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '200':
+          description: 'Ok. You accepted a follow request.'
+        '403':
+          description: 'Forbiden action.'
+        '404':
+          description: 'Not Found. The user ID does not exist or is not a follower of the user.'
+
+
+######### REJECT FOLLOW REQUEST #########
+
+  /user/rejectFollowRequest/{id}:
+
+    post:
+      operationId: R212
+      summary: 'R212: Reject a follow request.'
+      description: 'Rejects a follow request from a user. Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '200':
+          description: 'Ok. You rejected a follow request.'
+        '403':
+          description: 'Forbiden action.'
+        '404':
+          description: 'Not Found. The user ID does not exist or is not a follower of the user.'
+
+
+#### VER SE É PRECISO NOTIFICAÇÕES ####
+
+
+#### VER SE É PRECISO MENSAGENS ####
+
+
+######### ABOUT PAGE #########
+
+  /about:
+
+    get:
+      operationId: R220
+      summary: 'R220: About static page'
+      description: 'Shows About Page. Access USR, ADM, VST'
+      tags:
+        - 'M02: Users'
+
+      responses:
+        '200':
+          description: 'OK. Show the about page.'
+
+######### HELP PAGE #########
+
+  /help:
+
+    get:
+      operationId: R221
+      summary: 'R221: Help static page'
+      description: 'Shows Help Page. Access USR, ADM, VST'
+      tags:
+        - 'M02: Users'
+
+      responses:
+        '200':
+          description: 'OK. Show the help page.'
+
+######### FAQ PAGE #########
+
+  /faq:
+
+    get:
+      operationId: R222
+      summary: 'R222: FAQ static page'
+      description: 'Shows FAQ Page. Access USR, ADM, VST'
+      tags:
+        - 'M02: Users'
+
+      responses:
+        '200':
+          description: 'OK. Show the FAQ page.'
+
+######### CONTACTS PAGE #########
+
+  /contacts:
+
+    get:
+      operationId: R223
+      summary: 'R223: Contacts static page'
+      description: 'Shows Contacts Page. Access USR, ADM, VST'
+      tags:
+        - 'M02: Users'
+
+      responses:
+        '200':
+          description: 'OK. Show the contacts page.'
+
