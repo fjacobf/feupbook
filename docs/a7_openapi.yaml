@@ -611,3 +611,189 @@ paths:
         '200':
           description: 'OK. Show the contacts page.'
 
+############################################ POSTS ############################################
+
+######### CREATE POST #########
+
+  /post/create:
+
+    post:
+      operationId: R301
+      summary: 'R301: Create post action'
+      description: 'Creates a post. Access: USR'
+      tags:
+        - 'M03: Posts'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+                - content
+
+      responses:
+        '302':
+          description: 'Redirect once the new post information is processed.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Post created successfully. Redirect back.'
+                302Failure:
+                  description: 'Failed. Redirect back.'
+
+######### EDIT POST #########
+
+  /post/edit/{id}:
+
+    get:
+      operationId: R302
+      summary: 'R302: Edit post page'
+      description: 'Shows the edit post page. Access: USR, OWN, ADM'
+      tags:
+        - 'M03: Posts'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '200':
+          description: 'Ok. Show edit post UI.'
+        '403':
+          description: 'Forbiden action.'
+        '404':
+          description: 'Not Found. The post ID does not exist or is not a post of the user.'
+
+    post:
+      operationId: R303
+      summary: 'R303: Edit post action'
+      description: 'Processes and saves the changes made by user. Access: USR, ADM'
+      tags:
+        - 'M03: Posts'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+                - content
+
+      responses:
+        '302':
+          description: 'Redirect once the new post information is processed.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Post edited successfully. Redirect back.'
+                302Failure:
+                  description: 'Failed. Redirect back.'
+
+######### DELETE POST #########
+
+  /post/delete/{id}:
+
+    post:
+      operationId: R304
+      summary: 'R304: Delete post action'
+      description: 'Deletes a post. Access: OWN, ADM'
+      tags:
+        - 'M03: Posts'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '302':
+          description: 'Redirect once the post is deleted.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Post deleted successfully. Redirect back.'
+                302Failure:
+                  description: 'Failed. Redirect back.'
+
+######### LIKE POST #########
+
+  /post/like/{id}:
+
+    post:
+      operationId: R305
+      summary: 'R305: Like post action'
+      description: 'Likes a post. Access: USR, OWN, ADM'
+      tags:
+        - 'M03: Posts'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '200':
+          description: 'Ok. You liked a post.'
+        '403':
+          description: 'Forbiden action.'
+        '404':
+          description: 'Not Found. The post ID does not exist or is already liked by the user.'
+
+######### UNLIKE POST #########
+
+  /post/unlike/{id}:
+
+    post:
+      operationId: R306
+      summary: 'R306: Unlike post action'
+      description: 'Unlikes a post. Access: USR, OWN, ADM'
+      tags:
+        - 'M03: Posts'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '200':
+          description: 'Ok. You unliked a post.'
+        '403':
+          description: 'Forbiden action.'
+        '404':
+          description: 'Not Found. The post ID does not exist or is not liked by the user.'
+
