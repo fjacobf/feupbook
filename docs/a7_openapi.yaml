@@ -797,3 +797,200 @@ paths:
         '404':
           description: 'Not Found. The post ID does not exist or is not liked by the user.'
 
+
+############################################ SEARCH ############################################
+
+######### SEARCH #########
+
+  /search:
+
+    get:
+      operationId: R401
+      summary: 'R401: Search page'
+      description: 'Shows the search page. Access: USR, ADM'
+      tags:
+        - 'M04: Search'
+
+      responses:
+        '200':
+          description: 'Ok. Show search UI.'
+        '302':
+          description: 'Redirect if user is not logged in.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                loginRedirect:
+                  description: 'Redirect to the login page due to unauthorized access.'
+                  value: '/login'
+                
+
+######### SEARCH FOR USER#########
+
+  /api/user:
+
+    get:
+      operationId: R402
+      summary: 'R402: Search for user'
+      description: 'Shows the search results for users. Access: USR, ADM'
+      tags:
+        - 'M04: Search'
+
+      parameters:
+        - in: query
+          name: query
+          description: 'The search query.'
+          schema:
+            type: string
+          required: True
+
+      responses:
+        '200':
+          description: 'Ok. Show search results for users.'
+        '302':
+          description: 'Redirect if user is not logged in.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                loginRedirect:
+                  description: 'Redirect to the login page due to unauthorized access.'
+                  value: '/login'
+    
+
+############################################ ADMINISTRATION ############################################
+
+######### ADMIN PAGE #########
+
+  /admin:
+
+    get:
+      operationId: R501
+      summary: 'R501: Admin page'
+      description: 'Shows the admin page. Access: ADM'
+      tags:
+        - 'M05: Administration'
+
+      responses:
+        '200':
+          description: 'Ok. Show admin UI.'
+        '302':
+          description: 'Redirect if user is not logged in.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                loginRedirect:
+                  description: 'Redirect to the login page due to unauthorized access.'
+                  value: '/login'
+        '403':
+          description: 'Forbidden. The user is not an administrator.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                loginRedirect:
+                  description: 'Redirect to the home page due to unauthorized access.'
+                  value: '/home'
+
+
+######### ADMIN USERS PAGE #########
+
+  /admin/users:
+
+    get:
+      operationId: R502
+      summary: 'R502: Admin users page'
+      description: 'Shows the admin users page. Access: ADM'
+      tags:
+        - 'M05: Administration'
+
+      responses:
+        '200':
+          description: 'Ok. Show admin users UI.'
+        '302':
+          description: 'Redirect if user is not logged in.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                loginRedirect:
+                  description: 'Redirect to the login page due to unauthorized access.'
+                  value: '/login'
+        '403':
+          description: 'Forbidden. The user is not an administrator.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                loginRedirect:
+                  description: 'Redirect to the home page due to unauthorized access.'
+                  value: '/home'
+
+######### USER BLOCK #########
+
+  /admin/users/block/{user_id}:
+
+    post:
+      operationId: R503
+      summary: 'R503: Block user action'
+      description: 'Blocks a user. Access: ADM'
+      tags:
+        - 'M05: Administration'
+
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '302':
+          description: 'Redirect once the user is blocked.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'User blocked successfully. Redirect back.'
+                302Failure:
+                  description: 'Failed. Redirect back.'
+
+######### USER UNBLOCK #########
+
+  /admin/users/unblock/{user_id}:
+
+    post:
+      operationId: R504
+      summary: 'R504: Unblock user action'
+      description: 'Unblocks a user. Access: ADM'
+      tags:
+        - 'M05: Administration'
+
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '302':
+          description: 'Redirect once the user is unblocked.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'User unblocked successfully. Redirect back.'
+                302Failure:
+                  description: 'Failed. Redirect back.'
