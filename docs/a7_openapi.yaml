@@ -1057,3 +1057,166 @@ paths:
                 302Failure:
                   description: 'Failed. Redirect back.'
 
+############################################ COMMENTS ##############################################
+
+######### CREATE COMMENT #########
+
+  /comment/create:
+
+    post:
+      operationId: R601
+      summary: 'R601: Create comment action'
+      description: 'Creates a comment. Access: USR'
+      tags:
+        - 'M06: Comments'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+                - content
+
+      responses:
+        '302':
+          description: 'Redirect once the new comment information is processed.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Comment created successfully. Redirect back.'
+                302Failure:
+                  description: 'Failed. Redirect back.'
+
+######### EDIT COMMENT #########
+
+  /comment/edit/{id}:
+
+    post:
+      operationId: R602
+      summary: 'R602: Edit comment action'
+      description: 'Processes and saves the changes made by user. Access: OWN'
+      tags:
+        - 'M06: Comments'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+                - content
+
+      responses:
+        '302':
+          description: 'Redirect once the new comment information is processed.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Comment edited successfully. Redirect back.'
+                302Failure:
+                  description: 'Failed. Redirect back.'
+
+######### DELETE COMMENT #########
+
+  /comment/delete/{id}:
+
+    post:
+      operationId: R603
+      summary: 'R603: Delete comment action'
+      description: 'Deletes a comment. Access: OWN, ADM'
+      tags:
+        - 'M06: Comments'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '302':
+          description: 'Redirect once the comment is deleted.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Comment deleted successfully. Redirect back.'
+                302Failure:
+                  description: 'Failed. Redirect back.'
+
+######### LIKE COMMENT #########
+
+  /comment/like/{id}:
+
+    post:
+      operationId: R604
+      summary: 'R604: Like comment action'
+      description: 'Likes a comment. Access: USR, OWN, ADM'
+      tags:
+        - 'M06: Comments'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '200':
+          description: 'Ok. You liked a comment.'
+        '403':
+          description: 'Forbiden action.'
+        '404':
+          description: 'Not Found. The comment ID does not exist or is already liked by the user.'
+
+######### UNLIKE COMMENT #########
+
+  /comment/unlike/{id}:
+
+    post:
+      operationId: R605
+      summary: 'R605: Unlike comment action'
+      description: 'Unlikes a comment. Access: USR, OWN, ADM'
+      tags:
+        - 'M06: Comments'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '200':
+          description: 'Ok. You unliked a comment.'
+        '403':
+          description: 'Forbiden action.'
+        '404':
+          description: 'Not Found. The comment ID does not exist or is not liked by the user.'
