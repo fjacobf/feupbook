@@ -994,3 +994,66 @@ paths:
                   description: 'User unblocked successfully. Redirect back.'
                 302Failure:
                   description: 'Failed. Redirect back.'
+
+######### USER PROMOTE #########
+
+  /admin/users/promote/{user_id}:
+
+    post:
+      operationId: R505
+      summary: 'R505: Promote user action'
+      description: 'Promotes a user to administrator. Access: ADM'
+      tags:
+        - 'M05: Administration'
+
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '302':
+          description: 'Redirect once the user is promoted.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'User promoted successfully. Redirect back.'
+                302Failure:
+                  description: 'Failed. Redirect back.'
+
+######### USER DEMOTE #########
+
+  /admin/users/demote/{user_id}:
+
+    post:
+      operationId: R506
+      summary: 'R506: Demote user action'
+      description: 'Demotes a user from administrator. Access: ADM'
+      tags:
+        - 'M05: Administration'
+
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '302':
+          description: 'Redirect once the user is demoted.'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'User demoted successfully. Redirect back.'
+                302Failure:
+                  description: 'Failed. Redirect back.'
+
