@@ -69,7 +69,7 @@ CREATE TABLE comment (
     post_id INTEGER REFERENCES post(post_id) NOT NULL,
     content TEXT,
     date DATE NOT NULL CHECK (date <= CURRENT_DATE),
-    previous INTEGER DEFAULT NULL
+    previous INTEGER REFERENCES comment(comment_id) DEFAULT NULL
 );
 
 -- Table: group_chat (R07)
@@ -95,7 +95,8 @@ CREATE TABLE follow_request (
     req_id INTEGER REFERENCES users(user_id) NOT NULL,
     rcv_id INTEGER REFERENCES users(user_id) NOT NULL,
     date DATE NOT NULL CHECK (date <= CURRENT_DATE),
-    status VARCHAR(50) NOT NULL CHECK (status IN ('request_status'))
+    status VARCHAR(50) NOT NULL CHECK (status IN ('request_status')),
+	PRIMARY KEY (req_id, rcv_id)
 );
 
 
@@ -104,7 +105,8 @@ CREATE TABLE follow_request (
 CREATE TABLE group_member (
     user_id INTEGER REFERENCES users(user_id),
     group_id INTEGER REFERENCES group_chat(group_id),
-    status VARCHAR(50) NOT NULL CHECK (status IN ('request_status'))
+    status VARCHAR(50) NOT NULL CHECK (status IN ('request_status')),
+	PRIMARY KEY (user_id, group_id)
 );
 
 -- Table: post_likes (R09)
