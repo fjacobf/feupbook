@@ -651,7 +651,7 @@ paths:
 
 ######### EDIT POST #########
 
-  /post/edit/{id}:
+  /post/edit/{id}: #o id tem de estar antes
 
     get:
       operationId: R302
