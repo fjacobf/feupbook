@@ -171,8 +171,6 @@ CREATE INDEX author_id_comment ON comment USING hash (author_id);
 
 CREATE INDEX notified_user_notification ON notification USING btree (notified_user);
 
-CREATE INDEX emitter_user_notification ON notification USING btree (emitter_user);
-
 CREATE INDEX user_id_bookmarks ON bookmarks USING btree (user_id);
 CLUSTER bookmarks USING user_id_bookmarks;
 
