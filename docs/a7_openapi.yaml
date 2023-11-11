@@ -228,7 +228,7 @@ paths:
 
 ######### EDIT PROFILE #########
 
-  /user/editProfile:
+  /user/{id}/editProfile:
 
     get:
       operationId: R203
@@ -236,6 +236,13 @@ paths:
       description: 'Shows the edit profile page of the user. Access: OWN'
       tags:
         - 'M02: Users'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
 
       responses:
         '200':
@@ -247,7 +254,7 @@ paths:
               schema:
                 type: string
               examples:
-                401Success:
+                profileRedirect:
                   description: 'Unauthorized. Redirect to user profile.'
                   value: '/user/{id}'
 
@@ -310,7 +317,7 @@ paths:
           
 ######### PROFILE DELETE #########
 
-  /user/deleteProfile:
+  /user/{id}/deleteProfile:
 
     post:
       operationId: R204
@@ -319,6 +326,13 @@ paths:
       tags:
         - 'M02: Users'
       
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
       responses:
         '302':
           description: 'Redirect after deleting user information.'
@@ -356,11 +370,11 @@ paths:
         '200':
           description: 'Ok. Deleted the user information.'
         '403':
-          description: 'Forbiden action.'
+          description: 'Forbidden action.'
 
 ######### REMOVE FOLLOWER #########
 
-  /user/removeFollower/{followerId}:
+  /user/{user_id}/removeFollower/{follower_id}:
 
     post:
       operationId: R206
@@ -371,23 +385,45 @@ paths:
 
       parameters:
         - in: path
-          name: followerId
+          name: user_id
           schema:
             type: integer
           required: True
-
+        - in: path
+          name: follower_id
+          schema:
+            type: integer
+          required: True
+        
       responses:
         '200':
           description: 'Ok. You removed a follower from your profile.'
         '403':
-          description: 'Forbiden action.'
+          description: 'Forbidden action.'
         '404':
-          description: 'Not Found. The follower ID does not exist or is not a follower of the user.'
-
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                userNotFound:
+                  value:
+                    error_code: "UserNotFound"
+                    message: "The user ID does not exist."
+                notAFollower:
+                  value:
+                    error_code: "NotAFollower"
+                    message: "The specified ID is not a follower of the user."
 
 ######### FOLLOW #########
 
-  /user/follow/{id}:
+  /user/{user_id}/follow/{followed_id}:
 
     post:
       operationId: R207
@@ -398,7 +434,12 @@ paths:
 
       parameters:
         - in: path
-          name: id
+          name: user_id
+          schema:
+            type: integer
+          required: True
+        - in: path
+          name: followed_id
           schema:
             type: integer
           required: True
@@ -407,13 +448,31 @@ paths:
         '200':
           description: 'Ok. You followed a user.'
         '403':
-          description: 'Forbiden action.'
+          description: 'Forbidden action.'
         '404':
-          description: 'Not Found. The user ID does not exist or is already a follower of the user.'
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                userNotFound:
+                  value:
+                    error_code: "UserNotFound"
+                    message: "The user ID does not exist."
+                alreadyAFollower:
+                  value:
+                    error_code: "AlreadyAFollower"
+                    message: "The specified ID is already a follower of the user."
 
 ######### UNFOLLOW #########
 
-  /user/unfollow/{id}:
+  /user/{user_id}/unfollow/{unfollow_id}:
 
     post:
       operationId: R208
@@ -424,7 +483,12 @@ paths:
 
       parameters:
         - in: path
-          name: id
+          name: user_id
+          schema:
+            type: integer
+          required: True
+        - in: path
+          name: unfollow_id
           schema:
             type: integer
           required: True
@@ -433,13 +497,31 @@ paths:
         '200':
           description: 'Ok. You unfollowed a user.'
         '403':
-          description: 'Forbiden action.'
+          description: 'Forbidden action.'
         '404':
-          description: 'Not Found. The user ID does not exist or is not a follower of the user.'
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                userNotFound:
+                  value:
+                    error_code: "UserNotFound"
+                    message: "The user ID does not exist."
+                notAFollower:
+                  value:
+                    error_code: "NotAFollower"
+                    message: "The specified ID is not a follower of the user."
 
 ######### FOLLOW REQUEST #########
 
-  /user/followRequest/{id}:
+  /user/{user_id}/followRequest/{follow_id}:
 
     post:
       operationId: R209
@@ -450,7 +532,12 @@ paths:
 
       parameters:
         - in: path
-          name: id
+          name: user_id
+          schema:
+            type: integer
+          required: True
+        - in: path
+          name: follow_id
           schema:
             type: integer
           required: True
@@ -459,14 +546,32 @@ paths:
         '200':
           description: 'Ok. Sent a follow request to a user.'
         '403':
-          description: 'Forbiden action.'
+          description: 'Forbidden action.'
         '404':
-          description: 'Not Found. The user ID does not exist or is already a follower of the user.'
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                userNotFound:
+                  value:
+                    error_code: "UserNotFound"
+                    message: "The user ID does not exist."
+                alreadyAFollower:
+                  value:
+                    error_code: "AlreadyAFollower"
+                    message: "The specified ID is already a follower of the user."
 
 
 ######### CANCEL FOLLOW REQUEST #########
 
-  /user/cancelFollowRequest/{id}:
+  /user/{user_id}/cancelFollowRequest/{follow_id}:
 
     post:
       operationId: R210
@@ -477,7 +582,12 @@ paths:
 
       parameters:
         - in: path
-          name: id
+          name: user_id
+          schema:
+            type: integer
+          required: True
+        - in: path
+          name: follow_id
           schema:
             type: integer
           required: True
@@ -486,14 +596,31 @@ paths:
         '200':
           description: 'Ok. You cancelled a follow request.'
         '403':
-          description: 'Forbiden action.'
+          description: 'Forbidden action.'
         '404':
-          description: 'Not Found. The user ID does not exist or is not a follower of the user.'
-
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                userNotFound:
+                  value:
+                    error_code: "UserNotFound"
+                    message: "The user ID does not exist."
+                notAFollower:
+                  value:
+                    error_code: "NotAFollower"
+                    message: "The specified ID is not a follower of the user."
 
 ######### ACCEPT FOLLOW REQUEST #########
 
-  /user/acceptFollowRequest/{id}:
+  /user/{user_id}/acceptFollowRequest/{follow_id}:
 
     post:
       operationId: R211
@@ -504,7 +631,12 @@ paths:
 
       parameters:
         - in: path
-          name: id
+          name: user_id
+          schema:
+            type: integer
+          required: True
+        - in: path
+          name: follow_id
           schema:
             type: integer
           required: True
@@ -513,14 +645,32 @@ paths:
         '200':
           description: 'Ok. You accepted a follow request.'
         '403':
-          description: 'Forbiden action.'
+          description: 'Forbidden action.'
         '404':
-          description: 'Not Found. The user ID does not exist or is not a follower of the user.'
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                userNotFound:
+                  value:
+                    error_code: "UserNotFound"
+                    message: "The user ID does not exist."
+                notAFollower:
+                  value:
+                    error_code: "NotAFollower"
+                    message: "The specified ID is not a follower of the user."
 
 
 ######### REJECT FOLLOW REQUEST #########
 
-  /user/rejectFollowRequest/{id}:
+  /user/{user_id}/rejectFollowRequest/{follow_id}:
 
     post:
       operationId: R212
@@ -531,7 +681,12 @@ paths:
 
       parameters:
         - in: path
-          name: id
+          name: user_id
+          schema:
+            type: integer
+          required: True
+        - in: path
+          name: follow_id
           schema:
             type: integer
           required: True
@@ -540,16 +695,27 @@ paths:
         '200':
           description: 'Ok. You rejected a follow request.'
         '403':
-          description: 'Forbiden action.'
+          description: 'Forbidden action.'
         '404':
-          description: 'Not Found. The user ID does not exist or is not a follower of the user.'
-
-
-#### VER SE É PRECISO NOTIFICAÇÕES ####
-
-
-#### VER SE É PRECISO MENSAGENS ####
-
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                userNotFound:
+                  value:
+                    error_code: "UserNotFound"
+                    message: "The user ID does not exist."
+                notAFollower:
+                  value:
+                    error_code: "NotAFollower"
+                    message: "The specified ID is not a follower of the user."
 
 ######### ABOUT PAGE #########
 
@@ -651,12 +817,12 @@ paths:
 
 ######### EDIT POST #########
 
-  /post/edit/{id}:
+  /post/{id}/edit: 
 
     get:
       operationId: R302
       summary: 'R302: Edit post page'
-      description: 'Shows the edit post page. Access: USR, OWN, ADM'
+      description: 'Shows the edit post page. Access: OWN, ADM'
       tags:
         - 'M03: Posts'
 
@@ -671,14 +837,32 @@ paths:
         '200':
           description: 'Ok. Show edit post UI.'
         '403':
-          description: 'Forbiden action.'
+          description: 'Forbidden action.'
         '404':
-          description: 'Not Found. The post ID does not exist or is not a post of the user.'
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                postNotFound:
+                  value:
+                    error_code: "PostNotFound"
+                    message: "The post ID does not exist."
+                postNotFromUser:
+                  value:
+                    error_code: "PostNotFromUser"
+                    message: "The post does not belong to the user."
 
     post:
       operationId: R303
       summary: 'R303: Edit post action'
-      description: 'Processes and saves the changes made by user. Access: USR, ADM'
+      description: 'Processes and saves the changes made by user. Access: OWN, ADM'
       tags:
         - 'M03: Posts'
 
@@ -716,7 +900,7 @@ paths:
 
 ######### DELETE POST #########
 
-  /post/delete/{id}:
+  /post/{id}/delete:
 
     post:
       operationId: R304
@@ -747,7 +931,7 @@ paths:
 
 ######### LIKE POST #########
 
-  /post/like/{id}:
+  /post/{id}/like:
 
     post:
       operationId: R305
@@ -767,13 +951,31 @@ paths:
         '200':
           description: 'Ok. You liked a post.'
         '403':
-          description: 'Forbiden action.'
+          description: 'Forbidden action.'
         '404':
-          description: 'Not Found. The post ID does not exist or is already liked by the user.'
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                postNotFound:
+                  value:
+                    error_code: "PostNotFound"
+                    message: "The post ID does not exist."
+                alreadyLiked:
+                  value:
+                    error_code: "AlreadyLiked"
+                    message: "The specified post is already liked by the user."
 
 ######### UNLIKE POST #########
 
-  /post/unlike/{id}:
+  /post/{id}/unlike:
 
     post:
       operationId: R306
@@ -793,9 +995,27 @@ paths:
         '200':
           description: 'Ok. You unliked a post.'
         '403':
-          description: 'Forbiden action.'
+          description: 'Forbidden action.'
         '404':
-          description: 'Not Found. The post ID does not exist or is not liked by the user.'
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                postNotFound:
+                  value:
+                    error_code: "PostNotFound"
+                    message: "The post ID does not exist."
+                notLiked:
+                  value:
+                    error_code: "NotLiked"
+                    message: "The specified post is not liked by the user."
 
 
 ############################################ SEARCH ############################################
@@ -935,7 +1155,7 @@ paths:
 
 ######### USER BLOCK #########
 
-  /admin/users/block/{user_id}:
+  /admin/user/{user_id}/block:
 
     post:
       operationId: R503
@@ -963,10 +1183,41 @@ paths:
                   description: 'User blocked successfully. Redirect back.'
                 302Failure:
                   description: 'Failed. Redirect back.'
+        '403':
+          description: 'Forbidden. The user is not an administrator.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                loginRedirect:
+                  description: 'Redirect to the home page due to unauthorized access.'
+                  value: '/home'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                userNotFound:
+                  value:
+                    error_code: "UserNotFound"
+                    message: "The user ID does not exist."
+                alreadyBlocked:
+                  value:
+                    error_code: "AlreadyBlocked"
+                    message: "The specified user is already blocked."
+
 
 ######### USER UNBLOCK #########
 
-  /admin/users/unblock/{user_id}:
+  /admin/user/{user_id}/unblock:
 
     post:
       operationId: R504
@@ -994,10 +1245,40 @@ paths:
                   description: 'User unblocked successfully. Redirect back.'
                 302Failure:
                   description: 'Failed. Redirect back.'
+        '403':
+          description: 'Forbidden. The user is not an administrator.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                loginRedirect:
+                  description: 'Redirect to the home page due to unauthorized access.'
+                  value: '/home'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                userNotFound:
+                  value:
+                    error_code: "UserNotFound"
+                    message: "The user ID does not exist."
+                alreadyUnblocked:
+                  value:
+                    error_code: "AlreadyUnblocked"
+                    message: "The specified user is already unblocked."
 
 ######### USER PROMOTE #########
 
-  /admin/users/promote/{user_id}:
+  /admin/user/{user_id}/promote:
 
     post:
       operationId: R505
@@ -1025,10 +1306,40 @@ paths:
                   description: 'User promoted successfully. Redirect back.'
                 302Failure:
                   description: 'Failed. Redirect back.'
+        '403':
+          description: 'Forbidden. The user is not an administrator.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                loginRedirect:
+                  description: 'Redirect to the home page due to unauthorized access.'
+                  value: '/home'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                userNotFound:
+                  value:
+                    error_code: "UserNotFound"
+                    message: "The user ID does not exist."
+                alreadyPromoted:
+                  value:
+                    error_code: "AlreadyPromoted"
+                    message: "The specified user is already an administrator."
 
 ######### USER DEMOTE #########
 
-  /admin/users/demote/{user_id}:
+  /admin/user/{user_id}/demote:
 
     post:
       operationId: R506
@@ -1056,6 +1367,36 @@ paths:
                   description: 'User demoted successfully. Redirect back.'
                 302Failure:
                   description: 'Failed. Redirect back.'
+        '403':
+          description: 'Forbidden. The user is not an administrator.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                loginRedirect:
+                  description: 'Redirect to the home page due to unauthorized access.'
+                  value: '/home'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                userNotFound:
+                  value:
+                    error_code: "UserNotFound"
+                    message: "The user ID does not exist."
+                alreadyDemoted:
+                  value:
+                    error_code: "AlreadyDemoted"
+                    message: "The specified user is not an administrator."
 
 ############################################ COMMENTS ##############################################
 
@@ -1066,7 +1407,7 @@ paths:
     post:
       operationId: R601
       summary: 'R601: Create comment action'
-      description: 'Creates a comment. Access: USR'
+      description: 'Creates a comment. Access: USR, ADM'
       tags:
         - 'M06: Comments'
 
@@ -1097,7 +1438,7 @@ paths:
 
 ######### EDIT COMMENT #########
 
-  /comment/edit/{id}:
+  /comment/{id}/edit:
 
     post:
       operationId: R602
@@ -1140,7 +1481,7 @@ paths:
 
 ######### DELETE COMMENT #########
 
-  /comment/delete/{id}:
+  /comment/{id}/delete:
 
     post:
       operationId: R603
@@ -1171,7 +1512,7 @@ paths:
 
 ######### LIKE COMMENT #########
 
-  /comment/like/{id}:
+  /comment/{id}/like:
 
     post:
       operationId: R604
@@ -1191,13 +1532,31 @@ paths:
         '200':
           description: 'Ok. You liked a comment.'
         '403':
-          description: 'Forbiden action.'
+          description: 'Forbidden action.'
         '404':
-          description: 'Not Found. The comment ID does not exist or is already liked by the user.'
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                commentNotFound:
+                  value:
+                    error_code: "CommentNotFound"
+                    message: "The commnet ID does not exist."
+                alreadyLiked:
+                  value:
+                    error_code: "AlreadyLiked"
+                    message: "The specified comment is already liked by the user."
 
 ######### UNLIKE COMMENT #########
 
-  /comment/unlike/{id}:
+  /comment/{id}/unlike:
 
     post:
       operationId: R605
@@ -1217,6 +1576,24 @@ paths:
         '200':
           description: 'Ok. You unliked a comment.'
         '403':
-          description: 'Forbiden action.'
+          description: 'Forbidden action.'
         '404':
-          description: 'Not Found. The comment ID does not exist or is not liked by the user.'
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                commentNotFound:
+                  value:
+                    error_code: "CommentNotFound"
+                    message: "The comment ID does not exist."
+                notLiked:
+                  value:
+                    error_code: "NotLiked"
+                    message: "The specified comment is not liked by the user."
