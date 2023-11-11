@@ -32,7 +32,7 @@ DROP FUNCTION IF EXISTS user_search_update CASCADE;
 DROP FUNCTION IF EXISTS post_search_update CASCADE;
 DROP FUNCTION IF EXISTS comment_search_update CASCADE;
 DROP FUNCTION IF EXISTS group_chat_search_update CASCADE;
-DROP FUNCTION IF EXISTS notify_friend_request CASCADE;
+DROP FUNCTION IF EXISTS notify_follow_request CASCADE;
 DROP FUNCTION IF EXISTS reject_inappropriate_posts CASCADE;
 
 -- Create ENUM types
@@ -172,8 +172,6 @@ CREATE INDEX owner_id_post ON post USING hash (owner_id);
 CREATE INDEX author_id_comment ON comment USING hash (author_id);
 
 CREATE INDEX notified_user_notification ON notification USING btree (notified_user);
-
-CREATE INDEX emitter_user_notification ON notification USING btree (emitter_user);
 
 CREATE INDEX user_id_bookmarks ON bookmarks USING btree (user_id);
 CLUSTER bookmarks USING user_id_bookmarks;
@@ -320,7 +318,7 @@ CREATE INDEX search_group_chat ON group_chat USING GIN (tsvectors);
 -- TRIGGERS
 ------------------------------
 
-CREATE FUNCTION notify_friend_request() RETURNS TRIGGER AS
+CREATE FUNCTION notify_follow_request() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     INSERT INTO notifications (user_id, message, created_at)
@@ -330,10 +328,10 @@ END
 $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER notify_friend_request
-AFTER INSERT ON friend_requests
+CREATE TRIGGER notify_follow_request
+AFTER INSERT ON follow_request
 FOR EACH ROW
-EXECUTE PROCEDURE notify_friend_request();
+EXECUTE PROCEDURE notify_follow_request();
 
 CREATE FUNCTION reject_inappropriate_posts() RETURNS TRIGGER AS
 $BODY$
@@ -347,12 +345,12 @@ $BODY$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER reject_inappropriate_posts
-BEFORE INSERT ON posts
+BEFORE INSERT ON post
 FOR EACH ROW
 EXECUTE PROCEDURE reject_inappropriate_posts();
 
-CREATE OR REPLACE FUNCTION prevent_duplicate_post_likes();
-RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION prevent_duplicate_post_likes() RETURNS TRIGGER AS 
+$$
 BEGIN
     IF EXISTS (
         SELECT 1
@@ -487,7 +485,6 @@ CREATE TRIGGER check_owner_membership
 BEFORE INSERT ON group_chat
 FOR EACH ROW
 EXECUTE FUNCTION ensure_owner_is_member();
-
 
 ------------------------------
 -- TRANSACTIONS
