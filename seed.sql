@@ -493,21 +493,32 @@ EXECUTE FUNCTION ensure_owner_is_member();
 -- TRANSACTIONS
 ------------------------------
 
--- Set the isolation level to Repeatable Read
-SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+CREATE OR REPLACE FUNCTION create_post_with_mentions(
+    IN owner_id INTEGER,
+    IN post_content TEXT
+)
+RETURNS VOID AS $$
+DECLARE
+    newpost_id INTEGER;
+BEGIN
+    -- Set the isolation level to Repeatable Read
+    SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
--- Begin the transaction
-BEGIN;
+    -- Create the post and obtain the post_id
+    INSERT INTO post (owner_id, content, date)
+    VALUES (owner_id, post_content, NOW())
+    RETURNING post_id INTO newpost_id;
 
--- Create the post and obtain the post_id
-INSERT INTO post (owner_id, content, date)
-VALUES (:ownerId, :content, NOW())
-RETURNING post_id INTO newpost_id;
+    -- Create mention records for the post by extracting mentions from the content
+    INSERT INTO mention (post_id, user_mentioned)
+    SELECT newpost_id, user_id
+    FROM users
+    WHERE regexp_matches(post_content, '@([A-Za-z0-9_]+)', 'g') IS NOT NULL;
 
--- Create mention records for the post by extracting mentions from the content
-INSERT INTO mention (post_id, user_mentioned)
-SELECT newpost_id, regexp_matches(:content, '@([A-Za-z0-9_]+)', 'g');
+    -- Commit the transaction if everything is successful
+    COMMIT;
 
--- Commit the transaction if everything is successful
-COMMIT;
-
+    -- Return nothing (VOID)
+    RETURN;
+END;
+$$ LANGUAGE plpgsql;
