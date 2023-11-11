@@ -2,14 +2,14 @@
 INSERT INTO users (user_id, username, email, password, name, bio, private, user_type)
 VALUES
     (1, 'user1', 'user1@example.com', 'password1', 'User One', 'Bio for User One', false, 'normal_user'),
-    (2, 'user2', 'user2@example.com', 'password2', 'User Two', 'Bio for User Two', true, 'normal_user');
-    (3, 'newuser', 'newuser@example.com', 'mypass', 'New User', 'Bio for New User', false, 'normal_user');
-    (4, 'FPmod', 'fpmod@example.com', 'admin123', 'FPAdmin', 'Admin for FEUPbook', false, 'admin');
-    (5, 'ADM', 'admfpbook@example.com', 'admin123', 'ADM', 'Second Admin for FEUPbook', true, 'admin');
-    (6, 'FPhelper', 'helper@example.com', 'admin123', 'FPhelper', 'Helper for FEUPbook', false, 'helper');
-    (7, 'FPhelper2', 'helper2@example.com', 'admin123', 'FPhelper2', 'Second helepr for FEUPbook', false, 'helper');
-    (8, 'BadUser', 'baduser@example.com', 'banned123', 'BadUser', 'Banned from FEUPbook', false, 'suspended');
-    (9, 'BadUser2', 'baduser2@example.com', 'banned123', 'BadUser2', 'Second banned from FEUPbook', false, 'suspended');
+    (2, 'user2', 'user2@example.com', 'password2', 'User Two', 'Bio for User Two', true, 'normal_user'),
+    (3, 'newuser', 'newuser@example.com', 'mypass', 'New User', 'Bio for New User', false, 'normal_user'),
+    (4, 'FPmod', 'fpmod@example.com', 'admin123', 'FPAdmin', 'Admin for FEUPbook', false, 'admin'),
+    (5, 'ADM', 'admfpbook@example.com', 'admin123', 'ADM', 'Second Admin for FEUPbook', true, 'admin'),
+    (6, 'FPhelper', 'helper@example.com', 'admin123', 'FPhelper', 'Helper for FEUPbook', false, 'admin'),
+    (7, 'FPhelper2', 'helper2@example.com', 'admin123', 'FPhelper2', 'Second helepr for FEUPbook', false, 'admin'),
+    (8, 'BadUser', 'baduser@example.com', 'banned123', 'BadUser', 'Banned from FEUPbook', false, 'suspended'),
+    (9, 'BadUser2', 'baduser2@example.com', 'banned123', 'BadUser2', 'Second banned from FEUPbook', false, 'suspended'),
     (10, 'Joe', 'joe@example.com', 'password', 'Joe', 'Joe on feupbook', false, 'normal_user');
 
 -- Insert statements for the 'post' table
@@ -23,7 +23,7 @@ VALUES
     (6, 2, 'image6.jpg', 'Another post by User Two.', '2023-10-21'),
     (7, 1, 'image7.jpg', 'Another post by User One.', '2023-10-20'),
     (8, 8, 'image8.jpg', 'I got banned!', '2023-10-19'),
-    (9, 9, NULL 'I also got banned.', '2023-10-18'),
+    (9, 9, NULL, 'I also got banned.', '2023-10-18'),
     (10, 10, NULL, 'Hello from Joe.', '2023-10-17');
 
 -- Insert statements for the 'comment' table
