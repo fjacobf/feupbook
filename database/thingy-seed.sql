@@ -54,4 +54,3 @@ INSERT INTO items VALUES (DEFAULT, 1, 'Walk the dog', true);
 INSERT INTO cards VALUES (DEFAULT, 'Things not to do', 1);
 INSERT INTO items VALUES (DEFAULT, 2, 'Break a leg');
 INSERT INTO items VALUES (DEFAULT, 2, 'Crash the car');
--- 
