@@ -20,7 +20,7 @@ use App\Http\Controllers\Auth\RegisterController;
 */
 
 // Home
-Route::redirect('/', '/login');
+Route::view('/', 'welcome');
 
 // Cards
 Route::controller(CardController::class)->group(function () {

@@ -1,4 +1,4 @@
-body {
+/* body {
     background-color: #ffffff;
     color: #9b4dca;
   }
@@ -136,10 +136,8 @@ body {
       border-bottom: 1px solid rgba(96, 108, 118, 0.4);
     }
   }
-  /**
-   * Override milligram colors
-   * Some styles might be missing
-   **/
+  
+
   button {
     background-color: #9b4dca;
     border-color: #9b4dca;
@@ -159,4 +157,162 @@ body {
   input[type=password]:focus {
     border-color: #9b4dca;
   }
-  
+   */
+
+body, html {
+  height: 100vh; /* Viewport height */
+  margin: 0;
+  overflow: hidden; /* Hide overflow to prevent scrolling */
+  font-family: 'Arial', sans-serif;
+  background-color: #ffffff; /* Assuming the background is black */
+  color: #000000; /* White text color */
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: row; 
+  justify-content: center; /* Center content vertically */
+  align-items: stretch; /* Take up full width */
+  height: 100vh; /* Viewport height */
+}
+ 
+.left-side {
+  flex: 1; /* Takes up half the space of the wrapper */
+  justify-content: center;
+}
+
+.right-side {
+  flex: 1; /* Takes up the other half */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start; 
+  padding: 0 5%;
+}
+ 
+ /* Headings */
+.right-side h1 {
+  margin-top: 0em;
+  font-size: 3em; /* Large font size for the main heading */
+  font-weight: bold;
+  margin-bottom: 1.1em;
+}
+
+.right-side h2 {
+  font-size: 1.5em; /* Smaller font size for the subheading */
+  justify-content: left;
+  align-items: left;
+  font-weight: normal;
+  margin-bottom: 1em;
+}
+
+/* Button styles */
+button {
+  display: inline-block;
+  font-size: 1em;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 9999px; /* Fully rounded corners */
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button, .google-btn, .create-account-btn {
+  width: 250px; /* Set a fixed width for all buttons */
+}
+
+/* Google sign up button */
+.google-btn {
+  background-color: #cd6103; 
+  color: #ffffff; 
+  margin-left: 0;
+  margin-bottom: 10px;
+}
+
+.google-btn:hover {
+  background-color: #e8aa73; /* Light grey background on hover */
+}
+
+/* Create account button */
+.create-account-btn {
+  background-color: #cd6103; /* Twitter blue background */
+  color: #fff; /* White text */
+  margin-left: 0;
+  margin-bottom: 5px;
+}
+
+.create-account-btn:hover {
+  background-color: #e8aa73; /* Slightly darker blue on hover */
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* Agreement text */
+.agreement {
+  max-width: 250px; /* Should match the width of your buttons */
+  text-align: left;
+  font-size: 10px;
+  margin-left: 5px;
+  margin-top: 0;
+}
+
+.login-link{
+  margin-top: 30px;
+}
+
+/* Sign in link */
+.sign-in-link {
+  background-color: #cd6103; /* Match create account button color */
+  color: #fff; /* White text color */
+  display: block; /* Make it a block to fit the full width */
+  text-align: center; /* Center the text */
+  padding: 10px 0; /* Match the button padding */
+  border-radius: 9999px; /* Fully rounded corners */
+  margin-top: 10px; /* Add some space above the button */
+}
+
+.sign-in-link:hover {
+  background-color: #e8aa73;
+}
+ 
+footer {
+  position: absolute; /* Position it at the bottom */
+  bottom: 0;
+  width: 100%;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+footer nav {
+  text-align: center;
+  padding: 1em 0; /* Add padding to space out the links */
+}
+
+footer .copyright {
+  text-align: center;
+  padding: 0.5em 0; /* Add padding to give space above and below the text */
+  background-color: #ffffff; /* Maintain the same background color */
+  color: #000000; /* Maintain the same text color */
+  font-size: 0.75em;
+}
+
+/* Additional styles to ensure footer content doesn't overlap */
+footer nav a {
+  margin: 0 10px; /* Adjust spacing between links as needed */
+  color: #aaa; /* Light grey links */
+  text-decoration: none;
+}
+
+footer nav a:hover {
+  color: #cd6103;
+  text-decoration: underline;
+}
+
+ 
