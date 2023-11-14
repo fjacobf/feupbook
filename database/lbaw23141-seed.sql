@@ -37,7 +37,7 @@ DROP FUNCTION IF EXISTS reject_inappropriate_posts CASCADE;
 
 -- Create ENUM types
 CREATE TYPE user_types AS ENUM ('normal_user', 'admin', 'suspended');
-CREATE TYPE notification_types AS ENUM ('liked_comment', 'reply_comment', 'comment_tagging', 'request_follow', 'started_following', 'accepted_follow', 'joined_group', 'accept_join', 'liked_post', 'comment_post');
+CREATE TYPE notification_types AS ENUM ('liked_comment', 'reply_comment', 'request_follow', 'started_following', 'accepted_follow', 'joined_group', 'group_invite', 'liked_post', 'comment_post');
 CREATE TYPE report_types AS ENUM ('harassment', 'hate_speech', 'inappropriate_content', 'spam', 'self_harm');
 CREATE TYPE request_status AS ENUM ('accepted', 'rejected', 'waiting');
 
@@ -50,7 +50,7 @@ CREATE TABLE users (
     name VARCHAR(255) NOT NULL,
     bio TEXT,
     private BOOLEAN NOT NULL DEFAULT false,
-    user_type VARCHAR(50) NOT NULL CHECK (user_type IN ('user_types'))
+    user_type user_types NOT NULL
 );
 
 -- Table: post (R02)
@@ -95,7 +95,7 @@ CREATE TABLE follow_request (
     req_id INTEGER REFERENCES users(user_id) NOT NULL,
     rcv_id INTEGER REFERENCES users(user_id) NOT NULL,
     date DATE NOT NULL CHECK (date <= CURRENT_DATE),
-    status VARCHAR(50) NOT NULL CHECK (status IN ('request_status')),
+    status request_status NOT NULL,
 	PRIMARY KEY (req_id, rcv_id)
 );
 
@@ -143,7 +143,7 @@ CREATE TABLE report (
     user_id INTEGER REFERENCES users(user_id),
     post_id INTEGER REFERENCES post(post_id),
     date DATE NOT NULL CHECK (date <= CURRENT_DATE),
-    report_type VARCHAR(50) NOT NULL CHECK (report_type IN ('report_types'))
+    report_type report_types NOT NULL
 );
 
 -- Table: notification (R04)
@@ -151,9 +151,9 @@ CREATE TABLE notification (
     notification_id SERIAL PRIMARY KEY,
     date DATE NOT NULL CHECK (date <= CURRENT_DATE),
     notified_user INTEGER REFERENCES users(user_id) NOT NULL,
-    notification_type VARCHAR(50) NOT NULL CHECK (
+    notification_type notification_types NOT NULL CHECK (
         (notification_type IN ('liked_comment', 'reply_comment') AND post_id IS NULL AND group_id IS NULL) OR
-        (notification_type IN ('request_follow', 'started_following', 'accept_follow') AND comment_id IS NULL AND post_id IS NULL AND group_id IS NULL) OR
+        (notification_type IN ('request_follow', 'started_following', 'accepted_follow') AND comment_id IS NULL AND post_id IS NULL AND group_id IS NULL) OR
         (notification_type IN ('joined_group', 'group_invite') AND comment_id IS NULL AND post_id IS NULL) OR
         (notification_type IN ('liked_post', 'comment_post') AND comment_id IS NULL AND group_id IS NULL)
     ),

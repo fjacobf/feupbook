@@ -27,15 +27,15 @@ VALUES
     (10, 10, NULL, 'Hello from Joe.', '2023-10-17');
 
 -- Insert statements for the 'comment' table
-INSERT INTO comment (id, author_id, post_id, content, date, previous)
+INSERT INTO comment (comment_id, author_id, post_id, content, date, previous)
 VALUES
     (1, 1, 1, 'Comment on post 1 by User One.', '2023-10-26', NULL),
-    (2, 2, 1, 'Reply to comment 1 by User Two.', '2023-10-27', 1),
+    -- (2, 2, 1, 'Reply to comment 1 by User Two.', '2023-10-27', 1),
     (3, 4, 2, 'Moderator comment on post 2.', '2023-10-28', NULL),
-    (4, 2, 2, 'A moderator?', '2023-10-29', 3),
-    (5, 6, 2, 'Another moderator.', '2023-10-30', 4),
-    (6, 2, 8, 'Deserved.', '2023-10-31', NULL),
-    (7, 4, 8, 'I agree.', '2023-11-01', 6),
+    -- (4, 2, 2, 'A moderator?', '2023-10-29', 3),
+    (5, 6, 2, 'Another moderator.', '2023-10-30', NULL),
+    -- (6, 2, 8, 'Deserved.', '2023-10-31', NULL),
+    (7, 4, 8, 'I agree.', '2023-11-01', NULL),
     (8, 3, 9, 'You too?', '2023-11-02', NULL),
     (9, 3, 9, 'Why?', '2023-11-03', NULL),
     (10, 10, 10, 'Hello from Joe.', '2023-11-04', NULL);
