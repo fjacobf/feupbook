@@ -322,9 +322,13 @@ CREATE INDEX search_group_chat ON group_chat USING GIN (tsvectors);
 -------NOTIFY FOLLOW REQUEST TRIGGER--------
 CREATE OR REPLACE FUNCTION notify_follow_request() RETURNS TRIGGER AS
 $BODY$
+DECLARE
+    requester_name TEXT;
+
 BEGIN
+    SELECT name INTO requester_name FROM users WHERE user_id = NEW.req_id;
     INSERT INTO notification (notified_user, message, date, notification_type)
-    VALUES (NEW.rcv_id, 'You have a new follow request from ' || NEW.req_id, CURRENT_DATE, 'request_follow');
+    VALUES (NEW.rcv_id, 'You have a new follow request from ' || requester_name, CURRENT_DATE, 'request_follow');
     RETURN NEW;
 END
 $BODY$
