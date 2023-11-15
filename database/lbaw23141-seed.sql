@@ -34,6 +34,7 @@ DROP FUNCTION IF EXISTS comment_search_update CASCADE;
 DROP FUNCTION IF EXISTS group_chat_search_update CASCADE;
 DROP FUNCTION IF EXISTS notify_follow_request CASCADE;
 DROP FUNCTION IF EXISTS reject_inappropriate_posts CASCADE;
+DROP FUNCTION IF EXISTS create_group_owner CASCADE;
 
 -- Create ENUM types
 CREATE TYPE user_types AS ENUM ('normal_user', 'admin', 'suspended');
@@ -105,7 +106,7 @@ CREATE TABLE follow_request (
 CREATE TABLE group_member (
     user_id INTEGER REFERENCES users(user_id),
     group_id INTEGER REFERENCES group_chat(group_id),
-    status VARCHAR(50) NOT NULL CHECK (status IN ('request_status')),
+    status request_status NOT NULL,
 	PRIMARY KEY (user_id, group_id)
 );
 
@@ -151,6 +152,7 @@ CREATE TABLE notification (
     notification_id SERIAL PRIMARY KEY,
     date DATE NOT NULL CHECK (date <= CURRENT_DATE),
     notified_user INTEGER REFERENCES users(user_id) NOT NULL,
+    message VARCHAR(255),
     notification_type notification_types NOT NULL CHECK (
         (notification_type IN ('liked_comment', 'reply_comment') AND post_id IS NULL AND group_id IS NULL) OR
         (notification_type IN ('request_follow', 'started_following', 'accepted_follow') AND comment_id IS NULL AND post_id IS NULL AND group_id IS NULL) OR
@@ -317,12 +319,12 @@ CREATE INDEX search_group_chat ON group_chat USING GIN (tsvectors);
 ------------------------------
 -- TRIGGERS
 ------------------------------
-
-CREATE FUNCTION notify_follow_request() RETURNS TRIGGER AS
+-------NOTIFY FOLLOW REQUEST TRIGGER--------
+CREATE OR REPLACE FUNCTION notify_follow_request() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    INSERT INTO notifications (user_id, message, created_at)
-    VALUES (NEW.receiver_id, 'You have a new friend request from ' || NEW.sender_name);
+    INSERT INTO notification (notified_user, message, date)
+    VALUES (NEW.rcv_id, 'You have a new friend request from ' || NEW.req_id, CURRENT_DATE);
     RETURN NEW;
 END
 $BODY$
@@ -333,7 +335,8 @@ AFTER INSERT ON follow_request
 FOR EACH ROW
 EXECUTE PROCEDURE notify_follow_request();
 
-CREATE FUNCTION reject_inappropriate_posts() RETURNS TRIGGER AS
+------REJECT INAPPROPRIATE POSTS TRIGGER------
+CREATE OR REPLACE FUNCTION reject_inappropriate_posts() RETURNS TRIGGER AS
 $BODY$
 BEGIN
     IF NEW.content ILIKE ANY (ARRAY['%inappropriate%', '%offensive%', '%spam%']) THEN
@@ -349,6 +352,7 @@ BEFORE INSERT ON post
 FOR EACH ROW
 EXECUTE PROCEDURE reject_inappropriate_posts();
 
+------PREVENT DUPLICATE POST LIKES TRIGGER------
 CREATE OR REPLACE FUNCTION prevent_duplicate_post_likes() RETURNS TRIGGER AS 
 $$
 BEGIN
@@ -368,13 +372,14 @@ BEFORE INSERT ON post_likes
 FOR EACH ROW
 EXECUTE FUNCTION prevent_duplicate_post_likes();
 
+------ENFORCE MESSAGE SENDER MEMBERSHIP TRIGGER------
 CREATE OR REPLACE FUNCTION enforce_message_sender_membership()
 RETURNS TRIGGER AS $$
 BEGIN
     IF NOT EXISTS (
         SELECT 1
         FROM group_member
-        WHERE user_id = NEW.emitter_id AND group_id = NEW.group_id
+        WHERE user_id = NEW.emitter_id AND group_id = NEW.group_id AND status='accepted'
     ) THEN
     RAISE EXCEPTION 'User is not a member of the group chat.';
     END IF;
@@ -387,6 +392,7 @@ BEFORE INSERT ON message
 FOR EACH ROW
 EXECUTE FUNCTION enforce_message_sender_membership();
 
+------ENFORCE COMMENT PRIVACY TRIGGER------
 CREATE OR REPLACE FUNCTION enforce_comment_privacy()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -413,6 +419,7 @@ BEFORE INSERT ON comment
 FOR EACH ROW
 EXECUTE FUNCTION enforce_comment_privacy();
 
+------PREVENT SELF FOLLOW TRIGGER------
 CREATE OR REPLACE FUNCTION prevent_self_follow()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -428,6 +435,7 @@ BEFORE INSERT ON follow_request
 FOR EACH ROW
 EXECUTE FUNCTION prevent_self_follow();
 
+------PREVENT DUPLICATE GROUP MEMBERSHIP TRIGGER------
 CREATE OR REPLACE FUNCTION prevent_duplicate_group_membership()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -447,6 +455,7 @@ BEFORE INSERT ON group_member
 FOR EACH ROW
 EXECUTE FUNCTION prevent_duplicate_group_membership();
 
+------PREVENT DUPLICATE FOLLOW REQUEST TRIGGER------
 CREATE OR REPLACE FUNCTION prevent_duplicate_follow_request()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -454,7 +463,7 @@ BEGIN
         SELECT 1
         FROM follow_request
         WHERE req_id = NEW.req_id AND rcv_id = NEW.rcv_id
-        AND (status = 'pending' OR status = 'accepted')
+        AND (status = 'waiting' OR status = 'accepted')
     ) THEN
     RAISE EXCEPTION 'User has already requested to follow or is already following.';
     END IF;
@@ -467,13 +476,30 @@ BEFORE INSERT ON follow_request
 FOR EACH ROW
 EXECUTE FUNCTION prevent_duplicate_follow_request();
 
+-----CREATE GROUP OWNER TRIGGER-----
+CREATE OR REPLACE FUNCTION create_group_owner() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    INSERT INTO group_member (user_id, group_id, status)
+    VALUES (NEW.owner_id, NEW.group_id, 'accepted');
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER create_group_owner
+AFTER INSERT ON group_chat
+FOR EACH ROW
+EXECUTE PROCEDURE create_group_owner();
+
+------ENSURE OWNER IS MEMBER TRIGGER------
 CREATE OR REPLACE FUNCTION ensure_owner_is_member()
 RETURNS TRIGGER AS $$
 BEGIN
     IF NOT EXISTS (
         SELECT 1
         FROM group_member
-        WHERE user_id = NEW.owner_id AND group_id = NEW.group_id
+        WHERE user_id = NEW.owner_id AND group_id = NEW.group_id AND status = 'accepted'
     ) THEN
     RAISE EXCEPTION 'The group chat owner must be a member of the group chat.';
     END IF;
@@ -481,8 +507,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER check_owner_membership
-BEFORE INSERT ON group_chat
+CREATE TRIGGER ensure_owner_is_member
+BEFORE UPDATE ON group_chat
 FOR EACH ROW
 EXECUTE FUNCTION ensure_owner_is_member();
 
