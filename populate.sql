@@ -111,6 +111,7 @@ VALUES
 INSERT INTO comment_likes (user_id, comment_id)
 VALUES
     (1, 1),
+    (2, 1),
     (3, 3),
     (5, 5),
     (7, 7);
