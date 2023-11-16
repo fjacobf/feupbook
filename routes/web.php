@@ -22,6 +22,11 @@ use App\Http\Controllers\Auth\RegisterController;
 // Home
 Route::view('/', 'welcome');
 
+Route::view('/about', 'pages.about')->name('about');
+Route::view('/help', 'pages.help')->name('help');
+Route::view('/faq', 'pages.faq')->name('faq');
+Route::view('/contacts', 'pages.contacts')->name('contacts');
+
 // Cards
 Route::controller(CardController::class)->group(function () {
     Route::get('/cards', 'list')->name('cards');

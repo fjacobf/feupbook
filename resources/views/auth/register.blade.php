@@ -50,4 +50,16 @@
         </div>
     </div>
 </div>
+
+<footer>
+    <nav>
+        <a href="{{ url('/about') }}" class="active">About</a>
+        <a href="{{ url('/help') }}">Help Center</a>
+        <a href="{{ url('/faq') }}">FAQ</a>
+        <a href="{{ url('/contacts') }}">Contacts</a>
+    </nav>
+    <div class="copyright">
+        &copy; {{ date('Y') }} FEUPBook Corp.
+    </div>
+</footer>
 @endsection
