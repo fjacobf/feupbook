@@ -313,7 +313,7 @@ BEFORE INSERT OR UPDATE ON group_chat
 FOR EACH ROW
 EXECUTE PROCEDURE group_chat_search_update();
 
--- Create a GIN index for ts_vectors.
+-- Create a GIN index for Comment on post 1ts_vectors.
 CREATE INDEX search_group_chat ON group_chat USING GIN (tsvectors);
 
 ------------------------------
@@ -324,17 +324,23 @@ CREATE INDEX search_group_chat ON group_chat USING GIN (tsvectors);
 CREATE OR REPLACE FUNCTION notify_follow_request() RETURNS TRIGGER AS
 $BODY$
 DECLARE
-    requester_name TEXT;
-
+    requester_username TEXT;
+    rcv_privacy BOOLEAN;
 BEGIN
-    SELECT name INTO requester_name FROM users WHERE user_id = NEW.req_id;
+    SELECT username INTO requester_username FROM users WHERE user_id = NEW.req_id;
+    SELECT private INTO rcv_privacy FROM users WHERE user_id = NEW.rcv_id;
 
-    if NEW.status = 'waiting' THEN
-    INSERT INTO notification (notified_user, message, date, notification_type)
-    VALUES (NEW.rcv_id, 'You have a new follow request from ' || requester_name, CURRENT_DATE, 'request_follow');
-    else
-    INSERT INTO notification (notified_user, message, date, notification_type, viewed)
-    VALUES (NEW.rcv_id, 'You have a new follow request from ' || requester_name, CURRENT_DATE, 'request_follow', TRUE);
+    if rcv_privacy = true THEN
+        if NEW.status = 'waiting' THEN
+            INSERT INTO notification (notified_user, message, date, notification_type)
+            VALUES (NEW.rcv_id, 'You have a new follow request from ' || requester_username, CURRENT_DATE, 'request_follow');
+        else
+            INSERT INTO notification (notified_user, message, date, notification_type, viewed)
+            VALUES (NEW.rcv_id, 'You have a new follow request from ' || requester_username, CURRENT_DATE, 'request_follow', TRUE);
+        end if;
+    ELSE
+        INSERT INTO notification (notified_user, message, date, notification_type)
+            VALUES (NEW.rcv_id, requester_username || ' started following you.', CURRENT_DATE, 'started_following');
     end if;
     
     RETURN NEW;
@@ -356,7 +362,7 @@ DECLARE
     comment_content TEXT;
 
 BEGIN
-    SELECT name INTO user_who_liked FROM users WHERE user_id = NEW.user_id;
+    SELECT username INTO user_who_liked FROM users WHERE user_id = NEW.user_id;
     SELECT content, author_id INTO comment_content, notified_user FROM comment WHERE comment_id = NEW.comment_id; 
     IF NEW.user_id <> notified_user THEN
     INSERT INTO notification (notified_user, message, date, notification_type, comment_id)
@@ -372,11 +378,42 @@ AFTER INSERT ON comment_likes
 FOR EACH ROW
 EXECUTE PROCEDURE notify_liked_comment();
 
---'reply_comment', 'started_following', 'accepted_follow', 'joined_group', 'group_invite', 'liked_post', 'comment_post'
 
 -------NOTIFY COMMENT REPLY TRIGGER--------
------NOTIFY STARTED FOLLOWING TRIGGER------
+CREATE OR REPLACE FUNCTION notify_comment_reply() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+    user_who_commented TEXT;
+    author_previous_comment INTEGER;
+
+
+BEGIN
+    SELECT username INTO user_who_commented FROM users WHERE user_id = NEW.author_id;
+
+    SELECT author_id INTO author_previous_comment FROM comment WHERE comment_id = NEW.previous; 
+
+    IF NEW.previous IS NOT NULL AND NEW.author_id <> author_previous_comment THEN
+
+
+    INSERT INTO notification (notified_user, message, date, notification_type, comment_id)
+    VALUES (author_previous_comment, user_who_commented || ' replied your comment with: ' || NEW.content, CURRENT_DATE, 'reply_comment', NEW.comment_id);
+
+    END IF;
+
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER notify_comment_reply
+AFTER INSERT ON comment
+FOR EACH ROW
+EXECUTE PROCEDURE notify_comment_reply();
+
 ------NOTIFY ACCEPTED FOLLOW TRIGGER-------
+
+-- 'accepted_follow', 'joined_group', 'group_invite', 'liked_post', 'comment_post'
+
 -------NOTIFY JOINED GROUP TRIGGER---------
 -------NOTIFY GROUP INVITE TRIGGER---------
 --------NOTIFY LIKED POST TRIGGER----------
@@ -439,22 +476,25 @@ BEFORE INSERT ON message
 FOR EACH ROW
 EXECUTE FUNCTION enforce_message_sender_membership();
 
+
 ------ENFORCE COMMENT PRIVACY TRIGGER------
 CREATE OR REPLACE FUNCTION enforce_comment_privacy()
 RETURNS TRIGGER AS $$
+DECLARE
+    post_owner_private BOOLEAN;
+    post_owner_id INTEGER;
+
 BEGIN
-    IF NOT EXISTS (
-        SELECT 1
-        FROM users AS post_owner
-        WHERE post_owner.user_id = NEW.author_id
-        AND (post_owner.private = false OR EXISTS (
+    SELECT owner_id, private INTO post_owner_id, post_owner_private FROM post INNER JOIN users ON post.owner_id = users.user_id WHERE post_id = NEW.post_id;
+
+    IF post_owner_private = true  AND NOT EXISTS (
             SELECT 1
             FROM follow_request
             WHERE req_id = NEW.author_id
-            AND rcv_id = post_owner.user_id
+            AND rcv_id = post_owner_id
             AND status = 'accepted'
-        ))
-    ) THEN
+        )
+     THEN
     RAISE EXCEPTION 'User is not allowed to comment on this post.';
     END IF;
     RETURN NEW;
@@ -612,6 +652,22 @@ VALUES
     (9, 'BadUser2', 'baduser2@example.com', 'banned123', 'BadUser2', 'Second banned from FEUPbook', false, 'suspended'),
     (10, 'Joe', 'joe@example.com', 'password', 'Joe', 'Joe on feupbook', false, 'normal_user');
 
+-- Insert statements for the 'follow_request' table
+INSERT INTO follow_request (req_id, rcv_id, date, status)
+VALUES
+    (1, 2, '2023-10-26', 'waiting'),
+    (2, 1, '2023-10-27', 'accepted'),
+    (3, 2, '2023-10-28', 'waiting'),
+    (4, 3, '2023-10-29', 'accepted'),
+    (4, 2, '2023-10-27', 'accepted'),
+    (5, 4, '2023-10-30', 'accepted'),
+    (6, 5, '2023-10-31', 'waiting'),
+    (7, 6, '2023-11-01', 'accepted'),
+    (8, 7, '2023-11-02', 'accepted'),
+    (9, 8, '2023-11-03', 'accepted'),
+    (10, 9, '2023-11-04', 'accepted');
+-- Todos os follow_request feitos a um users com private=false devem ter automaticamente staus=accepted. Deve se fazer um trigger?
+
 -- Insert statements for the 'post' table
 INSERT INTO post (post_id, owner_id, image, content, date)
 VALUES
@@ -626,21 +682,22 @@ VALUES
     (9, 9, NULL, 'I also got banned.', '2023-10-18'),
     (10, 10, NULL, 'Hello from Joe.', '2023-10-17');
 
--- Insert statements for the 'comment' table
+
+
+--Insert statements for the 'comment' table
 INSERT INTO comment (comment_id, author_id, post_id, content, date, previous)
 VALUES
     (1, 1, 1, 'Comment on post 1 by User One.', '2023-10-26', NULL),
     (2, 4, 2, 'Moderator comment on post 2.', '2023-10-28', NULL),
-    (3, 6, 2, 'Another moderator.', '2023-10-30', NULL),
-    (4, 4, 8, 'I agree.', '2023-11-01', NULL),
-    (5, 3, 9, 'You too?', '2023-11-02', NULL),
-    (6, 3, 9, 'Why?', '2023-11-03', NULL),
-    (7, 10, 10, 'Hello from Joe.', '2023-11-04', NULL);
+    (3, 4, 8, 'I agree.', '2023-11-01', NULL),
+    (4, 3, 9, 'You too?', '2023-11-02', NULL),
+    (5, 3, 9, 'Why?', '2023-11-03', NULL),
+    (6, 10, 10, 'Hello from Joe.', '2023-11-04', NULL),
+    (7, 2, 1, 'Reply on comment one by User Two.', '2023-10-26', 1);
 
 
--- AN INSERT INTO THE NOTIFICATION TABLE SHOULD NOT EXIST, ALL THE NOTIFICATIONS SHOULD COME FROM TRIGGERS
 
-
+-- Insert statements for the 'group_chat' table
 INSERT INTO group_chat (group_id, owner_id, name, description)
 VALUES
     (1, 1, 'Group One', 'Description for Group One'),
@@ -679,19 +736,6 @@ VALUES
     (7, 7, 7, 'Message in Group Seven by User Seven', '2023-10-18', true),
     (8, 8, 8, 'Message in Group Eight by User Eight', '2023-10-17', true);
 
--- Insert statements for the 'follow_request' table
-INSERT INTO follow_request (req_id, rcv_id, date, status)
-VALUES
-    (1, 2, '2023-10-26', 'waiting'),
-    (2, 1, '2023-10-27', 'accepted'),
-    (3, 2, '2023-10-28', 'waiting'),
-    (4, 3, '2023-10-29', 'accepted'),
-    (5, 4, '2023-10-30', 'rejected'),
-    (6, 5, '2023-10-31', 'waiting'),
-    (7, 6, '2023-11-01', 'waiting'),
-    (8, 7, '2023-11-02', 'accepted'),
-    (9, 8, '2023-11-03', 'accepted'),
-    (10, 9, '2023-11-04', 'accepted');
 
 -- Insert statements for the 'post_likes' table
 INSERT INTO post_likes (user_id, post_id)
