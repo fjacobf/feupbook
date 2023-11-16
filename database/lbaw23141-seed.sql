@@ -327,8 +327,15 @@ DECLARE
 
 BEGIN
     SELECT name INTO requester_name FROM users WHERE user_id = NEW.req_id;
+
+    if NEW.status = 'waiting' THEN
     INSERT INTO notification (notified_user, message, date, notification_type)
     VALUES (NEW.rcv_id, 'You have a new follow request from ' || requester_name, CURRENT_DATE, 'request_follow');
+    else
+    INSERT INTO notification (notified_user, message, date, notification_type, viewed)
+    VALUES (NEW.rcv_id, 'You have a new follow request from ' || requester_name, CURRENT_DATE, 'request_follow', TRUE);
+    end if;
+    
     RETURN NEW;
 END
 $BODY$
@@ -338,6 +345,33 @@ CREATE TRIGGER notify_follow_request
 AFTER INSERT ON follow_request
 FOR EACH ROW
 EXECUTE PROCEDURE notify_follow_request();
+
+-------NOTIFY LIKED COMMENT TRIGGER--------
+-- CREATE OR REPLACE FUNCTION notify_liked_comment() RETURNS TRIGGER AS
+-- $BODY$
+-- DECLARE
+--     requester_name TEXT;
+
+-- BEGIN
+--     SELECT name INTO requester_name FROM users WHERE user_id = NEW.req_id;
+--     INSERT INTO notification (notified_user, message, date, notification_type)
+--     VALUES (NEW.rcv_id, 'You have a new follow request from ' || requester_name, CURRENT_DATE, 'request_follow');
+--     RETURN NEW;
+-- END
+-- $BODY$
+-- LANGUAGE plpgsql;
+
+-- CREATE TRIGGER notify_liked_comment
+-- AFTER INSERT ON comment_likes
+-- FOR EACH ROW
+-- EXECUTE PROCEDURE notify_liked_comment();
+-------NOTIFY COMMENT REPLY TRIGGER--------
+-----NOTIFY STARTED FOLLOWING TRIGGER------
+------NOTIFY ACCEPTED FOLLOW TRIGGER-------
+-------NOTIFY JOINED GROUP TRIGGER---------
+-------NOTIFY GROUP INVITE TRIGGER---------
+--------NOTIFY LIKED POST TRIGGER----------
+--------NOTIFY COMMENT POST TRIGGER--------
 
 ------REJECT INAPPROPRIATE POSTS TRIGGER------
 CREATE OR REPLACE FUNCTION reject_inappropriate_posts() RETURNS TRIGGER AS
