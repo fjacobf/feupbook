@@ -490,10 +490,32 @@ FOR EACH ROW
 EXECUTE PROCEDURE notify_group_invite();
 
 --------NOTIFY LIKED POST TRIGGER----------
--- 'liked_post', 'comment_post'
+CREATE OR REPLACE FUNCTION notify_liked_post() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+    user_who_liked TEXT;
+    notified_user INTEGER;
+
+BEGIN
+    SELECT username INTO user_who_liked FROM users WHERE user_id = NEW.user_id;
+    SELECT owner_id INTO notified_user FROM post WHERE post_id = NEW.post_id; 
+    IF NEW.user_id <> notified_user THEN
+    INSERT INTO notification (notified_user, message, date, notification_type, post_id)
+    VALUES (notified_user, user_who_liked || ' liked your post.', CURRENT_DATE, 'liked_post', NEW.post_id);
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER notify_liked_post
+AFTER INSERT ON post_likes
+FOR EACH ROW
+EXECUTE PROCEDURE notify_liked_post();
+-- 'comment_post'
 
 --------NOTIFY COMMENT POST TRIGGER--------
---   notification(notification_id, notified_user, notification_type, comment_id, post_id, group_id, viewed)
+
 ------REJECT INAPPROPRIATE POSTS TRIGGER------
 CREATE OR REPLACE FUNCTION reject_inappropriate_posts() RETURNS TRIGGER AS
 $BODY$
