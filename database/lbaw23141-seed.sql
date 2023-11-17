@@ -262,7 +262,7 @@ BEGIN
 IF TG_OP = 'INSERT' THEN
     NEW.tsvectors = to_tsvector('portuguese', NEW.content);
 END IF;
-IF TG_OP = 'UPDATE' THEN
+IF TG_OP = 'UPDATnotificaE' THEN
     IF (NEW.content <> OLD.content) THEN
         NEW.tsvectors = to_tsvector('portuguese', NEW.content);
     END IF;
@@ -434,9 +434,33 @@ CREATE TRIGGER notify_accepted_follow
 AFTER INSERT OR UPDATE ON follow_request
 FOR EACH ROW
 EXECUTE PROCEDURE notify_accepted_follow();
--- 'accepted_follow', 'joined_group', 'group_invite', 'liked_post', 'comment_post'
 
 -------NOTIFY JOINED GROUP TRIGGER---------
+CREATE OR REPLACE FUNCTION notify_joined_group() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+    group_owner INTEGER;
+    group_name TEXT;
+    member_username TEXT;
+BEGIN
+    SELECT owner_id, name INTO group_owner, group_name FROM group_chat WHERE group_id = NEW.group_id;
+    SELECT username INTO member_username FROM users WHERE user_id = NEW.user_id;
+
+    IF NEW.status = 'accepted' AND group_owner <> NEW.user_id THEN
+        INSERT INTO notification (notified_user, message, date, notification_type, group_id)
+            VALUES (group_owner, member_username || ' joined group ' || group_name, CURRENT_DATE, 'joined_group', NEW.group_id);
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER notify_joined_group
+AFTER INSERT OR UPDATE ON group_member
+FOR EACH ROW
+EXECUTE PROCEDURE notify_joined_group();
+-- 'joined_group', 'group_invite', 'liked_post', 'comment_post'
+
 -------NOTIFY GROUP INVITE TRIGGER---------
 --------NOTIFY LIKED POST TRIGGER----------
 --------NOTIFY COMMENT POST TRIGGER--------
