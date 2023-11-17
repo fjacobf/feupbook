@@ -1,318 +1,159 @@
-/* body {
-    background-color: #ffffff;
-    color: #9b4dca;
+body {
+  background-color: #ffffff;
+  color: #9b4dca;
+}
+main > header {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  background-color: #d2afe7;
+  padding: 1em;
+  margin: 1em;
+}
+main > header h1 {
+  margin: 0;
+}
+main > header a.button {
+  margin: 1em;
+  justify-self: center;
+}
+main > header span {
+  margin: 1em;
+  justify-self: center;
+}
+#cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+#cards article.card {
+  display: flex;
+  flex-direction: column;
+  background-color: #d3edc3;
+  padding: 1em;
+  margin: 1em;
+}
+#cards article.card header {
+  display: flex;
+  align-items: center;
+}
+#cards article.card header h2 {
+  flex-grow: 1;
+}
+#cards article.card header a.delete {
+  display: none;
+  font-size: 2.6rem;
+  margin-top: .5rem;
+  margin-bottom: 2.5rem;
+  line-height: 1.25;
+}
+#cards article.card header:hover a.delete {
+  display: inline;
+}
+#cards article.card li {
+  list-style-type: none;
+}
+#cards article.card li label {
+  display: flex;
+  align-items: baseline;
+}
+#cards article.card li label span {
+  margin-left: .5em;
+  flex-grow: 1;
+}
+#cards article.card li label a {
+  display: none;
+}
+#cards article.card li label:hover a {
+  display: inline;
+}
+#cards article.card input:checked + span {
+  text-decoration: var(--primary-color) solid line-through;
+}
+#cards article.card ul {
+  margin: 0;
+}
+#cards article.card form {
+  margin: 0;
+}
+#cards article.card input[type=text] {
+  background-color: white;
+  margin: 0;
+}
+#content label {
+  font-weight: normal;
+}
+#content > form {
+  margin: 0 auto;
+  padding: 1em;
+  max-width: 20em;
+  border: 1px solid #d2afe7;
+}
+#content > form .error {
+  font-weight: bold;
+  color: #ff3333;
+}
+#content > form .success {
+  font-weight: bold;
+  color: #106af1;
+}
+#content > form input {
+  background-color: white;
+}
+@media (max-width: 70em) {
+  #cards {
+    grid-template-columns: repeat(2, 1fr);
   }
   main > header {
     display: grid;
-    grid-template-columns: 1fr auto auto;
-    align-items: center;
-    background-color: #d2afe7;
-    padding: 1em;
-    margin: 1em;
+    grid-template-columns: 1fr auto;
   }
   main > header h1 {
+    grid-row-end: span 2;
+  }
+}
+@media (max-width: 40em) {
+  #cards {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 25em) {
+  body {
     margin: 0;
   }
-  main > header a.button {
-    margin: 1em;
-    justify-self: center;
+  main > header {
+    margin: 0;
+    padding: 0.5em;
   }
   main > header span {
-    margin: 1em;
-    justify-self: center;
-  }
-  #cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
-  #cards article.card {
-    display: flex;
-    flex-direction: column;
-    background-color: #d3edc3;
-    padding: 1em;
-    margin: 1em;
-  }
-  #cards article.card header {
-    display: flex;
-    align-items: center;
-  }
-  #cards article.card header h2 {
-    flex-grow: 1;
-  }
-  #cards article.card header a.delete {
-    display: none;
-    font-size: 2.6rem;
-    margin-top: .5rem;
-    margin-bottom: 2.5rem;
-    line-height: 1.25;
-  }
-  #cards article.card header:hover a.delete {
-    display: inline;
-  }
-  #cards article.card li {
-    list-style-type: none;
-  }
-  #cards article.card li label {
-    display: flex;
-    align-items: baseline;
-  }
-  #cards article.card li label span {
-    margin-left: .5em;
-    flex-grow: 1;
-  }
-  #cards article.card li label a {
-    display: none;
-  }
-  #cards article.card li label:hover a {
-    display: inline;
-  }
-  #cards article.card input:checked + span {
-    text-decoration: var(--primary-color) solid line-through;
-  }
-  #cards article.card ul {
     margin: 0;
   }
-  #cards article.card form {
+  #content form {
     margin: 0;
+    max-width: 25em;
   }
-  #cards article.card input[type=text] {
-    background-color: white;
+  article.card {
     margin: 0;
+    border-bottom: 1px solid rgba(96, 108, 118, 0.4);
   }
-  #content label {
-    font-weight: normal;
-  }
-  #content > form {
-    margin: 0 auto;
-    padding: 1em;
-    max-width: 20em;
-    border: 1px solid #d2afe7;
-  }
-  #content > form .error {
-    font-weight: bold;
-    color: #ff3333;
-  }
-  #content > form .success {
-    font-weight: bold;
-    color: #106af1;
-  }
-  #content > form input {
-    background-color: white;
-  }
-  @media (max-width: 70em) {
-    #cards {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    main > header {
-      display: grid;
-      grid-template-columns: 1fr auto;
-    }
-    main > header h1 {
-      grid-row-end: span 2;
-    }
-  }
-  @media (max-width: 40em) {
-    #cards {
-      grid-template-columns: 1fr;
-    }
-  }
-  @media (max-width: 25em) {
-    body {
-      margin: 0;
-    }
-    main > header {
-      margin: 0;
-      padding: 0.5em;
-    }
-    main > header span {
-      margin: 0;
-    }
-    #content form {
-      margin: 0;
-      max-width: 25em;
-    }
-    article.card {
-      margin: 0;
-      border-bottom: 1px solid rgba(96, 108, 118, 0.4);
-    }
-  }
-  
-
-  button {
-    background-color: #9b4dca;
-    border-color: #9b4dca;
-  }
-  a.button {
-    background-color: #9b4dca;
-    border-color: #9b4dca;
-  }
-  a.button.button-outline {
-    color: #9b4dca;
-  }
-  a {
-    color: #9b4dca;
-  }
-  input[type=text]:focus,
-  input[type=email]:focus,
-  input[type=password]:focus {
-    border-color: #9b4dca;
-  }
-   */
-
-body, html {
-  height: 100vh; /* Viewport height */
-  margin: 0;
-  overflow: hidden; /* Hide overflow to prevent scrolling */
-  font-family: 'Arial', sans-serif;
-  background-color: #ffffff; /* Assuming the background is black */
-  color: #000000; /* White text color */
 }
 
-.wrapper {
-  display: flex;
-  flex-direction: row; 
-  justify-content: center; /* Center content vertically */
-  align-items: stretch; /* Take up full width */
-  height: 100vh; /* Viewport height */
-}
- 
-.left-side {
-  flex: 1; /* Takes up half the space of the wrapper */
-  justify-content: center;
-}
 
-.right-side {
-  flex: 1; /* Takes up the other half */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start; 
-  padding: 0 5%;
-}
- 
- /* Headings */
-.right-side h1 {
-  margin-top: 0em;
-  font-size: 3em; /* Large font size for the main heading */
-  font-weight: bold;
-  margin-bottom: 1.1em;
-}
-
-.right-side h2 {
-  font-size: 1.5em; /* Smaller font size for the subheading */
-  justify-content: left;
-  align-items: left;
-  font-weight: normal;
-  margin-bottom: 1em;
-}
-
-/* Button styles */
 button {
-  display: inline-block;
-  font-size: 1em;
-  font-weight: bold;
-  padding: 10px 20px;
-  border-radius: 9999px; /* Fully rounded corners */
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  background-color: #9b4dca;
+  border-color: #9b4dca;
 }
-
-button, .google-btn, .create-account-btn {
-  width: 250px; /* Set a fixed width for all buttons */
+a.button {
+  background-color: #9b4dca;
+  border-color: #9b4dca;
 }
-
-/* Google sign up button */
-.google-btn {
-  background-color: #cd6103; 
-  color: #ffffff; 
-  margin-left: 0;
-  margin-bottom: 10px;
+a.button.button-outline {
+  color: #9b4dca;
 }
-
-.google-btn:hover {
-  background-color: #e8aa73; /* Light grey background on hover */
+a {
+  color: #9b4dca;
 }
-
-/* Create account button */
-.create-account-btn {
-  background-color: #cd6103; /* Twitter blue background */
-  color: #fff; /* White text */
-  margin-left: 0;
-  margin-bottom: 5px;
+input[type=text]:focus,
+input[type=email]:focus,
+input[type=password]:focus {
+  border-color: #9b4dca;
 }
-
-.create-account-btn:hover {
-  background-color: #e8aa73; /* Slightly darker blue on hover */
-}
-
-/* Divider */
-.divider {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-/* Agreement text */
-.agreement {
-  max-width: 250px; /* Should match the width of your buttons */
-  text-align: left;
-  font-size: 10px;
-  margin-left: 5px;
-  margin-top: 0;
-}
-
-.login-link{
-  margin-top: 30px;
-}
-
-/* Sign in link */
-.sign-in-link {
-  background-color: #cd6103; /* Match create account button color */
-  color: #fff; /* White text color */
-  display: block; /* Make it a block to fit the full width */
-  text-align: center; /* Center the text */
-  padding: 10px 0; /* Match the button padding */
-  border-radius: 9999px; /* Fully rounded corners */
-  margin-top: 10px; /* Add some space above the button */
-}
-
-.sign-in-link:hover {
-  background-color: #e8aa73;
-}
- 
-footer {
-  position: absolute; /* Position it at the bottom */
-  bottom: 0;
-  width: 100%;
-  background-color: #ffffff;
-  color: #000000;
-}
-
-footer nav {
-  text-align: center;
-  padding: 1em 0; /* Add padding to space out the links */
-}
-
-footer .copyright {
-  text-align: center;
-  padding: 0.5em 0; /* Add padding to give space above and below the text */
-  background-color: #ffffff; /* Maintain the same background color */
-  color: #000000; /* Maintain the same text color */
-  font-size: 0.75em;
-}
-
-/* Additional styles to ensure footer content doesn't overlap */
-footer nav a {
-  margin: 0 10px; /* Adjust spacing between links as needed */
-  color: #aaa; /* Light grey links */
-  text-decoration: none;
-}
-
-footer nav a:hover {
-  color: #cd6103;
-  text-decoration: underline;
-}
-
- 

@@ -11,7 +11,9 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Styles -->
-        <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet">
+        {{-- <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet"> --}}
+        {{-- <link href="{{ url('css/bootstrap.css') }}" rel="stylesheet"> --}}
+        <link href="{{ url('css/bootstrap.min_flatly.css') }}" rel="stylesheet">
         <link href="{{ url('css/app.css') }}" rel="stylesheet">
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
@@ -33,4 +35,7 @@
             </section>
         </main>
     </body>
+    <footer>
+        @yield('footer')
+    </footer>
 </html>

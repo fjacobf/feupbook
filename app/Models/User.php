@@ -11,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class User extends Authenticatable
+class User extends Authenticatable // lower case plural
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -34,7 +34,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $hidden = [
+    protected $hidden = [ // campos que nao sao pra ser enviados pra o user no caso de transformacao em json
         'password',
         'remember_token',
     ];
