@@ -6,7 +6,7 @@
     <link href="{{ url('css/bootstrap.min_flatly.css') }}" rel="stylesheet">
     <title>Welcome to FEUPBook</title>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 
 <div class="container-fluid">
     <div class="row">
@@ -31,7 +31,7 @@
     </div>
 </div>
 
-<footer class="mt-5">
+<footer class="bg-light text-center text-lg-start mt-auto">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -47,6 +47,5 @@
     </nav>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
