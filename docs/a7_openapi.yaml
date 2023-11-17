@@ -23,6 +23,21 @@ tags:
 
 paths:
 
+######### WELCOME #########
+
+  /:
+
+    get:
+      operationId: R000
+      summary: 'R000: Welcome page'
+      description: 'Shows the welcome page. Access: VST'
+      tags:
+        - 'M01: Authentication'
+
+      responses:
+        '200':
+          description: 'Ok. Show welcome UI.'
+
 ############################################ AUTENTICATION ############################################
 
 ######### LOGIN #########
