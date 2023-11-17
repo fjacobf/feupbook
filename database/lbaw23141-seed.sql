@@ -512,9 +512,32 @@ CREATE TRIGGER notify_liked_post
 AFTER INSERT ON post_likes
 FOR EACH ROW
 EXECUTE PROCEDURE notify_liked_post();
--- 'comment_post'
+
 
 --------NOTIFY COMMENT POST TRIGGER--------
+CREATE OR REPLACE FUNCTION notify_comment_post() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+    user_who_commented TEXT;
+    notified_user INTEGER;
+
+BEGIN
+    SELECT username INTO user_who_commented FROM users WHERE user_id = NEW.author_id;
+    SELECT owner_id INTO notified_user FROM post WHERE post_id = NEW.post_id;
+
+    IF NEW.author_id <> notified_user THEN
+    INSERT INTO notification (notified_user, message, date, notification_type, post_id)
+    VALUES (notified_user, user_who_commented || ' commented in your post.', CURRENT_DATE, 'comment_post', NEW.post_id);
+    END IF;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER notify_comment_post
+AFTER INSERT ON comment
+FOR EACH ROW
+EXECUTE PROCEDURE notify_comment_post();
 
 ------REJECT INAPPROPRIATE POSTS TRIGGER------
 CREATE OR REPLACE FUNCTION reject_inappropriate_posts() RETURNS TRIGGER AS
