@@ -20,7 +20,7 @@ use App\Http\Controllers\Auth\RegisterController;
 */
 
 // Home
-Route::view('/', 'welcome');
+Route::view('/', 'welcome')->name('welcome');
 
 Route::view('/about', 'pages.about')->name('about');
 Route::view('/help', 'pages.help')->name('help');
