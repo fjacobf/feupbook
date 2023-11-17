@@ -459,10 +459,39 @@ CREATE TRIGGER notify_joined_group
 AFTER INSERT OR UPDATE ON group_member
 FOR EACH ROW
 EXECUTE PROCEDURE notify_joined_group();
--- 'joined_group', 'group_invite', 'liked_post', 'comment_post'
 
 -------NOTIFY GROUP INVITE TRIGGER---------
+CREATE OR REPLACE FUNCTION notify_group_invite() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+    group_owner INTEGER;
+    group_name TEXT;
+BEGIN
+    SELECT owner_id, name INTO group_owner, group_name FROM group_chat WHERE group_id = NEW.group_id;
+
+    if group_owner <> NEW.user_id THEN
+    if NEW.status = 'waiting' THEN
+        INSERT INTO notification (notified_user, message, date, notification_type, group_id)
+        VALUES (NEW.user_id, 'You where invited to join group ' || group_name, CURRENT_DATE, 'group_invite', NEW.group_id);
+    else
+        INSERT INTO notification (notified_user, message, date, notification_type, group_id, viewed)
+        VALUES (NEW.user_id, 'You where invited to join group ' || group_name, CURRENT_DATE, 'group_invite', NEW.group_id, TRUE);
+    end if;
+    end if;
+    
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER notify_group_invite
+AFTER INSERT ON group_member
+FOR EACH ROW
+EXECUTE PROCEDURE notify_group_invite();
+
 --------NOTIFY LIKED POST TRIGGER----------
+-- 'liked_post', 'comment_post'
+
 --------NOTIFY COMMENT POST TRIGGER--------
 --   notification(notification_id, notified_user, notification_type, comment_id, post_id, group_id, viewed)
 ------REJECT INAPPROPRIATE POSTS TRIGGER------
