@@ -324,23 +324,23 @@ CREATE INDEX search_group_chat ON group_chat USING GIN (tsvectors);
 CREATE OR REPLACE FUNCTION notify_follow_request() RETURNS TRIGGER AS
 $BODY$
 DECLARE
-    requester_username TEXT;
+    reciever_username TEXT;
     rcv_privacy BOOLEAN;
 BEGIN
-    SELECT username INTO requester_username FROM users WHERE user_id = NEW.req_id;
+    SELECT username INTO reciever_username FROM users WHERE user_id = NEW.req_id;
     SELECT private INTO rcv_privacy FROM users WHERE user_id = NEW.rcv_id;
 
     if rcv_privacy = true THEN
         if NEW.status = 'waiting' THEN
             INSERT INTO notification (notified_user, message, date, notification_type)
-            VALUES (NEW.rcv_id, 'You have a new follow request from ' || requester_username, CURRENT_DATE, 'request_follow');
+            VALUES (NEW.rcv_id, 'You have a new follow request from ' || reciever_username, CURRENT_DATE, 'request_follow');
         else
             INSERT INTO notification (notified_user, message, date, notification_type, viewed)
-            VALUES (NEW.rcv_id, 'You have a new follow request from ' || requester_username, CURRENT_DATE, 'request_follow', TRUE);
+            VALUES (NEW.rcv_id, 'You have a new follow request from ' || reciever_username, CURRENT_DATE, 'request_follow', TRUE);
         end if;
     ELSE
         INSERT INTO notification (notified_user, message, date, notification_type)
-            VALUES (NEW.rcv_id, requester_username || ' started following you.', CURRENT_DATE, 'started_following');
+            VALUES (NEW.rcv_id, reciever_username || ' started following you.', CURRENT_DATE, 'started_following');
     end if;
     
     RETURN NEW;
@@ -411,7 +411,29 @@ FOR EACH ROW
 EXECUTE PROCEDURE notify_comment_reply();
 
 ------NOTIFY ACCEPTED FOLLOW TRIGGER-------
+CREATE OR REPLACE FUNCTION notify_accepted_follow() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+    reciever_username TEXT;
+    rcv_privacy BOOLEAN;
+BEGIN
+    SELECT username INTO reciever_username FROM users WHERE user_id = NEW.rcv_id;
+    SELECT private INTO rcv_privacy FROM users WHERE user_id = NEW.rcv_id;
 
+    if rcv_privacy = true AND NEW.status = 'accepted' THEN
+            INSERT INTO notification (notified_user, message, date, notification_type)
+            VALUES (NEW.req_id, reciever_username || ' accepted your follow request.', CURRENT_DATE, 'accepted_follow');
+    end if;
+    
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER notify_accepted_follow
+AFTER INSERT OR UPDATE ON follow_request
+FOR EACH ROW
+EXECUTE PROCEDURE notify_accepted_follow();
 -- 'accepted_follow', 'joined_group', 'group_invite', 'liked_post', 'comment_post'
 
 -------NOTIFY JOINED GROUP TRIGGER---------
