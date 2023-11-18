@@ -17,7 +17,7 @@
 
         <!-- Right side with login/signup information -->
         <div class="col-lg-6">
-            <div class="w-100" style="max-width: 540px;"> <!-- Adjust the max-width to match the left side content width -->
+            <div class="w-100" style="max-width: 540px;"> 
                 @if (auth()->check())
                     <h1 class="display-4">Welcome, {{ auth()->user()->name }}!</h1>
                     <p class="lead">You are logged in.</p>
@@ -25,11 +25,11 @@
                 @else
                 <h1 class="display-4">Happening now</h1>
                 <h2 class="display-6 mb-4">Join FEUPBook today.</h2>
-                <a class="btn btn-primary btn-lg mb-2 w-100">Sign up with Google</a> <!-- Buttons take full width for alignment -->
-                <div class="d-flex justify-content-center my-2"> <!-- Flex container for the "or" -->
-                    <span class="px-2">or</span> <!-- "or" with padding -->
+                <a class="btn btn-primary btn-lg mb-2 w-100">Sign up with Google</a> 
+                <div class="d-flex justify-content-center my-2"> 
+                    <span class="px-2">or</span> 
                 </div>
-                <a class="btn btn-success btn-lg w-100">Create account</a> <!-- Buttons take full width for alignment -->
+                <a href="{{ route('register') }}" class="btn btn-success btn-lg w-100">Create account</a>
                 <p class="text-muted mt-4"><small>By signing up, you agree to the Terms of Service and Privacy Policy, including Cookie Use.</small></p>
                 <div class="mt-2">
                     Already have an account? <a href="{{ route('login') }}" class="fw-bold">Sign in</a>
