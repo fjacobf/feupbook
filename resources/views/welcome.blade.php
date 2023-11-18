@@ -6,54 +6,61 @@
     <link href="{{ url('css/bootstrap.min_flatly.css') }}" rel="stylesheet">
     <title>Welcome to FEUPBook</title>
 </head>
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column bg-light" style="height: 100vh;">
 
-<div class="container-fluid">
-    <div class="row">
+<div class="container py-5 my-auto" style="padding-top: 5vh; padding-bottom: 5vh;">
+    <div class="row align-items-center" style="flex-grow: 1;">
         <!-- Left side with a large logo or image -->
-        <div class="col-md-6 left-side">
-            <!-- The logo can be a background image in the CSS if preferred -->
-            <img src="{{ asset('path-to-your-logo.png') }}" alt="FEUPBook Logo" class="img-fluid logo">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <img src="{{ asset('path-to-your-logo.png') }}" alt="FEUPBook Logo" class="img-fluid mx-auto d-block">
         </div>
 
         <!-- Right side with login/signup information -->
-        <div class="col-md-6 right-side">
-            @if (auth()->check())
-                {{-- User is logged in --}}
-                <h1>Welcome, {{ auth()->user()->name }}!</h1>
-                <p>You are logged in.</p>
-                <a href="{{ route('logout') }}" class="btn btn-danger">Logout</a>
-            @else
-                {{-- User is not logged in --}}
-                <h1>Happening now</h1>
-                <h2>Join FEUPBook today.</h2>
-                <button class="btn btn-primary google-btn">Sign up with Google</button>
-                <div class="mt-3 mb-3">or</div>
-                <button class="btn btn-success create-account-btn">Create account</button>
-                <p class="mt-3 agreement">By signing up, you agree to the Terms of Service and Privacy Policy, including Cookie Use.</p>
-                <div class="login-link">
-                    Already have an account? <a href="{{ route('login') }}" class="sign-in-link">Sign in</a>
+        <div class="col-lg-6">
+            <div class="w-100" style="max-width: 540px;"> <!-- Adjust the max-width to match the left side content width -->
+                @if (auth()->check())
+                    <h1 class="display-4">Welcome, {{ auth()->user()->name }}!</h1>
+                    <p class="lead">You are logged in.</p>
+                    <a href="{{ route('logout') }}" class="btn btn-danger btn-lg w-100">Logout</a>
+                @else
+                <h1 class="display-4">Happening now</h1>
+                <h2 class="display-6 mb-4">Join FEUPBook today.</h2>
+                <a class="btn btn-primary btn-lg mb-2 w-100">Sign up with Google</a> <!-- Buttons take full width for alignment -->
+                <div class="d-flex justify-content-center my-2"> <!-- Flex container for the "or" -->
+                    <span class="px-2">or</span> <!-- "or" with padding -->
                 </div>
-            @endif
+                <a class="btn btn-success btn-lg w-100">Create account</a> <!-- Buttons take full width for alignment -->
+                <p class="text-muted mt-4"><small>By signing up, you agree to the Terms of Service and Privacy Policy, including Cookie Use.</small></p>
+                <div class="mt-2">
+                    Already have an account? <a href="{{ route('login') }}" class="fw-bold">Sign in</a>
+                </div>
+                @endif
+            </div>
         </div>
     </div>
 </div>
 
-<footer class="bg-light text-center text-lg-start mt-auto">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="{{ url('/about') }}">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('/help') }}">Help Center</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('/terms') }}">Terms of Service</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url('/privacy') }}">Privacy Policy</a></li>
-            </ul>
-            <div class="copyright">
-                &copy; {{ date('Y') }} FEUPBook Corp.
-            </div>
-        </div>
-    </nav>
+<footer class="footer bg-primary text-center py-2">
+    <div class="container">
+        <ul class="nav justify-content-center mb-2">
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{{ url('/about') }}">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{{ url('/help') }}">Help Center</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{{ url('/terms') }}">Terms of Service</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{{ url('/privacy') }}">Privacy Policy</a>
+            </li>
+        </ul>
+        <div class="text-light">&copy; {{ date('Y') }} FEUPBook Corp.</div>
+    </div>
 </footer>
+
+
 
 </body>
 </html>
