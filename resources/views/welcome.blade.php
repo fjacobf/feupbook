@@ -18,15 +18,23 @@
 
         <!-- Right side with login/signup information -->
         <div class="col-md-6 right-side">
-            <h1>Happening now</h1>
-            <h2>Join FEUPBook today.</h2>
-            <button class="btn btn-primary google-btn">Sign up with Google</button>
-            <div class="mt-3 mb-3">or</div>
-            <button class="btn btn-success create-account-btn">Create account</button>
-            <p class="mt-3 agreement">By signing up, you agree to the Terms of Service and Privacy Policy, including Cookie Use.</p>
-            <div class="login-link">
-                Already have an account? <a href="{{ route('login') }}" class="sign-in-link">Sign in</a>
-            </div>
+            @if (auth()->check())
+                {{-- User is logged in --}}
+                <h1>Welcome, {{ auth()->user()->name }}!</h1>
+                <p>You are already logged in.</p>
+                <a href="{{ route('logout') }}" class="btn btn-danger">Logout</a>
+            @else
+                {{-- User is not logged in --}}
+                <h1>Happening now</h1>
+                <h2>Join FEUPBook today.</h2>
+                <button class="btn btn-primary google-btn">Sign up with Google</button>
+                <div class="mt-3 mb-3">or</div>
+                <button class="btn btn-success create-account-btn">Create account</button>
+                <p class="mt-3 agreement">By signing up, you agree to the Terms of Service and Privacy Policy, including Cookie Use.</p>
+                <div class="login-link">
+                    Already have an account? <a href="{{ route('login') }}" class="sign-in-link">Sign in</a>
+                </div>
+            @endif
         </div>
     </div>
 </div>
