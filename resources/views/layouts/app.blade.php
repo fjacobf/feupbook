@@ -14,7 +14,7 @@
         {{-- <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet"> --}}
         {{-- <link href="{{ url('css/bootstrap.css') }}" rel="stylesheet"> --}}
         <link href="{{ url('css/bootstrap.min_flatly.css') }}" rel="stylesheet">
-        <link href="{{ url('css/app.css') }}" rel="stylesheet">
+        {{-- <link href="{{ url('css/app.css') }}" rel="stylesheet"> --}}
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
             // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
@@ -34,8 +34,20 @@
                 @yield('content')
             </section>
         </main>
+        <footer class="bg-light text-center text-lg-start mt-auto">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="{{ url('/about') }}">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url('/help') }}">Help Center</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url('/terms') }}">Terms of Service</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url('/privacy') }}">Privacy Policy</a></li>
+                    </ul>
+                    <div class="copyright">
+                        &copy; {{ date('Y') }} FEUPBook Corp.
+                    </div>
+                </div>
+            </nav>
+        </footer>
     </body>
-    <footer>
-        @yield('footer')
-    </footer>
 </html>

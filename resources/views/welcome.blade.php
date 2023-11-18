@@ -21,7 +21,7 @@
             @if (auth()->check())
                 {{-- User is logged in --}}
                 <h1>Welcome, {{ auth()->user()->name }}!</h1>
-                <p>You are already logged in.</p>
+                <p>You are logged in.</p>
                 <a href="{{ route('logout') }}" class="btn btn-danger">Logout</a>
             @else
                 {{-- User is not logged in --}}
