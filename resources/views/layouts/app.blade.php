@@ -21,10 +21,11 @@
     </head>
     <body>
         <header>
-            <h1 class=""><a href="{{ url('/cards') }}">Feupbook</a></h1>
-            @if (Auth::check())
-                <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
-            @endif
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand fs-3" href="{{url('/')}}">Feupbook</a>
+                </div>
+            </nav>
         </header>
         
         @yield('content')

@@ -2,7 +2,7 @@
 
 @section('footer')
 <div class="container">
-        <ul class="nav justify-content-center mb-2">
+        <ul class="nav justify-content-center mb-1">
             <li class="nav-item">
                 <a class="nav-link text-white" href="{{ url('/about') }}">About</a>
             </li>
