@@ -1,16 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <!-- Left side with a large logo or image -->
-        <div class="col-md-6 left-side">
-            <!-- The logo can be a background image in the CSS if preferred -->
-            <img src="{{ asset('path-to-your-logo.png') }}" alt="FEUPBook Logo" class="img-fluid logo">
-        </div>
-
-        <!-- Right side with register information -->
-        <div class="col-md-6 right-side">
+<div class="container d-flex p-2 justify-content-center">
+    <div class="w-25">
             <form method="POST" action="{{ route('register') }}" class="mt-5">
                 {{ csrf_field() }}
 
@@ -65,8 +57,11 @@
             <div class="login-link mt-3">
                 Already have an account? <a href="{{ route('login') }}" class="sign-in-link">Sign in</a>
             </div>
-        </div>
     </div>
 </div>
 
+@endsection
+
+@section('footer')
+    @include('partials.footer')
 @endsection
