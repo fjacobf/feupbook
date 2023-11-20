@@ -26,6 +26,22 @@ class PostController extends Controller
     }
 
     /**
+     * Show all the posts available in the database.
+     */
+    public function list()
+    {
+      //check if user is logged in
+      if (Auth::check()) {
+        //user is logged in
+        $posts = Post::with('user')->orderBy('date', 'desc')->paginate(10);
+        return view('pages.posts', ['posts' => $posts]);
+      } else {
+        //user is not logged in
+        return redirect('/');
+      }
+    }
+
+    /**
      * Creates a new card.
      */
     // public function create(Request $request)
