@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('content')
 
@@ -49,6 +49,10 @@
 
 
 
+@endsection
+
+@section('sidebar')
+    @include('partials.sidebar')
 @endsection
 
 @section('footer')
