@@ -35,5 +35,10 @@ class User extends Authenticatable // lower case plural
     ];
 
     protected $primaryKey = 'user_id';
+
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class, 'owner_id', 'user_id');
+    }
 }
 

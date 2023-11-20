@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\ItemController;
 
@@ -29,8 +29,8 @@ Route::view('/faq', 'pages.faq')->name('faq');
 Route::view('/contacts', 'pages.contacts')->name('contacts');
 
 
-Route::controller(HomeController::class)->group(function () {
-    Route::get('/home', 'index')->name('home');
+Route::controller(PostController::class)->group(function () {
+    Route::get('/home', 'list')->name('home');
 });
 
 // Cards
