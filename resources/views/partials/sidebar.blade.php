@@ -49,7 +49,7 @@
     <div class="dropdown">
       <a href="/home" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle py-3" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 1.25rem;">
         <img src="https://github.com/mdo.png" alt="" width="48" height="48" class="rounded-circle me-3">
-        <strong>User</strong>
+        <strong>{{ $currentUser ? $currentUser->username : 'Guest' }}</strong>
       </a>
       <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
         <li><a class="dropdown-item" href="#">Add another account</a></li>
