@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\ItemController;
 
@@ -26,6 +27,11 @@ Route::view('/about', 'pages.about')->name('about');
 Route::view('/help', 'pages.help')->name('help');
 Route::view('/faq', 'pages.faq')->name('faq');
 Route::view('/contacts', 'pages.contacts')->name('contacts');
+
+
+Route::controller(HomeController::class)->group(function () {
+    Route::get('/home', 'index')->name('home');
+});
 
 // Cards
 Route::controller(CardController::class)->group(function () {
