@@ -21,6 +21,40 @@
             </div>
         </div>
     </section>
+    <section id="profile-feed">
+        <h2>Posts from this user</h2>
+        @if ((Auth::check() && Auth::user()->user_id == $user->user_id) || !$user->private || (Auth::Check() && Auth::user()->user_type == 'admin'))
+            @if ($user->posts()->count() > 0)
+            <ul>
+                @foreach ($user->posts()->orderBy('date', 'desc')->get() as $post)
+                <div class="post col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <small class="text-black">{{ $user->name }}</small>
+                            <small class="text-muted"><span class="text-muted">@</span>{{ $user->username }}</small>
+                            <small class="text-black">{{ $post->date }}</small>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ $post->content }}</p>
+                            <p class="card-text">{{ $post->image }}</p>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </ul>
+            @else
+            <div class="alert alert-info" role="alert">
+                <h4 class="alert-heading">No posts yet!</h4>
+                <p>When this user posts something, it will appear here.</p>
+            </div>
+            @endif
+        @else
+        <div class="alert alert-info" role="alert">
+            <h4 class="alert-heading">This user's profile is set to private!</h4>
+            <p>Follow this user to see their posts.</p>
+        </div>
+        @endif
+    </section>
 </section>
 
 @endsection

@@ -58,8 +58,11 @@ class User extends Authenticatable // lower case plural
     }
 
     // For post counts.
+    public function posts() {
+        return $this->hasMany(Post::class, 'owner_id');
+    }
     public function postCounts() {
-        return $this->hasMany(Post::class, 'owner_id')->count();
+        return $this->posts()->count();
     }
 }
 
