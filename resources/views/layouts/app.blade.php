@@ -23,7 +23,7 @@
         <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
-                    <a class="navbar-brand fs-3" href="{{url('/')}}">Feupbook</a>
+                    <a class="navbar-brand fs-3" href="{{url('/home')}}">Feupbook</a>
                 </div>
             </nav>
         </header>
