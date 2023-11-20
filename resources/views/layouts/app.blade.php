@@ -11,10 +11,7 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Styles -->
-        {{-- <link href="{{ url('css/milligram.min.css') }}" rel="stylesheet"> --}}
-        {{-- <link href="{{ url('css/bootstrap.css') }}" rel="stylesheet"> --}}
         <link href="{{ url('css/bootstrap.min_flatly.css') }}" rel="stylesheet">
-        <link href="{{ url('css/app.css') }}" rel="stylesheet">
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
             // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
@@ -23,19 +20,18 @@
         </script>
     </head>
     <body>
-        <main>
-            <header>
-                <h1><a href="{{ url('/cards') }}">Thingy!</a></h1>
-                @if (Auth::check())
-                    <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
-                @endif
-            </header>
-            <section id="content">
-                @yield('content')
-            </section>
-        </main>
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand fs-3" href="{{url('/')}}">Feupbook</a>
+                </div>
+            </nav>
+        </header>
+        
+        @yield('content')
+        
+        <footer class="footer bg-primary text-center py-2" style="position: absolute; bottom: 0; width: 100%;">
+            @yield('footer')
+        </footer>
     </body>
-    <footer>
-        @yield('footer')
-    </footer>
 </html>

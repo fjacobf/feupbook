@@ -37,8 +37,10 @@ class LoginController extends Controller
  
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
- 
-            return redirect()->intended('/cards');
+            
+            // go to welcome page
+            return redirect()->route('welcome')
+                ->withSuccess('You have successfully logged in!');
         }
  
         return back()->withErrors([
