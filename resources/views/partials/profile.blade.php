@@ -19,16 +19,24 @@
                 <p><strong>{{ $user->followingCounts() }} Following</strong></p>
                 <p><strong>{{ $user->postCounts() }} Posts</strong></p>
                 @if (Auth::check() && Auth::user()->user_id != $user->user_id)
-                    @if ($user->isFollowing())
-                    <form action="{{ route('user.unfollow', ['id' => $user->user_id]) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-danger">Unfollow</button>
-                    </form>
+                    @if ($user->followStatus() === 'accepted')
+                        {{-- Show Unfollow button --}}
+                        <form action="{{ route('user.unfollow', ['id' => $user->user_id]) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-danger">Unfollow</button>
+                        </form>
+                    @elseif ($user->followStatus() === 'waiting')
+                        {{-- Show a message indicating that the request is pending --}}
+                        <span class="text-muted">Follow request pending</span>
+                    @elseif ($user->followStatus() === 'rejected')
+                        {{-- Show a message indicating that the request was rejected --}}
+                        <span class="text-danger">Follow request rejected</span>
                     @else
-                    <form action="{{ route('user.follow', ['id' => $user->user_id]) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-primary">Follow</button>
-                    </form>
+                        {{-- Show Follow button --}}
+                        <form action="{{ route('user.follow', ['id' => $user->user_id]) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">Follow</button>
+                        </form>
                     @endif
                 @endif
             </div>
