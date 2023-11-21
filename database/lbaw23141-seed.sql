@@ -60,7 +60,8 @@ CREATE TABLE posts (
     owner_id INTEGER REFERENCES users(user_id) NOT NULL,
     image TEXT,
     content TEXT,
-    date DATE NOT NULL CHECK (date <= CURRENT_DATE)
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT NULL
 );
 
 -- Table: comments (R03)
@@ -789,18 +790,19 @@ VALUES
 -- Todos os follow_requests feitos a um users com private=false devem ter automaticamente staus=accepted. Deve se fazer um trigger?
 
 -- Insert statements for the 'posts' table
-INSERT INTO posts (owner_id, image, content, date)
+INSERT INTO posts (owner_id, image, content, created_at, updated_at)
 VALUES
-    (1, 'image1.jpg', 'This is the content of the first post.', '2023-10-26'),
-    (2, 'image2.jpg', 'Post by User Two.', '2023-10-25'),
-    (4, NULL, 'Moderator post.', '2023-10-24'),
-    (2, 'image4.jpg', 'Second post from User Two', '2023-10-23'),
-    (7, NULL, 'Welcome to FEUPbook!', '2023-10-22'),
-    (2, 'image6.jpg', 'Another post by User Two.', '2023-10-21'),
-    (1, 'image7.jpg', 'Another post by User One.', '2023-10-20'),
-    (8, 'image8.jpg', 'I got banned!', '2023-10-19'),
-    (9, NULL, 'I also got banned.', '2023-10-18'),
-    (10, NULL, 'Hello from Joe.', '2023-10-17');
+    (1, 'image1.jpg', 'This is the content of the first post.', '2023-10-26 00:00:00', NULL),
+    (2, 'image2.jpg', 'Post by User Two.', '2023-10-25 00:00:00', NULL),
+    (4, NULL, 'Moderator post.', '2023-10-24 00:00:00', NULL),
+    (2, 'image4.jpg', 'Second post from User Two', '2023-10-23 00:00:00', NULL),
+    (7, NULL, 'Welcome to FEUPbook!', '2023-10-22 00:00:00', NULL),
+    (2, 'image6.jpg', 'Another post by User Two.', '2023-10-21 00:00:00', NULL),
+    (1, 'image7.jpg', 'Another post by User One.', '2023-10-20 00:00:00', NULL),
+    (8, 'image8.jpg', 'I got banned!', '2023-10-19 00:00:00', NULL),
+    (9, NULL, 'I also got banned.', '2023-10-18 00:00:00', NULL),
+    (10, NULL, 'Hello from Joe.', '2023-10-17 00:00:00', NULL);
+
 
 
 
