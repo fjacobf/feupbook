@@ -11,7 +11,7 @@
     <div class="d-flex justify-content-center">
         <div class="btn-group mt-3" role="group" aria-label="Post filters">
             <a href="{{ route('forYou') }}" class="btn {{ request()->routeIs('forYou') ? 'btn-primary' : 'btn-secondary' }}" style="width: 150px;">For You</a>
-            <a href="{{ route('list') }}" class="btn {{ request()->routeIs('list') ? 'btn-primary' : 'btn-secondary' }}" style="width: 150px;">All Posts</a>
+            <a href="{{ route('home') }}" class="btn {{ request()->routeIs('home') ? 'btn-primary' : 'btn-secondary' }}" style="width: 150px;">All Posts</a>
         </div>
     </div>
     <div class="overflow-auto h-100">
