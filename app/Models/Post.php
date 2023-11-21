@@ -18,6 +18,8 @@ class Post extends Model
 
    protected $primaryKey = 'post_id';
 
+   protected $fillable = ['content', 'owner_id'];
+
    /**
    * Get the user that owns the post.
    */

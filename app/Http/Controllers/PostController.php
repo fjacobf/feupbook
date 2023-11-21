@@ -33,7 +33,7 @@ class PostController extends Controller
       //check if user is logged in
       if (Auth::check()) {
         //user is logged in
-        $posts = Post::with('user')->orderBy('date', 'desc')->paginate(10);
+        $posts = Post::with('user')->orderBy('created_at', 'desc')->paginate(10);
         return view('pages.posts', ['posts' => $posts]);
       } else {
         //user is not logged in
@@ -54,7 +54,7 @@ class PostController extends Controller
         // Fetch posts only from these users
         $posts = Post::with('user')
                     ->whereIn('owner_id', $followingIds)
-                    ->orderBy('date', 'desc')
+                    ->orderBy('created_at', 'desc')
                     ->paginate(10);
 
         return view('pages.posts', ['posts' => $posts]);
@@ -65,39 +65,22 @@ class PostController extends Controller
         }
     }
 
-    /**
-     * Creates a new card.
-     */
-    // public function create(Request $request)
-    // {
-    //     // Create a blank new Card.
-    //     $card = new Card();
+    public function create()
+    {
+        return view('pages.postsCreate');
+    }
 
-    //     // Check if the current user is authorized to create this card.
-    //     $this->authorize('create', $card);
+    public function store(Request $request)
+    {
+      $validatedData = $request->validate([
+          'content' => 'required|max:1000',
+      ]);
 
-    //     // Set card details.
-    //     $card->name = $request->input('name');
-    //     $card->user_id = Auth::user()->id;
+      $post = new Post;
+      $post->content = $validatedData['content'];
+      $post->owner_id = Auth::id(); // Set the owner_id to the current user's ID
+      $post->save();
 
-    //     // Save the card and return it as JSON.
-    //     $card->save();
-    //     return response()->json($card);
-    // }
-
-    /**
-     * Delete a card.
-     */
-    // public function delete(Request $request, $id)
-    // {
-    //     // Find the card.
-    //     $card = Card::find($id);
-
-    //     // Check if the current user is authorized to delete this card.
-    //     $this->authorize('delete', $card);
-
-    //     // Delete the card and return it as JSON.
-    //     $card->delete();
-    //     return response()->json($card);
-    // }
+      return redirect('/home')->with('success', 'Post created successfully!');
+    }
 }
