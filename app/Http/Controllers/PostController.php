@@ -41,6 +41,30 @@ class PostController extends Controller
       }
     }
 
+    public function forYou()
+    {
+        // Check if user is logged in
+      if (Auth::check()) {
+        // User is logged in
+        $user = Auth::user();
+
+        // Get the IDs of users that the current user follows
+        $followingIds = $user->following()->pluck('users.user_id')->toArray();
+        
+        // Fetch posts only from these users
+        $posts = Post::with('user')
+                    ->whereIn('owner_id', $followingIds)
+                    ->orderBy('date', 'desc')
+                    ->paginate(10);
+
+        return view('pages.posts', ['posts' => $posts]);
+      } 
+      else {
+          // User is not logged in
+          return redirect('/');
+        }
+    }
+
     /**
      * Creates a new card.
      */

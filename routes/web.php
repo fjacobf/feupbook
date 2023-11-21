@@ -30,7 +30,8 @@ Route::view('/contacts', 'pages.contacts')->name('contacts');
 
 
 Route::controller(PostController::class)->group(function () {
-    Route::get('/home', 'list')->name('home');
+    Route::get('/home/forYou', 'forYou')->name('forYou');
+    Route::get('/home', 'list')->name('list');
 });
 
 // Cards
