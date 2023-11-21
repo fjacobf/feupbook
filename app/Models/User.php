@@ -54,44 +54,27 @@ class User extends Authenticatable // lower case plural
     }
 
     public function followStatus() {
-        $authUser = Auth::user();
-        $statusRows = $this->followRequests()->get();
+        if(Auth::check()) {
+            $authUser = Auth::user();
+            $statusRows = $this->followRequests()->get();
+            
+            $statusRow = $statusRows->where('req_id', $authUser->user_id)->first();
         
-        $statusRow = $statusRows->where('req_id', $authUser->user_id)->first();
-    
-        if ($statusRow) {
-            return $statusRow->status;
+            if ($statusRow) {
+                return $statusRow->status;
+            }
         }
     
         return '';
     }
 
     public function isFollowing() {
-        if (Auth::check()) {
-            $authUser = Auth::user();
+        $status = $this->followStatus();
     
-            // Print the authenticated user's ID and the current instance's ID for debugging
-            echo "Auth User ID: " . $authUser->user_id . PHP_EOL;
-            echo "Current Instance ID: " . $this->user_id . PHP_EOL;
+        // Check if the follow status is 'accepted'
+        return $status === 'accepted';
+    }
     
-            // Print all follow requests for debugging
-            $followRequests = $this->followRequests()->get();
-            echo "Follow Requests: " . $followRequests . PHP_EOL;
-    
-            // Check if there's a follow request with accepted status and matching req_id
-            $isFollowing = $this->followRequests()
-                ->where('status', 'accepted')
-                ->where('req_id', $authUser->user_id)
-                ->exists();
-    
-            // Print the result for debugging
-            echo "Is Following: " . ($isFollowing ? 'true' : 'false') . PHP_EOL;
-    
-            return $isFollowing;
-        }
-    
-        return false;
-    }     
 
     // For follwer counts.
     public function followRequests() {

@@ -44,6 +44,10 @@
     </section>
     <section id="profile-feed">
         <h2>Posts from this user</h2>
+
+        {{-- print out isFollowing --}}
+        <p>isFollowing: {{ $user->isFollowing() ? 'true' : 'false' }}</p>
+
         @if ((Auth::check() && Auth::user()->user_id == $user->user_id) || !$user->private || (Auth::Check() && Auth::user()->user_type == 'admin')
         || (Auth::check() && $user->isFollowing()))
             @if ($user->posts()->count() > 0)

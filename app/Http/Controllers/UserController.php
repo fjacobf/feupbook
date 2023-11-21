@@ -49,14 +49,16 @@ class UserController extends Controller
     public function unfollow($id) {
         $authUser = Auth::user();
         $user = User::find($id);
-
+    
         $followRequest = FollowRequest::where('req_id', $authUser->user_id)
-        ->where('rcv_id', $user->user_id)->first();
-
+            ->where('rcv_id', $user->user_id);
+        // dd($followRequest);
+    
         if ($followRequest) {
             $followRequest->delete();
         }
-
+    
         return redirect()->back();
     }
+    
 }

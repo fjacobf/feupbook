@@ -21,4 +21,6 @@ class FollowRequest extends Model
         'date',
         'status',
     ];
+
+    
 }
