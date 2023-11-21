@@ -206,14 +206,39 @@ paths:
                   loginRedirect:
                     description: 'Redirect to the login page due to unauthorized access.'
                     value: '/login'
+                  
+######### FOR YOU HOME PAGE #########
+  
+  /home/forYou:
+
+    get:
+      operationId: R202
+      summary: 'R202: View for you home page'
+      description: 'Show for you home page, Access: USR, ADM'
+      tags:
+        - 'M02: Users'
+
+      responses:
+        '200':
+          description: 'OK. Show the for you home page for an individual user'
+        '401':
+          description: 'Unauthorized. The client must authenticate itself to get the requested response.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                  loginRedirect:
+                    description: 'Redirect to the login page due to unauthorized access.'
+                    value: '/login'
 
 ######### PROFILE #########
 
   /user/{id}:
 
     get:
-      operationId: R202
-      summary: 'R202: View user profile'
+      operationId: R203
+      summary: 'R203: View user profile'
       description: 'Show the individual user profile, Access: USR, OWN, ADM'
       tags:
         - 'M02: Users'
@@ -246,8 +271,8 @@ paths:
   /user/{id}/editProfile:
 
     get:
-      operationId: R203
-      summary: 'R203: Edit user profile page.'
+      operationId: R204
+      summary: 'R204: Edit user profile page.'
       description: 'Shows the edit profile page of the user. Access: OWN'
       tags:
         - 'M02: Users'
@@ -274,8 +299,8 @@ paths:
                   value: '/user/{id}'
 
     post:
-      operationId: R204
-      summary: 'R204: Edit user profile action'
+      operationId: R205
+      summary: 'R205: Edit user profile action'
       description: 'Processes and saves the changes made by user. Access: USR, OWN'
       tags:
         - 'M02: Users'
@@ -335,8 +360,8 @@ paths:
   /user/{id}/deleteProfile:
 
     post:
-      operationId: R204
-      summary: 'R204: Delete current user.'
+      operationId: R206
+      summary: 'R206: Delete current user.'
       description: 'Deletes the current user through the profile page. Access: OWN'
       tags:
         - 'M02: Users'
@@ -368,8 +393,8 @@ paths:
   /user/{id}/delete:
 
     post:
-      operationId: R205
-      summary: 'R205: Delete a user by ID.'
+      operationId: R207
+      summary: 'R207: Delete a user by ID.'
       description: 'Allows an administrator to delete a user by ID Access: ADM'
       tags:
         - 'M02: Users'
@@ -392,8 +417,8 @@ paths:
   /user/{user_id}/removeFollower/{follower_id}:
 
     post:
-      operationId: R206
-      summary: 'R206: Remove a follower.'
+      operationId: R208
+      summary: 'R208: Remove a follower.'
       description: 'Removes a follower from the user followers. Access: OWN'
       tags:
         - 'M02: Users'
@@ -441,8 +466,8 @@ paths:
   /user/{user_id}/follow/{followed_id}:
 
     post:
-      operationId: R207
-      summary: 'R207: Follow a user.'
+      operationId: R209
+      summary: 'R209: Follow a user.'
       description: 'Follows a user. Access: USR, ADM'
       tags:
         - 'M02: Users'
@@ -490,8 +515,8 @@ paths:
   /user/{user_id}/unfollow/{unfollow_id}:
 
     post:
-      operationId: R208
-      summary: 'R208: Unfollow a user.'
+      operationId: R210
+      summary: 'R210: Unfollow a user.'
       description: 'Unfollows a user. Access: USR, ADM'
       tags:
         - 'M02: Users'
@@ -539,8 +564,8 @@ paths:
   /user/{user_id}/followRequest/{follow_id}:
 
     post:
-      operationId: R209
-      summary: 'R209: Send follow request to a user.'
+      operationId: R211
+      summary: 'R211: Send follow request to a user.'
       description: 'Sends a notification with a follow request to a user. Access: USR, ADM'
       tags:
         - 'M02: Users'
@@ -589,8 +614,8 @@ paths:
   /user/{user_id}/cancelFollowRequest/{follow_id}:
 
     post:
-      operationId: R210
-      summary: 'R210: Cancel a follow request.'
+      operationId: R212
+      summary: 'R212: Cancel a follow request.'
       description: 'Removes the notification of the follow request to a user. Access: USR, ADM'
       tags:
         - 'M02: Users'
@@ -638,8 +663,8 @@ paths:
   /user/{user_id}/acceptFollowRequest/{follow_id}:
 
     post:
-      operationId: R211
-      summary: 'R211: Accept a follow request.'
+      operationId: R213
+      summary: 'R213: Accept a follow request.'
       description: 'Accepts a follow request from a user. Access: USR, ADM'
       tags:
         - 'M02: Users'
@@ -688,8 +713,8 @@ paths:
   /user/{user_id}/rejectFollowRequest/{follow_id}:
 
     post:
-      operationId: R212
-      summary: 'R212: Reject a follow request.'
+      operationId: R214
+      summary: 'R214: Reject a follow request.'
       description: 'Rejects a follow request from a user. Access: USR, ADM'
       tags:
         - 'M02: Users'
@@ -737,8 +762,8 @@ paths:
   /about:
 
     get:
-      operationId: R220
-      summary: 'R220: About static page'
+      operationId: R215
+      summary: 'R215: About static page'
       description: 'Shows About Page. Access USR, ADM, VST'
       tags:
         - 'M02: Users'
@@ -752,8 +777,8 @@ paths:
   /help:
 
     get:
-      operationId: R221
-      summary: 'R221: Help static page'
+      operationId: R216
+      summary: 'R216: Help static page'
       description: 'Shows Help Page. Access USR, ADM, VST'
       tags:
         - 'M02: Users'
@@ -767,8 +792,8 @@ paths:
   /faq:
 
     get:
-      operationId: R222
-      summary: 'R222: FAQ static page'
+      operationId: R217
+      summary: 'R217: FAQ static page'
       description: 'Shows FAQ Page. Access USR, ADM, VST'
       tags:
         - 'M02: Users'
@@ -782,8 +807,8 @@ paths:
   /contacts:
 
     get:
-      operationId: R223
-      summary: 'R223: Contacts static page'
+      operationId: R218
+      summary: 'R218: Contacts static page'
       description: 'Shows Contacts Page. Access USR, ADM, VST'
       tags:
         - 'M02: Users'
