@@ -35,5 +35,16 @@ class User extends Authenticatable // lower case plural
     ];
 
     protected $primaryKey = 'user_id';
+
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class, 'owner_id', 'user_id');
+    }
+
+    public function following() {
+        return $this->belongsToMany(User::class, 'follow_requests', 'req_id', 'rcv_id')
+                    ->wherePivot('status', 'accepted'); 
+    }
+    
 }
 

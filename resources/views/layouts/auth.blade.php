@@ -12,19 +12,26 @@
 
         <!-- Styles -->
         <link href="{{ url('css/bootstrap.min_flatly.css') }}" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
             // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
         </script>
-        <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+        <script type="text/javascript" src={{ url('js/app.js') }} defer>
         </script>
     </head>
     <body>
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand fs-3" href="{{url('/home')}}">Feupbook</a>
+                </div>
+            </nav>
+        </header>
 
-      @yield('sidebar')
-      
-      @yield('content')
-
+        @yield('content')
+        
+        <footer class="footer bg-primary text-center py-2" style="position: absolute; bottom: 0; width: 100%;">
+            @yield('footer')
+        </footer>
     </body>
 </html>
