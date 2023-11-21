@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -39,6 +40,10 @@ class User extends Authenticatable // lower case plural
 
     protected $primaryKey = 'user_id';
 
+    public function getRouteKeyName() {
+        return 'user_id';
+    }
+
     // For following counts.
     public function followRequestsRcv() {
         return $this->hasMany(FollowRequest::class, 'rcv_id');
@@ -46,6 +51,17 @@ class User extends Authenticatable // lower case plural
 
     public function followerCounts() {
         return $this->followRequestsRcv()->where('status', 'accepted')->count();
+    }
+
+    public function isFollowing() {
+        if (Auth::check()) {
+            $authUser = Auth::user();
+            return $this->followRequests()
+            ->where('status', 'accepted')
+            ->where('req_id', $authUser->user_id)
+            ->exists();
+        }
+        return false;
     }
 
     // For follwer counts.

@@ -18,12 +18,26 @@
                 <p><strong>{{ $user->followerCounts() }} Followers</strong></p>
                 <p><strong>{{ $user->followingCounts() }} Following</strong></p>
                 <p><strong>{{ $user->postCounts() }} Posts</strong></p>
+                @if (Auth::check() && Auth::user()->user_id != $user->user_id)
+                    @if ($user->isFollowing())
+                    <form action="{{ route('user.unfollow', ['id' => $user->user_id]) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">Unfollow</button>
+                    </form>
+                    @else
+                    <form action="{{ route('user.follow', ['id' => $user->user_id]) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-primary">Follow</button>
+                    </form>
+                    @endif
+                @endif
             </div>
         </div>
     </section>
     <section id="profile-feed">
         <h2>Posts from this user</h2>
-        @if ((Auth::check() && Auth::user()->user_id == $user->user_id) || !$user->private || (Auth::Check() && Auth::user()->user_type == 'admin'))
+        @if ((Auth::check() && Auth::user()->user_id == $user->user_id) || !$user->private || (Auth::Check() && Auth::user()->user_type == 'admin')
+        || (Auth::check() && $user->isFollowing()))
             @if ($user->posts()->count() > 0)
             <ul>
                 @foreach ($user->posts()->orderBy('date', 'desc')->get() as $post)

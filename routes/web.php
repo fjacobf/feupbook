@@ -63,4 +63,6 @@ Route::controller(RegisterController::class)->group(function () {
 // User
 Route::controller(UserController::class)->group(function () {
     Route::get('/users/{id}', [UserController::class, 'show'])->name('profile');
+    Route::post('/users/{id}/follow', [UserController::class, 'follow'])->name('user.follow');
+    Route::post('/users/{id}/unfollow', [UserController::class, 'unfollow'])->name('user.unfollow');
 });
