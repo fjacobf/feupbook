@@ -33,10 +33,18 @@
         </a>
       </li>
       <li>
-        <a href="#" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
+        @auth
+        <a href="{{ route('user.profile', ['id' => auth()->user()->user_id]) }}" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
           <i class="bi bi-person-circle me-3"></i>
           Profile
         </a>
+        @endauth
+        @guest
+        <a href="{{ route('login') }}" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
+          <i class="bi bi-person-circle me-3"></i>
+          Profile
+        </a>
+        @endguest
       </li>
       <li>
         <a href="#" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
