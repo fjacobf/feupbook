@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -64,4 +65,11 @@ Route::controller(LoginController::class)->group(function () {
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
+});
+
+// User
+Route::controller(UserController::class)->group(function () {
+    Route::get('/users/{id}', [UserController::class, 'show'])->name('profile');
+    Route::post('/users/{id}/follow', [UserController::class, 'follow'])->name('user.follow');
+    Route::post('/users/{id}/unfollow', [UserController::class, 'unfollow'])->name('user.unfollow');
 });

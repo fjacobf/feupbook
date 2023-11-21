@@ -5,23 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-// Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-
 class Post extends Model
 {
-   use HasFactory;
+    use HasFactory;
 
-   // Don't add create and update timestamps in database.
-   // public $timestamps  = false;
+    protected $table = 'posts';
 
-   protected $primaryKey = 'post_id';
+    protected $primaryKey = 'post_id';
 
-   /**
-   * Get the user that owns the post.
-   */
-   public function user(): BelongsTo
+    protected $fillable = [
+        'owner_id',
+        'image',
+        'content',
+        'date',
+    ];
+
+    public function user(): BelongsTo
    {
       return $this->belongsTo(User::class, 'owner_id', 'user_id');
    }
