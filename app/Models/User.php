@@ -75,7 +75,6 @@ class User extends Authenticatable // lower case plural
         return $status === 'accepted';
     }
     
-
     // For follwer counts.
     public function followRequests() {
         return $this->hasMany(FollowRequest::class, 'rcv_id');
@@ -85,12 +84,19 @@ class User extends Authenticatable // lower case plural
         return $this->followRequests()->where('status', 'accepted')->count();
     }
 
-    // For post counts.
-    public function posts() {
-        return $this->hasMany(Post::class, 'owner_id');
-    }
     public function postCounts() {
         return $this->posts()->count();
     }
+
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class, 'owner_id', 'user_id');
+    }
+
+    public function following() {
+        return $this->belongsToMany(User::class, 'follow_requests', 'req_id', 'rcv_id')
+                    ->wherePivot('status', 'accepted'); 
+    }
+    
 }
 

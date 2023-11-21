@@ -17,9 +17,15 @@ class RegisterController extends Controller
     /**
      * Display a login form.
      */
-    public function showRegistrationForm(): View
+    public function showRegistrationForm()
     {
-        return view('auth.register');
+        //if user is logged in, redirect to home
+        if (Auth::check()) {
+            return redirect('/home');
+        }
+        else{
+            return view('auth.register');
+        }
     }
 
     /**
@@ -45,7 +51,7 @@ class RegisterController extends Controller
         $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);
         $request->session()->regenerate();
-        return redirect()->route('welcome')
+        return redirect()->route('home')
             ->withSuccess('You have successfully registered & logged in!');
     }
 }

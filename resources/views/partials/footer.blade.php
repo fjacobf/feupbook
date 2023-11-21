@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
 @section('footer')
 <div class="container">
@@ -10,10 +10,10 @@
                 <a class="nav-link text-white" href="{{ url('/help') }}">Help Center</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ url('/terms') }}">Terms of Service</a>
+                <a class="nav-link text-white" href="{{ url('/faq') }}">FAQ</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="{{ url('/privacy') }}">Privacy Policy</a>
+                <a class="nav-link text-white" href="{{ url('/contacts') }}">Contacts</a>
             </li>
         </ul>
         <div class="text-light">&copy; {{ date('Y') }} FEUPBook Corp.</div>

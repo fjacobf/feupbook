@@ -761,16 +761,16 @@ $$ LANGUAGE plpgsql;
 -- Insert statements for the 'users' table
 INSERT INTO users (username, email, password, name, bio, private, user_type)
 VALUES
-    ('user1', 'user1@example.com', 'password1', 'User One', 'Bio for User One', false, 'normal_user'),
-    ('user2', 'user2@example.com', 'password2', 'User Two', 'Bio for User Two', true, 'normal_user'),
-    ('newuser', 'newuser@example.com', 'mypass', 'New User', 'Bio for New User', false, 'normal_user'),
-    ('FPmod', 'fpmod@example.com', 'admin123', 'FPAdmin', 'Admin for FEUPbook', false, 'admin'),
-    ('ADM', 'admfpbook@example.com', 'admin123', 'ADM', 'Second Admin for FEUPbook', true, 'admin'),
-    ('FPhelper', 'helper@example.com', 'admin123', 'FPhelper', 'Helper for FEUPbook', false, 'admin'),
-    ('FPhelper2', 'helper2@example.com', 'admin123', 'FPhelper2', 'Second helepr for FEUPbook', false, 'admin'),
-    ('BadUser', 'baduser@example.com', 'banned123', 'BadUser', 'Banned from FEUPbook', false, 'suspended'),
-    ('BadUser2', 'baduser2@example.com', 'banned123', 'BadUser2', 'Second banned from FEUPbook', false, 'suspended'),
-    ('Joe', 'joe@example.com', 'password', 'Joe', 'Joe on feupbook', false, 'normal_user');
+    ('user1', 'user1@example.com', '$2a$12$goYowY.ccXyLR8so94t3y.jEXtVs7.IDFworUJqqxIGmMd4XhrITa', 'User One', 'Bio for User One', false, 'normal_user'),
+    ('user2', 'user2@example.com', '$2a$12$GE0k/yA1x88VMc48xmgiEeLWnbDCxqDuyUMm3RT9QBEj.GdP0BzjW', 'User Two', 'Bio for User Two', true, 'normal_user'),
+    ('newuser', 'newuser@example.com', '$2a$12$hCqEe5DSo019ZZsRY9xFfOpVHlZ642xSjZIxWKx3xmveCOYBMISj6', 'New User', 'Bio for New User', false, 'normal_user'),
+    ('FPmod', 'fpmod@example.com', '$2a$12$Pw1yagUYBgvoMqcGGv8McOkRXS4WMO/a6S7RH.HjmmlmQQyPHueMG', 'FPAdmin', 'Admin for FEUPbook', false, 'admin'),
+    ('ADM', 'admfpbook@example.com', '$2a$12$XQefcocDGnOoS5Cl4Q9Vw.ChpEzIH2Ft4uxD8E9spoVX2ijO2JdZG', 'ADM', 'Second Admin for FEUPbook', true, 'admin'),
+    ('FPhelper', 'helper@example.com', '$2a$12$5FBTo8/npT5CBquqcxIBduolFG3JsT1l6iLLAUhfInmJ.gfBELiiu', 'FPhelper', 'Helper for FEUPbook', false, 'admin'),
+    ('FPhelper2', 'helper2@example.com', '$2a$12$Cqrwqn4G58jRZdGgOUFH7uM9dt5I5tFWyItYpMquC7If8TndQNIdO', 'FPhelper2', 'Second helepr for FEUPbook', false, 'admin'),
+    ('BadUser', 'baduser@example.com', '$2a$12$ByMwcBrT3hICpLZTbop0XuBHRJ9BOS71olRdbXU92QTXk0jxGfLqi', 'BadUser', 'Banned from FEUPbook', false, 'suspended'),
+    ('BadUser2', 'baduser2@example.com', '$2a$12$K2UnxG3ulT4HxlZKj/tFr.AJ3zimcjLPTQDHgKZdP/z6xJlW1ITH2', 'BadUser2', 'Second banned from FEUPbook', false, 'suspended'),
+    ('Joe', 'joe@example.com', '$2a$12$pL/fXwZkS4vihbITTltNV.fA5G4IQYVrts0Ds2wf9gtKm/VXeK8yO', 'Joe', 'Joe on feupbook', false, 'normal_user');
 
 -- Insert statements for the 'follow_requests' table
 INSERT INTO follow_requests (req_id, rcv_id, date, status)

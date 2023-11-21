@@ -19,7 +19,7 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
-            return redirect('/cards');
+            return redirect('/home');
         } else {
             return view('auth.login');
         }
@@ -39,7 +39,7 @@ class LoginController extends Controller
             $request->session()->regenerate();
             
             // go to welcome page
-            return redirect()->route('welcome')
+            return redirect()->route('home')
                 ->withSuccess('You have successfully logged in!');
         }
  
