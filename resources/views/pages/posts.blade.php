@@ -17,7 +17,13 @@
     <div class="overflow-auto h-100">
         <section id="posts" class="container my-4 d-flex justify-content-center">
             <div>
-                @each('partials.post', $posts, 'post')
+                @forelse($posts as $post)
+                    @include('partials.post', ['post' => $post])
+                @empty
+                    <div class="alert alert-info" role="alert">
+                        There are no posts to display.
+                    </div>
+                @endforelse
             </div>
         </section>
     </div>
