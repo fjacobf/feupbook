@@ -823,6 +823,17 @@ paths:
 
   /post/create:
 
+    get:
+      operationId: R300
+      summary: 'R300: Create post page'
+      description: 'Shows the create post page. Access: USR'
+      tags:
+        - 'M03: Posts'
+
+      responses:
+        '200':
+          description: 'Ok. Show create post UI.'
+
     post:
       operationId: R301
       summary: 'R301: Create post action'
