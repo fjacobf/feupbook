@@ -22,7 +22,10 @@ use App\Http\Controllers\Auth\RegisterController;
 */
 
 // Home
-Route::view('/', 'welcome')->name('welcome');
+Route::get('/', function () {
+    return view('welcome');
+})->middleware('guest')->name('welcome');
+
 
 Route::view('/about', 'pages.about')->name('about');
 Route::view('/help', 'pages.help')->name('help');
