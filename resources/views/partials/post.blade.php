@@ -12,9 +12,18 @@
                 </div>
             </a>
             @if (Auth::check() && Auth::id() == $post->owner_id)
-                <div class="card-footer">
-                    <a href="{{ route('editPost', ['id' => $post->post_id]) }}" class="btn btn-primary">Edit Post</a>
+                <div class="card-footer d-flex justify-content-end">
+                    <!-- Edit Button -->
+                    <a href="{{ route('editPost', ['id' => $post->post_id]) }}" class="btn btn-primary me-2">Edit Post</a>
+
+                    <!-- Delete Button Form -->
+                    <form action="{{ route('deletePost', ['id' => $post->post_id]) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post?')">Delete Post</button>
+                    </form>
                 </div>
             @endif
+
         </div>
 </div>

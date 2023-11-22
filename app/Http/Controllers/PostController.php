@@ -117,7 +117,23 @@ class PostController extends Controller
       $post->save();
 
       // Redirect with a success message
-      return redirect('/home')->with('success', 'Post updated successfully!');
+      return redirect()->route('user.profile', ['id' => Auth::id()])->with('success', 'Post updated successfully!');
+    }
+
+    public function delete(string $id)
+    {
+      $post = Post::findOrFail($id);
+
+      // Check if the authenticated user is the owner of the post
+      if (Auth::id() !== $post->owner_id) {
+          abort(403, 'Unauthorized action.');
+      }
+
+      // Delete the post
+      $post->delete();
+
+      // Redirect with a success message
+      return redirect()->route('user.profile', ['id' => Auth::id()])->with('success', 'Post deleted successfully!');
     }
 
 }

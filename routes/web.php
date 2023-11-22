@@ -41,6 +41,7 @@ Route::controller(PostController::class)->group(function () {
     Route::get('/post/{id}', 'show')->name('showPost');
     Route::get('/post/{id}/edit', 'edit')->name('editPost');
     Route::put('/post/{id}/edit', 'update')->name('updatePost');   
+    Route::delete('/post/{id}/delete', 'delete')->name('deletePost');
 });
 
 // Authentication
