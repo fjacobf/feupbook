@@ -19,7 +19,7 @@ class UserController extends Controller
             abort(404, 'User not found'); 
         }
         
-        $posts = $user->posts()->orderBy('date', 'desc')->get();
+        $posts = $user->posts()->orderBy('created_at', 'desc')->get();
 
         return view('pages.users', ['user' => $user]);
     }
