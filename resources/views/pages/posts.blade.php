@@ -10,8 +10,8 @@
 <div class="flex-grow-1" style="margin-left: 280px;">
     <div class="d-flex justify-content-center">
         <div class="btn-group mt-3" role="group" aria-label="Post filters">
-            <a href="{{ route('forYou') }}" class="btn {{ request()->routeIs('forYou') ? 'btn-primary' : 'btn-secondary' }}" style="width: 150px;">For You</a>
-            <a href="{{ route('home') }}" class="btn {{ request()->routeIs('home') ? 'btn-primary' : 'btn-secondary' }}" style="width: 150px;">All Posts</a>
+            <a href="{{ route('forYou') }}" class="btn btn-lg {{ request()->routeIs('forYou') ? 'btn-primary' : 'btn-secondary' }}" style="width: 150px;">For You</a>
+            <a href="{{ route('home') }}" class="btn btn-lg {{ request()->routeIs('home') ? 'btn-primary' : 'btn-secondary' }}" style="width: 150px;">All Posts</a>
         </div>
     </div>
     <div class="overflow-auto h-100">
@@ -27,5 +27,9 @@
             </div>
         </section>
     </div>
+    <a href="{{ url('/post/create') }}" class="btn btn-primary btn-lg position-fixed bottom-0 end-0 m-3">
+        <i class="bi bi-plus-lg"></i> Add Post
+    </a>
 </div>
+
 @endsection

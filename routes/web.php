@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -32,6 +33,8 @@ Route::view('/contacts', 'pages.contacts')->name('contacts');
 Route::controller(PostController::class)->group(function () {
     Route::get('/home/forYou', 'forYou')->name('forYou');
     Route::get('/home', 'list')->name('home');
+    Route::get('/post/create', 'create')->name('createPost');
+    Route::post('/post', 'store')->name('storePost');
 });
 
 // // Cards
@@ -64,4 +67,11 @@ Route::controller(LoginController::class)->group(function () {
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
+});
+
+// User
+Route::controller(UserController::class)->group(function () {
+    Route::get('/user/{id}', [UserController::class, 'show'])->name('user.profile');
+    Route::post('/user/{id}/follow', [UserController::class, 'follow'])->name('user.follow');
+    Route::post('/user/{id}/unfollow', [UserController::class, 'unfollow'])->name('user.unfollow');
 });
