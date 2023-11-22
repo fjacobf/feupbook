@@ -29,6 +29,10 @@
                             <input type="email" class="form-control" name="email" value="{{ $user->email }}" required>
                         </div>
                         <div class="mb-3">
+                            <label for="password" class="form-label">New Password:</label>
+                            <input type="password" class="form-control" name="password">
+                        </div>
+                        <div class="mb-3">
                             <label for="name" class="form-label">Name:</label>
                             <input type="text" class="form-control" name="name" value="{{ $user->name }}" required>
                         </div>

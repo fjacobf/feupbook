@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -33,6 +34,7 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'bio' => 'nullable|string|max:255',
             'private' => 'boolean',
+            'password' => 'nullable|string|min:8',
             'user_type' => 'required|string|in:normal_user,admin,suspended'
         ];
 
