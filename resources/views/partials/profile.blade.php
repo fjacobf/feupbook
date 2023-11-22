@@ -71,7 +71,7 @@
         @if ($user->posts()->count() > 0)
         <div class="container-lg">
             <ul class="list-unstyled d-inline-block">
-                @foreach ($user->posts()->orderBy('date', 'desc')->get() as $post)
+                @foreach ($user->posts()->orderBy('created_at', 'desc')->get() as $post)
                 <div class="post mb-4 d-inline-block align-top">
                     <div class="card" style="width: 50rem;">
                         <div class="card-header d-flex justify-content-between">
