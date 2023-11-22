@@ -80,4 +80,5 @@ Route::controller(UserController::class)->group(function () {
 // Admin Management
 Route::controller(AdminController::class)->group(function () {
     Route::get('/admin/user/{id}', [AdminController::class, 'showUserManagement'])->name('admin.manageUser');
+    Route::post('/admin/user/{id}/edit', [AdminController::class, 'updateUser'])->name('admin.updateUser');
 });
