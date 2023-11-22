@@ -30,16 +30,22 @@ class PostController extends Controller
      */
     public function list()
     {
-      //check if user is logged in
+      // Check if user is logged in
       if (Auth::check()) {
-        //user is logged in
-        $posts = Post::with('user')->orderBy('created_at', 'desc')->paginate(10);
-        return view('pages.posts', ['posts' => $posts]);
+          // User is logged in
+          // Get posts only from public users excluding the logged-in user
+          $posts = Post::whereHas('user', function($query) {
+              $query->where('private', false)
+                    ->where('owner_id', '!=', Auth::id());
+          })->orderBy('created_at', 'desc')->paginate(10);
+
+          return view('pages.posts', ['posts' => $posts]);
       } else {
-        //user is not logged in
-        return redirect('/');
+          // User is not logged in
+          return redirect('/');
       }
     }
+
 
     public function forYou()
     {
