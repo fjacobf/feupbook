@@ -70,7 +70,7 @@ CREATE TABLE comments (
     author_id INTEGER REFERENCES users(user_id) NOT NULL,
     post_id INTEGER REFERENCES posts(post_id) NOT NULL,
     content TEXT,
-    date DATE NOT NULL CHECK (date <= CURRENT_DATE),
+    date DATE NOT NULL CHECK (date <= CURRENT_DATE) DEFAULT CURRENT_DATE,
     previous INTEGER REFERENCES comments(comment_id) DEFAULT NULL
 );
 

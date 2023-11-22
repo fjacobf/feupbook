@@ -6,6 +6,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CommentController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -33,8 +34,12 @@ Route::view('/contacts', 'pages.contacts')->name('contacts');
 Route::controller(PostController::class)->group(function () {
     Route::get('/home/forYou', 'forYou')->name('forYou');
     Route::get('/home', 'list')->name('home');
-    Route::get('/post/create', 'create')->name('createPost');
+    Route::get('/post/create', 'create')->name('createPost'); //returns the view postsCreate
     Route::post('/post', 'store')->name('storePost');
+});
+
+Route::controller(CommentController::class)->group(function () {
+    Route::post('/comment', 'store')->name('storeComment');
 });
 
 // // Cards

@@ -11,6 +11,7 @@ class comment extends Model
     use HasFactory;
 
     protected $primaryKey = 'comment_id';
+    public $timestamps = false;
 
     public function user(): BelongsTo
    {
