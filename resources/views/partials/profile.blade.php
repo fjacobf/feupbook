@@ -52,13 +52,13 @@
         || (Auth::check() && $user->isFollowing()))
             @if ($user->posts()->count() > 0)
             <ul>
-                @foreach ($user->posts()->orderBy('date', 'desc')->get() as $post)
+                @foreach ($user->posts()->orderBy('created_at', 'desc')->get() as $post)
                 <div class="post col-md-6 mb-4">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <small class="text-black">{{ $user->name }}</small>
                             <small class="text-muted"><span class="text-muted">@</span>{{ $user->username }}</small>
-                            <small class="text-black">{{ $post->date }}</small>
+                            <small class="text-black">{{ $post->created_at }}</small>
                         </div>
                         <div class="card-body">
                             <p class="card-text">{{ $post->content }}</p>
