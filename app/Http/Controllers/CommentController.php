@@ -19,6 +19,7 @@ class CommentController extends Controller
       $comment->content = $validatedData['content'];
       $comment->author_id = Auth::id(); // Set the owner_id to the current user's ID
       $comment->post_id = $request->post_id;
+      $comment->previous = $request->comment_id;
       $comment->save();
 
       return redirect('/home')->with('success', 'Comment created successfully!');

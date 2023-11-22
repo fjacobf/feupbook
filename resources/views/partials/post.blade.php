@@ -20,8 +20,9 @@
         <form style="display:flex; justify-content: center" action="{{ route('storeComment') }}" method="POST">
             @csrf
             <textarea style="resize:none" id="content" name="content" cols="30" rows="1"
-                placeholder="Adicionei um comentário..."></textarea> <!--textarea not auto expanding-->
+                placeholder="Adicione um comentário..."></textarea> <!--textarea not auto expanding-->
             <input type="hidden" name="post_id" id="post_id" value="{{ $post->post_id }}">
+            <input type="hidden" name="comment_id" id="comment_id" value="{{ NULL }}">
             <button type="submit" class="btn btn-primary">Post</button>
         </form>
     </div>
