@@ -36,9 +36,11 @@ Route::view('/contacts', 'pages.contacts')->name('contacts');
 Route::controller(PostController::class)->group(function () {
     Route::get('/home/forYou', 'forYou')->name('forYou');
     Route::get('/home', 'list')->name('home');
-    Route::get('/post/{id}', 'show')->name('showPost');
     Route::get('/post/create', 'create')->name('createPost');
     Route::post('/post/create', 'store')->name('storePost');
+    Route::get('/post/{id}', 'show')->name('showPost');
+    Route::get('/post/{id}/edit', 'edit')->name('editPost');
+    Route::put('/post/{id}/edit', 'update')->name('updatePost');   
 });
 
 // Authentication

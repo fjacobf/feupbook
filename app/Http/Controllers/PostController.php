@@ -67,7 +67,7 @@ class PostController extends Controller
 
     public function create()
     {
-        return view('pages.postsCreate');
+        return view('pages.createPost');
     }
 
     public function store(Request $request)
@@ -83,4 +83,41 @@ class PostController extends Controller
 
       return redirect('/home')->with('success', 'Post created successfully!');
     }
+
+    public function edit(string $id)
+    {
+      $post = Post::findOrFail($id);
+
+      // Unauthorized action check
+      if (Auth::id() !== $post->owner_id) {
+          abort(403, 'Unauthorized action.');
+      }
+
+      return view('pages.editPost', ['post' => $post]);
+    }
+
+
+    public function update(Request $request, string $id)
+    {
+      // Validate the request
+      $validatedData = $request->validate([
+          'content' => 'required|max:1000', // Validation rules for the content
+      ]);
+
+      // Find the post
+      $post = Post::findOrFail($id);
+
+      // Check if the authenticated user is the owner of the post
+      if (Auth::id() !== $post->owner_id) {
+          abort(403, 'Unauthorized action.');
+      }
+
+      // Update the post
+      $post->content = $validatedData['content'];
+      $post->save();
+
+      // Redirect with a success message
+      return redirect('/home')->with('success', 'Post updated successfully!');
+    }
+
 }

@@ -18,7 +18,8 @@ class Post extends Model
         'owner_id',
         'image',
         'content',
-        'date',
+        'created_at',
+        'updated_at',
     ];
 
     public function user(): BelongsTo

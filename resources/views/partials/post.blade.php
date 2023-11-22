@@ -11,5 +11,10 @@
                     <p class="card-text text-black">{{ $post->image }}</p>
                 </div>
             </a>
+            @if (Auth::check() && Auth::id() == $post->owner_id)
+                <div class="card-footer">
+                    <a href="{{ route('editPost', ['id' => $post->post_id]) }}" class="btn btn-primary">Edit Post</a>
+                </div>
+            @endif
         </div>
 </div>
