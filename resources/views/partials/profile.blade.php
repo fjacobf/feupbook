@@ -64,41 +64,30 @@
             </div>
         </div>
     </section>
-    <section id="profile-feed" class="mt-4 text-center">
+    <section id="profile-feed" class="mt-4">
     <hr/>
-    <h2 class="mb-4">Posts from this user</h2>
+    <h2 class="mb-4 text-center">Posts from this user</h2>
     @if ((Auth::check() && Auth::user()->user_id == $user->user_id) || !$user->private || (Auth::Check() && Auth::user()->user_type == 'admin') || (Auth::check() && $user->isFollowing()))
         @if ($user->posts()->count() > 0)
-        <div class="container-lg">
-            <ul class="list-unstyled d-inline-block">
-                @foreach ($user->posts()->orderBy('created_at', 'desc')->get() as $post)
-                <div class="post mb-4 d-inline-block align-top">
-                    <div class="card" style="width: 50rem;">
-                        <div class="card-header d-flex justify-content-between fs-5">
-                            <small class="text-black"><a href="{{ route('user.profile', ['id' => $user->user_id]) }}">{{$user->name}}</a></small>
-                            <small class="text-muted"><span class="text-muted">@</span>{{ $user->username }}</small>
-                            <small class="text-black">{{ $post->created_at }}</small>
-                        </div>
-                        <div class="card-body">
-                            <p class="card-text">{{ $post->content }}</p>
-                            <p class="card-text">{{ $post->image }}</p>
-                        </div>
-                    </div>
+            <div class="container-lg d-flex justify-content-center align-items-center w-100">
+                <ul class="list-unstyled mb-4">
+                        @foreach ($user->posts()->orderBy('created_at', 'desc')->get() as $post)
+                            @include('partials.post', ['post' => $post])
+                        @endforeach
+                    </ul>
                 </div>
-                @endforeach
-            </ul>
             @else
-            <div class="alert alert-info mt-4 mb-4" role="alert">
-                <h4 class="alert-heading">No posts yet!</h4>
-                <p>When this user posts something, it will appear here.</p>
-            </div>
+                <div class="alert alert-info mt-4 mb-4" role="alert">
+                    <h4 class="alert-heading">No posts yet!</h4>
+                    <p>When this user posts something, it will appear here.</p>
+                </div>
             @endif
-            @else
+        @else
             <div class="alert alert-info mt-4 mb-4" role="alert">
                 <h4 class="alert-heading">This user's profile is set to private!</h4>
                 <p>Follow this user to see their posts.</p>
             </div>
-            @endif
+        @endif
         </div>
     </section>
 </section>
