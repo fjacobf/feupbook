@@ -74,8 +74,8 @@
                 @foreach ($user->posts()->orderBy('created_at', 'desc')->get() as $post)
                 <div class="post mb-4 d-inline-block align-top">
                     <div class="card" style="width: 50rem;">
-                        <div class="card-header d-flex justify-content-between">
-                            <small class="text-black">{{ $user->name }}</small>
+                        <div class="card-header d-flex justify-content-between fs-5">
+                            <small class="text-black"><a href="{{ route('user.profile', ['id' => $user->user_id]) }}">{{$user->name}}</a></small>
                             <small class="text-muted"><span class="text-muted">@</span>{{ $user->username }}</small>
                             <small class="text-black">{{ $post->created_at }}</small>
                         </div>
