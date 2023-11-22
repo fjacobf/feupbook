@@ -8,8 +8,12 @@ use App\Models\User;
 use App\Models\FollowRequest;
 
 class UserController extends Controller
-{
+{   
     public function show($id) {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
         $user = User::find($id);
         if (!$user) {
             abort(404, 'User not found'); 

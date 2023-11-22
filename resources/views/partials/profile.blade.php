@@ -1,23 +1,45 @@
+@section('sidebar')
+    @include('partials.sidebar')
+@endsection
+
 @section('profile')
 
-<section id="profile">
-    <section id="profile-details">
+<section id="profile" class="flex-grow-1" style="margin-left: 280px;">
+    <section id="profile-details" class="d-flex justify-content-center">
         <div class="profile-details">
             <!-- <img> User profile pic here </img> -->
-            <div class="profile-details-text">
-                <h1> {{ $user->name }} </h1>
-                @if ($user->private) <h3 class="text-muted">Private Profile</h3>
-                @else <h3 class="text-muted">Public Profile</h3>
+            <div class="profile-details-text border-black mb-4">
+                <h1 class="display-4">{{ $user->name }}</h1>
+                <h3 class="text-secondary"><span>@</span>{{ $user->username }}</h3>
+                @if ($user->private)
+                    <div class="alert alert-warning" role="alert">
+                        <strong>Private Profile</strong>
+                    </div>
+                @else
+                    <div class="alert alert-success" role="alert">
+                        <strong>Public Profile</strong>
+                    </div>
                 @endif
-                <h3 class="text-secondary"><span class="text-secondary">@</span>{{ $user->username }}</h3>
-                <div class="bio-rectangle p-2 border border-dark">
-                    <p class="mb-0"> {{ $user->bio }} </p>
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Biography</h5>
+                        <p class="card-text">{{ $user->bio }}</p>
+                    </div>
                 </div>
             </div>
-            <div class="profile-details-counts mt-3">
-                <p><strong>{{ $user->followerCounts() }} Followers</strong></p>
-                <p><strong>{{ $user->followingCounts() }} Following</strong></p>
-                <p><strong>{{ $user->postCounts() }} Posts</strong></p>
+            <div class="profile-details-counts mt-3 d-flex justify-content-between">
+                <div class="text-center">
+                    <p class="mb-0"><strong>{{ $user->followerCounts() }}</strong></p>
+                    <p class="mb-0" style="font-size: 0.8rem;">Followers</p>
+                </div>
+                <div class="text-center">
+                    <p class="mb-0"><strong>{{ $user->followingCounts() }}</strong></p>
+                    <p class="mb-0" style="font-size: 0.8rem;">Following</p>
+                </div>
+                <div class="text-center">
+                    <p class="mb-0"><strong>{{ $user->postCounts() }}</strong></p>
+                    <p class="mb-0" style="font-size: 0.8rem;">Posts</p>
+                </div>
                 @if (Auth::check() && Auth::user()->user_id != $user->user_id)
                     @if ($user->followStatus() === 'accepted')
                         {{-- Show Unfollow button --}}
@@ -42,19 +64,16 @@
             </div>
         </div>
     </section>
-    <section id="profile-feed">
-        <h2>Posts from this user</h2>
-
-        {{-- print out isFollowing --}}
-        <p>isFollowing: {{ $user->isFollowing() ? 'true' : 'false' }}</p>
-
-        @if ((Auth::check() && Auth::user()->user_id == $user->user_id) || !$user->private || (Auth::Check() && Auth::user()->user_type == 'admin')
-        || (Auth::check() && $user->isFollowing()))
-            @if ($user->posts()->count() > 0)
-            <ul>
-                @foreach ($user->posts()->orderBy('created_at', 'desc')->get() as $post)
-                <div class="post col-md-6 mb-4">
-                    <div class="card">
+    <section id="profile-feed" class="mt-4 text-center">
+    <hr/>
+    <h2 class="mb-4">Posts from this user</h2>
+    @if ((Auth::check() && Auth::user()->user_id == $user->user_id) || !$user->private || (Auth::Check() && Auth::user()->user_type == 'admin') || (Auth::check() && $user->isFollowing()))
+        @if ($user->posts()->count() > 0)
+        <div class="container-lg">
+            <ul class="list-unstyled d-inline-block">
+                @foreach ($user->posts()->orderBy('date', 'desc')->get() as $post)
+                <div class="post mb-4 d-inline-block align-top">
+                    <div class="card" style="width: 50rem;">
                         <div class="card-header d-flex justify-content-between">
                             <small class="text-black">{{ $user->name }}</small>
                             <small class="text-muted"><span class="text-muted">@</span>{{ $user->username }}</small>
@@ -69,17 +88,18 @@
                 @endforeach
             </ul>
             @else
-            <div class="alert alert-info" role="alert">
+            <div class="alert alert-info mt-4 mb-4" role="alert">
                 <h4 class="alert-heading">No posts yet!</h4>
                 <p>When this user posts something, it will appear here.</p>
             </div>
             @endif
-        @else
-        <div class="alert alert-info" role="alert">
-            <h4 class="alert-heading">This user's profile is set to private!</h4>
-            <p>Follow this user to see their posts.</p>
+            @else
+            <div class="alert alert-info mt-4 mb-4" role="alert">
+                <h4 class="alert-heading">This user's profile is set to private!</h4>
+                <p>Follow this user to see their posts.</p>
+            </div>
+            @endif
         </div>
-        @endif
     </section>
 </section>
 

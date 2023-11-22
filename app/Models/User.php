@@ -56,7 +56,7 @@ class User extends Authenticatable // lower case plural
     public function followStatus() {
         if(Auth::check()) {
             $authUser = Auth::user();
-            $statusRows = $this->followRequests()->get();
+            $statusRows = $this->followRequestsRcv()->get();
             
             $statusRow = $statusRows->where('req_id', $authUser->user_id)->first();
         
@@ -77,7 +77,7 @@ class User extends Authenticatable // lower case plural
     
     // For follwer counts.
     public function followRequests() {
-        return $this->hasMany(FollowRequest::class, 'rcv_id');
+        return $this->hasMany(FollowRequest::class, 'req_id');
     }
 
     public function followingCounts() {
