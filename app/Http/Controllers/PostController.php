@@ -33,7 +33,7 @@ class PostController extends Controller
       //check if user is logged in
       if (Auth::check()) {
         //user is logged in
-        $posts = Post::with('user')->orderBy('date', 'desc')->paginate(10);
+        $posts = Post::with('comments')->with('user')->orderBy('date', 'desc')->paginate(10);
         return view('pages.posts', ['posts' => $posts]);
       } else {
         //user is not logged in
