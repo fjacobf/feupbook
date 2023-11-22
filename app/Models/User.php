@@ -27,6 +27,8 @@ class User extends Authenticatable // lower case plural
         'username',
         'email',
         'password',
+        'bio',
+        'private',
         'user_type',
     ];
 
