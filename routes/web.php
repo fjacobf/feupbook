@@ -40,6 +40,7 @@ Route::controller(PostController::class)->group(function () {
 
 Route::controller(CommentController::class)->group(function () {
     Route::post('/comment', 'store')->name('storeComment');
+    Route::get('/comment/delete', 'delete')->name('deleteComment');
 });
 
 // // Cards

@@ -22,4 +22,16 @@ class comment extends Model
     {
         return $this->belongsTo(Post::class, 'post_id','post_id');
     }
+
+    public function parentComment()
+    {
+        return $this->belongsTo(Comment::class, 'previous', 'comment_id');
+    }
+
+    // Relationship to child comments
+    public function replies()
+    {
+        return $this->hasMany(Comment::class, 'previous', 'comment_id');
+    }
+
 }

@@ -720,6 +720,27 @@ BEFORE UPDATE ON group_chats
 FOR EACH ROW
 EXECUTE FUNCTION ensure_owner_is_member();
 
+------DELETE COMMENT CASCADE------
+CREATE OR REPLACE FUNCTION delete_comment()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Delete comment likes associated with the comment
+    DELETE FROM comment_likes WHERE comment_id = OLD.comment_id;
+
+    -- Delete comments with the same previous ID
+    DELETE FROM comments WHERE previous = OLD.comment_id;
+
+    DELETE FROM notifications WHERE comment_id = OLD.comment_id;
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_delete_comment
+BEFORE DELETE ON comments
+FOR EACH ROW    
+EXECUTE FUNCTION delete_comment();
+
 ------------------------------
 -- TRANSACTIONS
 ------------------------------

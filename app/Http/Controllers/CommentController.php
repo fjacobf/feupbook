@@ -23,4 +23,12 @@ class CommentController extends Controller
 
       return redirect('/home')->with('success', 'Comment created successfully!');
     }
+
+    public function delete(Request $request)
+    {
+      Comment::where('previous', $request->comment_id)->delete();
+      Comment::find($request->comment_id)->delete();
+
+      return redirect('/home')->with('success', 'Comment deleted successfully!');
+    }
 }
