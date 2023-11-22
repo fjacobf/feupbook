@@ -1,14 +1,13 @@
-<div class="card bg-light mb-3" style="width: 100%;">
-  <div class="card-header">
-      <h4 class="card-title">{{ $post->user ? $post->user->username : 'Unknown User' }}</h4>
-      <!-- Format the date -->
-      <p class="card-text">{{ \Carbon\Carbon::parse($post->created_at)->format('H:i d-m-y') }}</p>
-  </div>
-  <div class="card-body">
-    <p class="card-text">{{$post->content}}</p><br><br>
-  <!-- code to display post images when implemented -->
-    <!-- @if($post->image)
-      <img src="{{ asset('storage/images/' . $post->image) }}" alt="Post Image">
-    @endif -->
-  </div>
+<div class="post mb-4">
+    <div class="card" style="width: 50em;">
+        <div class="card-header d-flex justify-content-between">
+            <small class="text-black">{{ $post->user->name }}</small>
+            <small class="text-muted"><span class="text-muted">@</span>{{ $post->user->username }}</small>
+            <small class="text-black">{{ \Carbon\Carbon::parse($post->created_at)->format('H:i d-m-y') }}</small>
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{ $post->content }}</p>
+            <p class="card-text">{{ $post->image }}</p>
+        </div>
+    </div>
 </div>

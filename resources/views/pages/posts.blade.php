@@ -14,18 +14,16 @@
             <a href="{{ route('home') }}" class="btn btn-lg {{ request()->routeIs('home') ? 'btn-primary' : 'btn-secondary' }}" style="width: 150px;">All Posts</a>
         </div>
     </div>
-    <div class="overflow-auto h-100">
-        <section id="posts" class="container my-4 d-flex justify-content-center">
-            <div>
-                @forelse($posts as $post)
-                    @include('partials.post', ['post' => $post])
-                @empty
-                    <div class="alert alert-info" role="alert">
-                        There are no posts to display.
-                    </div>
-                @endforelse
-            </div>
-        </section>
+    <div class="container-lg d-flex justify-content-center align-items-center w-100">
+        <ul class="list-unstyled mt-4">
+            @forelse($posts as $post)
+                @include('partials.post', ['post' => $post])
+            @empty
+                <div class="alert alert-info" role="alert">
+                    There are no posts to display.
+                </div>
+            @endforelse
+        </ul>
     </div>
     <a href="{{ url('/post/create') }}" class="btn btn-primary btn-lg position-fixed bottom-0 end-0 m-3">
         <i class="bi bi-plus-lg"></i> Add Post
