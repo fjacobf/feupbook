@@ -19,8 +19,9 @@
             @forelse($posts as $post)
                 @include('partials.post', ['post' => $post])
             @empty
-                <div class="alert alert-info" role="alert">
-                    There are no posts to display.
+                <div class="alert alert-info mt-4" role="alert">
+                    <h4 class="alert-heading">No posts to display!</h4>
+                    <p>When the user starts following other users, their posts will be displayed here.</p>
                 </div>
             @endforelse
         </ul>

@@ -9,7 +9,7 @@
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
-        <a href="{{url('/home')}}" class="nav-link active py-2" aria-current="page" style="font-size: 1.25rem;">
+        <a href="{{url('/home')}}" class="nav-link {{ request()->is('home') ? 'active' : 'link-dark' }} py-2" aria-current="page" style="font-size: 1.25rem;">
           <i class="bi bi-house-fill me-3"></i>
           Home
         </a>
@@ -34,7 +34,7 @@
       </li>
       <li>
         @auth
-        <a href="{{ route('user.profile', ['id' => auth()->user()->user_id]) }}" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
+        <a href="{{ route('user.profile', ['id' => auth()->user()->user_id]) }}" class="nav-link {{ request()->routeIs('user.profile') && (request()->route()->parameter('id') == auth()->user()->user_id) ? 'active' : 'link-dark' }} py-2" style="font-size: 1.25rem;">
           <i class="bi bi-person-circle me-3"></i>
           Profile
         </a>
