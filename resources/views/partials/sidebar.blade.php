@@ -52,7 +52,36 @@
           Settings
         </a>
       </li>
+      <!-- Button to toggle additional items -->
+      <li class="nav-item">
+        <a href="#" class="nav-link link-dark py-2" style="font-size: 1.25rem;" data-bs-toggle="collapse" data-bs-target="#additionalItems" aria-expanded="false" aria-controls="additionalItems">
+            <i class="bi bi-question-circle me-3"></i>
+            Help
+        </a>
+      </li>
     </ul>
+    <!-- Additional items (collapsed by default) -->
+    <div class="collapse" id="additionalItems">
+      <ul class="nav nav-pills flex-column mb-auto">
+          <li>
+              <a href="#" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
+                  Help Contacts
+              </a>
+          </li>
+          <li>
+              <a href="#" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
+                  Help
+              </a>
+          </li>
+          <li>
+              <a href="#" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
+                  FAQ
+              </a>
+          </li>
+      </ul>
+    </div>
+
+    
     <hr>
     <div class="dropdown">
       <a href="/home" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle py-3" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 1.25rem;">
@@ -65,5 +94,7 @@
       </ul>
     </div>
 </div>
+
+
 
 @endsection
