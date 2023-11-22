@@ -37,7 +37,7 @@ Route::controller(PostController::class)->group(function () {
     Route::get('/home/forYou', 'forYou')->name('forYou');
     Route::get('/home', 'list')->name('home');
     Route::get('/post/create', 'create')->name('createPost');
-    Route::post('/post', 'store')->name('storePost');
+    Route::post('/post/create', 'store')->name('storePost');
 });
 
 // Cards
