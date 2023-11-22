@@ -15,7 +15,7 @@
         </div>
     </div>
     <div class="container-lg d-flex justify-content-center align-items-center w-100">
-        <ul class="list-unstyled mt-4">
+        <ul class="list-unstyled mb-4">
             @forelse($posts as $post)
                 @include('partials.post', ['post' => $post])
             @empty
