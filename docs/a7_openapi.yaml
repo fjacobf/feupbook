@@ -815,7 +815,7 @@ paths:
 
 ######### DELETE COMMENT #########
 
-  /comment/delete:
+  /comment/{id}/delete:
 
     post:
       operationId: R602
@@ -823,6 +823,13 @@ paths:
       description: 'Deletes a comment. Access: OWN, ADM'
       tags:
         - 'M06: Comments'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
 
       responses:
         '302':

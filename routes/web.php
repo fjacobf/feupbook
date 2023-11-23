@@ -34,7 +34,7 @@ Route::view('/help', 'pages.help')->name('help');
 Route::view('/faq', 'pages.faq')->name('faq');
 Route::view('/contacts', 'pages.contacts')->name('contacts');
 
-
+// Posts
 Route::controller(PostController::class)->group(function () {
     Route::get('/home/forYou', 'forYou')->name('forYou');
     Route::get('/home', 'list')->name('home');
@@ -46,10 +46,12 @@ Route::controller(PostController::class)->group(function () {
     Route::delete('/post/{id}/delete', 'delete')->name('deletePost');
 });
 
+// Comments
 Route::controller(CommentController::class)->group(function () {
     Route::post('/comment/create', 'store')->name('storeComment');
-    Route::get('/comment/delete', 'delete')->name('deleteComment');
+    Route::delete('/comment/{id}/delete', 'delete')->name('deleteComment');
 });
+
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {

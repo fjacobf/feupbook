@@ -11,7 +11,13 @@ class comment extends Model
     use HasFactory;
 
     protected $primaryKey = 'comment_id';
-    public $timestamps = false;
+
+    protected $fillable = [
+        'author_id',
+        'post_id',
+        'content',
+        'previous',
+    ];
 
     public function user(): BelongsTo
    {
