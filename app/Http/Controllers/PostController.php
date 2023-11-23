@@ -26,19 +26,28 @@ class PostController extends Controller
     }
 
     /**
-     * Show all the posts available in the database.
+     * Show the posts of public users. Show posts of public and private users if you are an admin.
      */
     public function list()
     {
       // Check if user is logged in
       if (Auth::check()) {
           // User is logged in
-          // Get posts only from public users excluding the logged-in user
-          $posts = Post::whereHas('user', function($query) {
-              $query->where('private', false)
-                    ->where('owner_id', '!=', Auth::id());
-          })->with('comments')
-          ->orderBy('created_at', 'desc')->paginate(10);
+          // Check if the user is an admin
+          if (auth()->user()->user_type == 'admin') {
+              // For admin users, get all posts including private ones
+              $posts = Post::whereHas('user', function($query) {
+                $query->where('owner_id', '!=', Auth::id());
+            })->with('comments')
+              ->orderBy('created_at', 'desc')->paginate(10);
+          } else {
+              // For non-admin users, get posts only from public users excluding the logged-in user
+              $posts = Post::whereHas('user', function($query) {
+                  $query->where('private', false)
+                        ->where('owner_id', '!=', Auth::id());
+              })->with('comments')
+                ->orderBy('created_at', 'desc')->paginate(10);
+          }
 
           return view('pages.posts', ['posts' => $posts]);
       } else {
@@ -46,6 +55,7 @@ class PostController extends Controller
           return redirect('/');
       }
     }
+
 
 
     public function forYou()
