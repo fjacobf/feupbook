@@ -83,4 +83,6 @@ class PostController extends Controller
 
       return redirect('/home')->with('success', 'Post created successfully!');
     }
+
+
 }
