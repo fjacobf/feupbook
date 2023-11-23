@@ -16,10 +16,10 @@ class PostController extends Controller
      */
     public function show(string $id): View
     {
-        // Get the card.
+        // Get the post.
         $post = Post::findOrFail($id); 
 
-        // Use the pages.card template to display the card.
+        // Use the pages.post template to display the post.
         return view('pages.post', [
             'post' => $post
         ]);
@@ -30,16 +30,23 @@ class PostController extends Controller
      */
     public function list()
     {
-      //check if user is logged in
+      // Check if user is logged in
       if (Auth::check()) {
-        //user is logged in
-        $posts = Post::with('user')->orderBy('created_at', 'desc')->paginate(10);
-        return view('pages.posts', ['posts' => $posts]);
+          // User is logged in
+          // Get posts only from public users excluding the logged-in user
+          $posts = Post::whereHas('user', function($query) {
+              $query->where('private', false)
+                    ->where('owner_id', '!=', Auth::id());
+          })->with('comments')
+          ->orderBy('created_at', 'desc')->paginate(10);
+
+          return view('pages.posts', ['posts' => $posts]);
       } else {
-        //user is not logged in
-        return redirect('/');
+          // User is not logged in
+          return redirect('/');
       }
     }
+
 
     public function forYou()
     {
@@ -67,7 +74,7 @@ class PostController extends Controller
 
     public function create()
     {
-        return view('pages.postsCreate');
+        return view('pages.createPost');
     }
 
     public function store(Request $request)
@@ -83,4 +90,57 @@ class PostController extends Controller
 
       return redirect('/home')->with('success', 'Post created successfully!');
     }
+
+    public function edit(string $id)
+    {
+      $post = Post::findOrFail($id);
+
+      // Unauthorized action check
+      if (Auth::id() !== $post->owner_id) {
+          abort(403, 'Unauthorized action.');
+      }
+
+      return view('pages.editPost', ['post' => $post]);
+    }
+
+
+    public function update(Request $request, string $id)
+    {
+      // Validate the request
+      $validatedData = $request->validate([
+          'content' => 'required|max:1000', // Validation rules for the content
+      ]);
+
+      // Find the post
+      $post = Post::findOrFail($id);
+
+      // Check if the authenticated user is the owner of the post
+      if (Auth::id() !== $post->owner_id) {
+          abort(403, 'Unauthorized action.');
+      }
+
+      // Update the post
+      $post->content = $validatedData['content'];
+      $post->save();
+
+      // Redirect with a success message
+      return redirect()->route('user.profile', ['id' => Auth::id()])->with('success', 'Post updated successfully!');
+    }
+
+    public function delete(string $id)
+    {
+      $post = Post::findOrFail($id);
+
+      // Check if the authenticated user is the owner of the post
+      if (Auth::id() !== $post->owner_id) {
+          abort(403, 'Unauthorized action.');
+      }
+
+      // Delete the post
+      $post->delete();
+
+      // Redirect with a success message
+      return redirect()->route('user.profile', ['id' => Auth::id()])->with('success', 'Post deleted successfully!');
+    }
+
 }

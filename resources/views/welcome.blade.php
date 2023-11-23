@@ -18,11 +18,6 @@
         <!-- Right side with login/signup information -->
         <div class="col-lg-6">
             <div class="w-100" style="max-width: 540px;"> 
-                @if (auth()->check())
-                    <h1 class="display-4">Welcome, {{ auth()->user()->name }}!</h1>
-                    <p class="lead">You are logged in.</p>
-                    <a href="{{ route('logout') }}" class="btn btn-danger btn-lg w-100">Logout</a>
-                @else
                 <h1 class="display-4">Happening now</h1>
                 <h2 class="display-6 mb-4">Join FEUPBook today.</h2>
                 <a class="btn btn-primary btn-lg mb-2 w-100">Sign up with Google</a> 
@@ -34,7 +29,6 @@
                 <div class="mt-2">
                     Already have an account? <a href="{{ route('login') }}" class="fw-bold">Sign in</a>
                 </div>
-                @endif
             </div>
         </div>
     </div>

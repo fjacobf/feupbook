@@ -27,6 +27,8 @@ class User extends Authenticatable // lower case plural
         'username',
         'email',
         'password',
+        'bio',
+        'private',
         'user_type',
     ];
 
@@ -91,6 +93,11 @@ class User extends Authenticatable // lower case plural
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, 'owner_id', 'user_id');
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class, 'author_id', 'post_id');
     }
 
     public function following() {
