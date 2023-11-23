@@ -50,6 +50,8 @@ class AdminController extends Controller
 
         $user->update($requestData);
 
-        return redirect()->back()->with('success', 'User updated successfully.');
+        //return redirect()->back()->with('success', 'User updated successfully.');
+        return redirect()->route('user.profile', ['id' => $user->user_id])
+                     ->with('success', 'User updated successfully.');
     }
 }
