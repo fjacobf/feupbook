@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-@section('title', 'Search')
-
 @section('sidebar')
     @include('partials.sidebar')
 @endsection

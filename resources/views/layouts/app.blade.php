@@ -8,7 +8,7 @@
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
         
-        <title>@yield('title', 'Laravel')</title>
+        <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Styles -->
         <link href="{{ url('css/bootstrap.min_flatly.css') }}" rel="stylesheet">
