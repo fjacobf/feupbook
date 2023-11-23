@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
@@ -71,6 +72,9 @@ Route::controller(UserController::class)->group(function () {
     Route::post('/user/{id}/follow', [UserController::class, 'follow'])->name('user.follow');
     Route::post('/user/{id}/unfollow', [UserController::class, 'unfollow'])->name('user.unfollow');
 });
+
+// Search
+Route::get('/search', [SearchController::class, 'search'])->name('search');
 
 // Admin Management
 Route::controller(AdminController::class)->group(function () {
