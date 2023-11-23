@@ -15,7 +15,7 @@
         </a>
       </li>
       <li>
-        <a href="#" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
+        <a href="/search" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
           <i class="bi bi-search me-3"></i>
           Search
         </a>
