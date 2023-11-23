@@ -23,7 +23,10 @@ use App\Http\Controllers\Auth\RegisterController;
 */
 
 // Home
-Route::view('/', 'welcome')->name('welcome');
+Route::get('/', function () {
+    return view('welcome');
+})->middleware('guest')->name('welcome');
+
 
 Route::view('/about', 'pages.about')->name('about');
 Route::view('/help', 'pages.help')->name('help');
@@ -34,34 +37,18 @@ Route::view('/contacts', 'pages.contacts')->name('contacts');
 Route::controller(PostController::class)->group(function () {
     Route::get('/home/forYou', 'forYou')->name('forYou');
     Route::get('/home', 'list')->name('home');
-    Route::get('/post/create', 'create')->name('createPost'); //returns the view postsCreate
-    Route::post('/post', 'store')->name('storePost');
+    Route::get('/post/create', 'create')->name('createPost');
+    Route::post('/post/create', 'store')->name('storePost');
+    Route::get('/post/{id}', 'show')->name('showPost');
+    Route::get('/post/{id}/edit', 'edit')->name('editPost');
+    Route::put('/post/{id}/edit', 'update')->name('updatePost');   
+    Route::delete('/post/{id}/delete', 'delete')->name('deletePost');
 });
 
 Route::controller(CommentController::class)->group(function () {
     Route::post('/comment', 'store')->name('storeComment');
     Route::get('/comment/delete', 'delete')->name('deleteComment');
 });
-
-// // Cards
-// Route::controller(CardController::class)->group(function () {
-//     Route::get('/cards', 'list')->name('cards');
-//     Route::get('/cards/{id}', 'show');
-// });
-
-
-// // API
-// Route::controller(CardController::class)->group(function () {
-//     Route::put('/api/cards', 'create');
-//     Route::delete('/api/cards/{card_id}', 'delete');
-// });
-
-// Route::controller(ItemController::class)->group(function () {
-//     Route::put('/api/cards/{card_id}', 'create');
-//     Route::post('/api/item/{id}', 'update');
-//     Route::delete('/api/item/{id}', 'delete');
-// });
-
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {
