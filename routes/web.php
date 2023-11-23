@@ -74,7 +74,6 @@ Route::controller(UserController::class)->group(function () {
 // Search
 Route::get('/search', [SearchController::class, 'search'])->name('search');
 
-
 // Admin Management
 Route::controller(AdminController::class)->group(function () {
     Route::get('/admin/user/{id}', [AdminController::class, 'showUserManagement'])->name('admin.manageUser');
