@@ -784,16 +784,16 @@ $$ LANGUAGE plpgsql;
 -- Insert statements for the 'users' table
 INSERT INTO users (username, email, password, name, bio, private, user_type)
 VALUES
-    ('user1', 'user1@example.com', '$2a$12$goYowY.ccXyLR8so94t3y.jEXtVs7.IDFworUJqqxIGmMd4XhrITa', 'User One', 'Bio for User One', false, 'normal_user'),
-    ('user2', 'user2@example.com', '$2a$12$GE0k/yA1x88VMc48xmgiEeLWnbDCxqDuyUMm3RT9QBEj.GdP0BzjW', 'User Two', 'Bio for User Two', true, 'normal_user'),
-    ('newuser', 'newuser@example.com', '$2a$12$hCqEe5DSo019ZZsRY9xFfOpVHlZ642xSjZIxWKx3xmveCOYBMISj6', 'New User', 'Bio for New User', false, 'normal_user'),
-    ('FPmod', 'fpmod@example.com', '$2a$12$Pw1yagUYBgvoMqcGGv8McOkRXS4WMO/a6S7RH.HjmmlmQQyPHueMG', 'FPAdmin', 'Admin for FEUPbook', false, 'admin'),
-    ('ADM', 'admfpbook@example.com', '$2a$12$XQefcocDGnOoS5Cl4Q9Vw.ChpEzIH2Ft4uxD8E9spoVX2ijO2JdZG', 'ADM', 'Second Admin for FEUPbook', true, 'admin'),
-    ('FPhelper', 'helper@example.com', '$2a$12$5FBTo8/npT5CBquqcxIBduolFG3JsT1l6iLLAUhfInmJ.gfBELiiu', 'FPhelper', 'Helper for FEUPbook', false, 'admin'),
-    ('FPhelper2', 'helper2@example.com', '$2a$12$Cqrwqn4G58jRZdGgOUFH7uM9dt5I5tFWyItYpMquC7If8TndQNIdO', 'FPhelper2', 'Second helepr for FEUPbook', false, 'admin'),
-    ('BadUser', 'baduser@example.com', '$2a$12$ByMwcBrT3hICpLZTbop0XuBHRJ9BOS71olRdbXU92QTXk0jxGfLqi', 'BadUser', 'Banned from FEUPbook', false, 'suspended'),
-    ('BadUser2', 'baduser2@example.com', '$2a$12$K2UnxG3ulT4HxlZKj/tFr.AJ3zimcjLPTQDHgKZdP/z6xJlW1ITH2', 'BadUser2', 'Second banned from FEUPbook', false, 'suspended'),
-    ('Joe', 'joe@example.com', '$2a$12$pL/fXwZkS4vihbITTltNV.fA5G4IQYVrts0Ds2wf9gtKm/VXeK8yO', 'Joe', 'Joe on feupbook', false, 'normal_user');
+    ('john_doe', 'john.doe@example.com', '$2a$12$goYowY.ccXyLR8so94t3y.jEXtVs7.IDFworUJqqxIGmMd4XhrITa', 'John Doe', 'Computer Science student at University X', false, 'normal_user'),
+    ('alice_smith', 'alice.smith@example.com', '$2a$12$GE0k/yA1x88VMc48xmgiEeLWnbDCxqDuyUMm3RT9QBEj.GdP0BzjW', 'Alice Smith', 'Mathematics enthusiast', true, 'normal_user'),
+    ('prof_jones', 'prof.jones@example.com', '$2a$12$hCqEe5DSo019ZZsRY9xFfOpVHlZ642xSjZIxWKx3xmveCOYBMISj6', 'Professor Jones', 'Teaching Physics at University X', false, 'normal_user'),
+    ('admin1', 'admin1@example.com', '$2a$12$Pw1yagUYBgvoMqcGGv8McOkRXS4WMO/a6S7RH.HjmmlmQQyPHueMG', 'Admin One', 'Administrator at University X', false, 'admin'),
+    ('admin2', 'admin2@example.com', '$2a$12$XQefcocDGnOoS5Cl4Q9Vw.ChpEzIH2Ft4uxD8E9spoVX2ijO2JdZG', 'Admin Two', 'Second Administrator at University X', true, 'admin'),
+    ('ta_physics', 'ta_physics@example.com', '$2a$12$5FBTo8/npT5CBquqcxIBduolFG3JsT1l6iLLAUhfInmJ.gfBELiiu', 'TA Physics', 'Teaching Assistant for Physics course', false, 'normal_user'),
+    ('ta_math', 'ta_math@example.com', '$2a$12$Cqrwqn4G58jRZdGgOUFH7uM9dt5I5tFWyItYpMquC7If8TndQNIdO', 'TA Math', 'Teaching Assistant for Mathematics course', false, 'normal_user'),
+    ('banned_user', 'banned_user@example.com', '$2a$12$ByMwcBrT3hICpLZTbop0XuBHRJ9BOS71olRdbXU92QTXk0jxGfLqi', 'Banned User', 'Account suspended due to violation of university policies', false, 'normal_user'),
+    ('banned_user2', 'banned_user2@example.com', '$2a$12$K2UnxG3ulT4HxlZKj/tFr.AJ3zimcjLPTQDHgKZdP/z6xJlW1ITH2', 'Banned User 2', 'Second account suspended', false, 'normal_user'),
+    ('jane_doe', 'jane.doe@example.com', '$2a$12$pL/fXwZkS4vihbITTltNV.fA5G4IQYVrts0Ds2wf9gtKm/VXeK8yO', 'Jane Doe', 'Studying Computer Engineering at University X', false, 'suspended');
 
 -- Insert statements for the 'follow_requests' table
 INSERT INTO follow_requests (req_id, rcv_id, date, status)
@@ -809,36 +809,31 @@ VALUES
     (8, 7, '2023-11-02', 'accepted'),
     (9, 8, '2023-11-03', 'accepted'),
     (10, 9, '2023-11-04', 'accepted');
--- Todos os follow_requests feitos a um users com private=false devem ter automaticamente staus=accepted. Deve se fazer um trigger?
 
 -- Insert statements for the 'posts' table
 INSERT INTO posts (owner_id, image, content, created_at, updated_at)
 VALUES
-    (1, 'image1.jpg', 'This is the content of the first post.', '2023-10-26 00:00:00', NULL),
-    (2, 'image2.jpg', 'Post by User Two.', '2023-10-25 00:00:00', NULL),
-    (4, NULL, 'Moderator post.', '2023-10-24 00:00:00', NULL),
-    (2, 'image4.jpg', 'Second post from User Two', '2023-10-23 00:00:00', NULL),
-    (7, NULL, 'Welcome to FEUPbook!', '2023-10-22 00:00:00', NULL),
-    (2, 'image6.jpg', 'Another post by User Two.', '2023-10-21 00:00:00', NULL),
-    (1, 'image7.jpg', 'Another post by User One.', '2023-10-20 00:00:00', NULL),
-    (8, 'image8.jpg', 'I got banned!', '2023-10-19 00:00:00', NULL),
-    (9, NULL, 'I also got banned.', '2023-10-18 00:00:00', NULL),
-    (10, NULL, 'Hello from Joe.', '2023-10-17 00:00:00', NULL);
+    (1, 'image1.jpg', 'Studying late at the library. #CodingAllNight', '2023-10-26 19:30:00', NULL),
+    (2, 'image2.jpg', 'Solving complex math problems today!', '2023-10-25 15:45:00', NULL),
+    (4, NULL, 'Important announcement for Physics students.', '2023-10-24 12:00:00', NULL),
+    (2, 'image4.jpg', 'Just aced my midterms! Feeling great!', '2023-10-23 10:15:00', NULL),
+    (7, NULL, 'Excited to join University X! #NewBeginnings', '2023-10-22 08:00:00', NULL),
+    (2, 'image6.jpg', 'Another day, another math challenge.', '2023-10-21 16:20:00', NULL),
+    (1, 'image7.jpg', 'Exploring campus and meeting new friends.', '2023-10-20 14:30:00', NULL),
+    (8, 'image8.jpg', 'Account suspended due to violation of university policies.', '2023-10-19 11:45:00', NULL),
+    (9, NULL, 'Second account suspended. Lesson learned.', '2023-10-18 09:00:00', NULL),
+    (10, NULL, 'Hello from Joe. #LifeAtUniversityX', '2023-10-17 07:15:00', NULL);
 
-
-
-
---Insert statements for the 'comment' table
+-- Insert statements for the 'comment' table
 INSERT INTO comments (author_id, post_id, content, created_at, previous)
 VALUES
-    (1, 1, 'Comment on post 1 by User One.', '2023-10-26 00:00:00', NULL),
-    (4, 2, 'Moderator comment on post 2.', '2023-10-28 00:00:00', NULL),
-    (4, 8, 'I agree.', '2023-11-01 00:00:00', NULL),
-    (3, 9, 'You too?', '2023-11-02 00:00:00', NULL),
-    (3, 9, 'Why?', '2023-11-03 00:00:00', NULL),
-    (10, 10, 'Hello from Joe.', '2023-11-04 00:00:00', NULL),
-    (2, 1, 'Reply on comment one by User Two.', '2023-10-26 00:00:00', 1);
-
+    (1, 1, 'Late-night coding sessions are the best!', '2023-10-26 20:00:00', NULL),
+    (4, 2, 'Great job on the math problems!', '2023-10-25 16:00:00', NULL),
+    (4, 8, 'Agreed, the decision was necessary.', '2023-10-24 12:30:00', NULL),
+    (3, 9, 'Unfortunately, yes. Lets hope for better days.', '2023-10-23 11:00:00', NULL),
+    (3, 9, 'Its a long story. Lets chat offline.', '2023-10-23 11:30:00', NULL),
+    (10, 10, 'Greetings, Joe! Hows university life treating you?', '2023-10-17 08:00:00', NULL),
+    (2, 1, 'Coding all night is the key to success!', '2023-10-26 20:15:00', 1);
 
 
 -- Insert statements for the 'group_chats' table
