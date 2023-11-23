@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\PostController;
@@ -67,4 +68,10 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/user/{id}', [UserController::class, 'show'])->name('user.profile');
     Route::post('/user/{id}/follow', [UserController::class, 'follow'])->name('user.follow');
     Route::post('/user/{id}/unfollow', [UserController::class, 'unfollow'])->name('user.unfollow');
+});
+
+// Admin Management
+Route::controller(AdminController::class)->group(function () {
+    Route::get('/admin/user/{id}', [AdminController::class, 'showUserManagement'])->name('admin.manageUser');
+    Route::post('/admin/user/{id}/edit', [AdminController::class, 'updateUser'])->name('admin.updateUser');
 });

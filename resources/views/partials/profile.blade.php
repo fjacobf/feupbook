@@ -11,6 +11,14 @@
             <div class="profile-details-text border-black mb-4">
                 <h1 class="display-4">{{ $user->name }}</h1>
                 <h3 class="text-secondary"><span>@</span>{{ $user->username }}</h3>
+                <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 10px;">
+                    @if (Auth::check() && Auth::user()->user_id == $user->user_id)
+                        <a href="" class="btn btn-primary" style="margin-right: 5px;">Edit Profile</a>
+                    @endif
+                    @if (Auth::check() && Auth::user()->user_type == 'admin')
+                        <a href="{{ route('admin.manageUser', ['id' => $user->user_id]) }}"class="btn btn-primary">Manage User's Account</a>
+                    @endif
+                </div>
                 @if ($user->private)
                     <div class="alert alert-warning" role="alert">
                         <strong>Private Profile</strong>

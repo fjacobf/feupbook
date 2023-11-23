@@ -38,6 +38,7 @@ class User extends Authenticatable // lower case plural
 
     protected $casts = [
         'password' => 'hashed',
+        'private' => 'boolean',
     ];
 
     protected $primaryKey = 'user_id';
