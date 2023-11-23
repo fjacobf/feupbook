@@ -6,6 +6,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CommentController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -42,6 +43,11 @@ Route::controller(PostController::class)->group(function () {
     Route::get('/post/{id}/edit', 'edit')->name('editPost');
     Route::put('/post/{id}/edit', 'update')->name('updatePost');   
     Route::delete('/post/{id}/delete', 'delete')->name('deletePost');
+});
+
+Route::controller(CommentController::class)->group(function () {
+    Route::post('/comment', 'store')->name('storeComment');
+    Route::get('/comment/delete', 'delete')->name('deleteComment');
 });
 
 // Authentication

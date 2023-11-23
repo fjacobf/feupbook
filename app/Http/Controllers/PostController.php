@@ -37,7 +37,8 @@ class PostController extends Controller
           $posts = Post::whereHas('user', function($query) {
               $query->where('private', false)
                     ->where('owner_id', '!=', Auth::id());
-          })->orderBy('created_at', 'desc')->paginate(10);
+          })->with('comments')
+          ->orderBy('created_at', 'desc')->paginate(10);
 
           return view('pages.posts', ['posts' => $posts]);
       } else {
