@@ -4,13 +4,10 @@
 
 <div class="container">
     <div class="row">
-        <!-- Left side with a large logo or image -->
         <div class="col-md-6">
-            <!-- The logo can be a background image in the CSS if preferred -->
             <img src="{{ asset('path-to-your-logo.png') }}" alt="FEUPBook Logo" class="img-fluid logo">
         </div>
 
-        <!-- Right side with help information -->
         <div class="col-md-6">
             <h1 class="mt-4">Help Center</h1>
             <p>

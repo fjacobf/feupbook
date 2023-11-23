@@ -9,7 +9,7 @@
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
-        <a href="{{url('/home')}}" class="nav-link {{ request()->is('home') ? 'active' : 'link-dark' }} py-2" aria-current="page" style="font-size: 1.25rem;">
+        <a href="{{ route('home') }}" class="nav-link {{ request()->is('home') ? 'active' : 'link-dark' }} py-2" aria-current="page" style="font-size: 1.25rem;">
           <i class="bi bi-house-fill me-3"></i>
           Home
         </a>
@@ -64,18 +64,23 @@
     <div class="collapse" id="additionalItems">
       <ul class="nav nav-pills flex-column mb-auto">
           <li>
-              <a href="#" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
-                  Help Contacts
+              <a href="{{route('contacts')}}" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
+                  Contacts
               </a>
           </li>
           <li>
-              <a href="#" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
+              <a href="{{route('help')}}" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
                   Help
               </a>
           </li>
           <li>
-              <a href="#" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
+              <a href="{{route('faq')}}" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
                   FAQ
+              </a>
+          </li>
+          <li>
+              <a href="{{route('about')}}" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
+                  About
               </a>
           </li>
       </ul>
