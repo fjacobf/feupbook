@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\FollowRequest;
-use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {   
@@ -64,45 +63,6 @@ class UserController extends Controller
         }
     
         return redirect()->back();
-    }
-
-    
-
-    public function search(Request $request){
-        // Log::info('This is some useful information.');
-        if($request){
-            $data=User::where('username','like','%'.$request->search.'%')
-            ->orwhere('email','like','%'.$request->search.'%')->get();
- 
-            $output='';
-            if(count($data)>0){
-                $output ='
-                    <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">Username</th>
-                        <th scope="col">Email</th>
-                    </tr>
-                    </thead>
-                    <tbody>';
-                        foreach($data as $row){
-                            $output .='
-                            <tr>
-                            <th scope="row">'.$row->username.'</th>
-                            <td>'.$row->email.'</td>
-                            </tr>
-                            ';
-                        }
-                $output .= '
-                    </tbody>
-                    </table>';
-            }
-            else{
-                $output .='No results';
-            }
-
-            return $output;
-        }
     }
     
 }

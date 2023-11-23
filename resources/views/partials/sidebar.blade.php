@@ -64,49 +64,6 @@
         <li><a class="dropdown-item" href="{{url('/logout')}}">Sign out</a></li>
       </ul>
     </div>
+</div>
 
-    <div id="search_bar" class=" flex-column flex-shrink-0 p-4 bg-light"
-        style="display:none; width: 280px; height: 100vh; position: fixed; overflow-y: auto; margin-left: 280px;">
-
-        <label for="">Search for users</label>
-        <input type="text" name="search" id="search" placeholder="Enter search name" class="form-control"
-            onfocus="this.value=''">
-        <div id="search_list"></div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var searchInput = document.getElementById('search');
-            var searchList = document.getElementById('search_list');
-
-            searchInput.addEventListener('keyup', function() {
-                var query = searchInput.value;
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', 'search?search=' + query, true);
-
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        console.log(xhr.responseText);
-                        searchList.innerHTML = xhr.responseText;
-                    }
-                };
-
-                xhr.send();
-            });
-        });
-
-        function toggle_search_bar() {
-            var x = document.getElementById("search_bar");
-            var y = document.getElementById("search_bar_button")
-            if (x.style.display === "none") {
-                x.style.display = "block";
-                y.classList.add("active");
-                y.classList.remove("link-dark");
-              } else {
-                x.style.display = "none";
-                y.classList.remove("active");
-                y.classList.add("link-dark");
-            }
-        }
-    </script>
 @endsection
