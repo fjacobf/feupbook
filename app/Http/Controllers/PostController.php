@@ -16,10 +16,10 @@ class PostController extends Controller
      */
     public function show(string $id): View
     {
-        // Get the card.
+        // Get the post.
         $post = Post::findOrFail($id); 
 
-        // Use the pages.card template to display the card.
+        // Use the pages.post template to display the post.
         return view('pages.post', [
             'post' => $post
         ]);

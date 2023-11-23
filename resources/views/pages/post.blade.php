@@ -1,4 +1,4 @@
-{{-- @extends('layouts.app')
+@extends('layouts.app')
 
 @section('sidebar')
     @include('partials.sidebar')
@@ -8,4 +8,4 @@
     <section class="d-flex justify-content-center" style="margin-left: 280px;">
         @include('partials.post', ['post' => $post])
     </section>
-@endsection --}}
+@endsection

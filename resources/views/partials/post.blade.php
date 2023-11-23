@@ -7,7 +7,10 @@
             </div>
             <a href="{{ route('showPost', ['id' => $post->post_id]) }}" class="text-decoration-none">
                 <div class="card-body">
-                    <p class="card-text">{{ $post->content }}</p><br><br>
+                    <h5 class="card-text text-black">{{ $post->content }}</h5>
+                </div>
+            </a>
+                <div class="card-body">
                     <h4 class="card-text">Comments:</h4>
                     @forelse($post->comments as $comment)
                     @include('partials.comment', ['comment' => $comment])
@@ -24,7 +27,6 @@
                         <button type="submit" class="btn btn-primary">Post</button>
                     </form>
                 </div>
-            </a>
             @if (Auth::check() && Auth::id() == $post->owner_id)
                 <div class="card-footer d-flex justify-content-end">
                     <!-- Edit Button -->

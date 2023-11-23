@@ -10,7 +10,7 @@
             @if (Auth::id() == $comment->author_id)
                 <form action="{{ route('deleteComment') }}" method="GET">
                     @csrf
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this comment?')">Delete Comment</button>
                     <input type="hidden" name="comment_id" id="post_id" value="{{ $comment->comment_id }}">
                 </form>
             @endif

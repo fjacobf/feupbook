@@ -22,7 +22,7 @@ class CommentController extends Controller
       $comment->previous = $request->comment_id;
       $comment->save();
 
-      return redirect('/home')->with('success', 'Comment created successfully!');
+      return redirect()->back()->with('success', 'Comment created successfully!');
     }
 
     public function delete(Request $request)
@@ -30,6 +30,6 @@ class CommentController extends Controller
       Comment::where('previous', $request->comment_id)->delete();
       Comment::find($request->comment_id)->delete();
 
-      return redirect('/home')->with('success', 'Comment deleted successfully!');
+      return redirect()->back()->with('success', 'Comment deleted successfully!');
     }
 }
