@@ -7,8 +7,8 @@
 
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
-
-        <title>{{ config('app.name', 'FEUPbook') }}</title>
+        
+        <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Styles -->
         <link href="{{ url('css/bootstrap.min_flatly.css') }}" rel="stylesheet">
@@ -18,6 +18,7 @@
             // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
         </script>
         <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+        <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
     </head>
     <body>
 

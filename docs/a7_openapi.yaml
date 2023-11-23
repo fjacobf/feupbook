@@ -97,7 +97,7 @@ paths:
 
   /logout:
 
-    post:
+    get:
       operationId: R103
       summary: 'R103 : Logout Action'
       description: 'Logout the current authenticated user. Access: USR, ADM'
@@ -265,221 +265,21 @@ paths:
                   value: '/login'
         '404':
           description: 'Not Found. The user does not exist.'
-
-######### EDIT PROFILE #########
-
-  /user/{id}/editProfile:
-
-    get:
-      operationId: R204
-      summary: 'R204: Edit user profile page.'
-      description: 'Shows the edit profile page of the user. Access: OWN'
-      tags:
-        - 'M02: Users'
-
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: True
-
-      responses:
-        '200':
-          description: 'Ok. Show edit profile UI.'
-        '401':
-          description: 'Unauthorized. You cannot edit this profile.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                profileRedirect:
-                  description: 'Unauthorized. Redirect to user profile.'
-                  value: '/user/{id}'
-
-    post:
-      operationId: R205
-      summary: 'R205: Edit user profile action'
-      description: 'Processes and saves the changes made by user. Access: USR, OWN'
-      tags:
-        - 'M02: Users'
-
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                username:
-                  type: string
-                email:
-                  type: string
-                  format: email
-                bio:
-                  type: string
-                password:
-                  type: string
-                  format: password
-                confirm_password:
-                  type: string
-                  format: password
-                # image:
-                #   type: string
-                #   format: binary
-                private:
-                  type: boolean
-
-              required:
-              - name
-              - username
-              - email
-              - bio
-              - private
-
-      responses:
-        '302':
-          description: 'Redirect after processing the new user information.'
-          headers:
-            Location:
-              schema:
-                type: string
-              example:
-                302Success:
-                  description: 'Successful update. Redirect to user profile page.'
-                  value: '/user/{id}'
-                302Failure:
-                  description: 'Failed update. Redirect to edit profile page.'
-                  value: '/user/edit'
           
-######### PROFILE DELETE #########
-
-  /user/{id}/deleteProfile:
-
-    post:
-      operationId: R206
-      summary: 'R206: Delete current user.'
-      description: 'Deletes the current user through the profile page. Access: OWN'
-      tags:
-        - 'M02: Users'
-      
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: True
-
-      responses:
-        '302':
-          description: 'Redirect after deleting user information.'
-          headers:
-            Location:
-              schema:
-                type: string
-              example:
-                302Success:
-                  description: 'Successful delete. Redirect to login page.'
-                  value: '/login'
-                302Failure:
-                  description: 'Failed delete. Redirect to user profile page.'
-                  value: '/user/{id}'
-
-######### DELETE #########
-
-  /user/{id}/delete:
-
-    post:
-      operationId: R207
-      summary: 'R207: Delete a user by ID.'
-      description: 'Allows an administrator to delete a user by ID Access: ADM'
-      tags:
-        - 'M02: Users'
-
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: True
-
-      responses:
-        '200':
-          description: 'Ok. Deleted the user information.'
-        '403':
-          description: 'Forbidden action.'
-
-######### REMOVE FOLLOWER #########
-
-  /user/{user_id}/removeFollower/{follower_id}:
-
-    post:
-      operationId: R208
-      summary: 'R208: Remove a follower.'
-      description: 'Removes a follower from the user followers. Access: OWN'
-      tags:
-        - 'M02: Users'
-
-      parameters:
-        - in: path
-          name: user_id
-          schema:
-            type: integer
-          required: True
-        - in: path
-          name: follower_id
-          schema:
-            type: integer
-          required: True
-        
-      responses:
-        '200':
-          description: 'Ok. You removed a follower from your profile.'
-        '403':
-          description: 'Forbidden action.'
-        '404':
-          description: 'Not Found'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: string
-                  message:
-                    type: string
-              examples:
-                userNotFound:
-                  value:
-                    error_code: "UserNotFound"
-                    message: "The user ID does not exist."
-                notAFollower:
-                  value:
-                    error_code: "NotAFollower"
-                    message: "The specified ID is not a follower of the user."
-
 ######### FOLLOW #########
 
-  /user/{user_id}/follow/{followed_id}:
+  /user/{id}/follow:
 
     post:
-      operationId: R209
-      summary: 'R209: Follow a user.'
+      operationId: R204
+      summary: 'R204: Follow a user.'
       description: 'Follows a user. Access: USR, ADM'
       tags:
         - 'M02: Users'
 
       parameters:
         - in: path
-          name: user_id
-          schema:
-            type: integer
-          required: True
-        - in: path
-          name: followed_id
+          name: id
           schema:
             type: integer
           required: True
@@ -512,23 +312,18 @@ paths:
 
 ######### UNFOLLOW #########
 
-  /user/{user_id}/unfollow/{unfollow_id}:
+  /user/{id}/unfollow:
 
     post:
-      operationId: R210
-      summary: 'R210: Unfollow a user.'
+      operationId: R205
+      summary: 'R205: Unfollow a user.'
       description: 'Unfollows a user. Access: USR, ADM'
       tags:
         - 'M02: Users'
 
       parameters:
         - in: path
-          name: user_id
-          schema:
-            type: integer
-          required: True
-        - in: path
-          name: unfollow_id
+          name: id
           schema:
             type: integer
           required: True
@@ -559,211 +354,13 @@ paths:
                     error_code: "NotAFollower"
                     message: "The specified ID is not a follower of the user."
 
-######### FOLLOW REQUEST #########
-
-  /user/{user_id}/followRequest/{follow_id}:
-
-    post:
-      operationId: R211
-      summary: 'R211: Send follow request to a user.'
-      description: 'Sends a notification with a follow request to a user. Access: USR, ADM'
-      tags:
-        - 'M02: Users'
-
-      parameters:
-        - in: path
-          name: user_id
-          schema:
-            type: integer
-          required: True
-        - in: path
-          name: follow_id
-          schema:
-            type: integer
-          required: True
-
-      responses:
-        '200':
-          description: 'Ok. Sent a follow request to a user.'
-        '403':
-          description: 'Forbidden action.'
-        '404':
-          description: 'Not Found'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: string
-                  message:
-                    type: string
-              examples:
-                userNotFound:
-                  value:
-                    error_code: "UserNotFound"
-                    message: "The user ID does not exist."
-                alreadyAFollower:
-                  value:
-                    error_code: "AlreadyAFollower"
-                    message: "The specified ID is already a follower of the user."
-
-
-######### CANCEL FOLLOW REQUEST #########
-
-  /user/{user_id}/cancelFollowRequest/{follow_id}:
-
-    post:
-      operationId: R212
-      summary: 'R212: Cancel a follow request.'
-      description: 'Removes the notification of the follow request to a user. Access: USR, ADM'
-      tags:
-        - 'M02: Users'
-
-      parameters:
-        - in: path
-          name: user_id
-          schema:
-            type: integer
-          required: True
-        - in: path
-          name: follow_id
-          schema:
-            type: integer
-          required: True
-
-      responses:
-        '200':
-          description: 'Ok. You cancelled a follow request.'
-        '403':
-          description: 'Forbidden action.'
-        '404':
-          description: 'Not Found'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: string
-                  message:
-                    type: string
-              examples:
-                userNotFound:
-                  value:
-                    error_code: "UserNotFound"
-                    message: "The user ID does not exist."
-                notAFollower:
-                  value:
-                    error_code: "NotAFollower"
-                    message: "The specified ID is not a follower of the user."
-
-######### ACCEPT FOLLOW REQUEST #########
-
-  /user/{user_id}/acceptFollowRequest/{follow_id}:
-
-    post:
-      operationId: R213
-      summary: 'R213: Accept a follow request.'
-      description: 'Accepts a follow request from a user. Access: USR, ADM'
-      tags:
-        - 'M02: Users'
-
-      parameters:
-        - in: path
-          name: user_id
-          schema:
-            type: integer
-          required: True
-        - in: path
-          name: follow_id
-          schema:
-            type: integer
-          required: True
-
-      responses:
-        '200':
-          description: 'Ok. You accepted a follow request.'
-        '403':
-          description: 'Forbidden action.'
-        '404':
-          description: 'Not Found'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: string
-                  message:
-                    type: string
-              examples:
-                userNotFound:
-                  value:
-                    error_code: "UserNotFound"
-                    message: "The user ID does not exist."
-                notAFollower:
-                  value:
-                    error_code: "NotAFollower"
-                    message: "The specified ID is not a follower of the user."
-
-
-######### REJECT FOLLOW REQUEST #########
-
-  /user/{user_id}/rejectFollowRequest/{follow_id}:
-
-    post:
-      operationId: R214
-      summary: 'R214: Reject a follow request.'
-      description: 'Rejects a follow request from a user. Access: USR, ADM'
-      tags:
-        - 'M02: Users'
-
-      parameters:
-        - in: path
-          name: user_id
-          schema:
-            type: integer
-          required: True
-        - in: path
-          name: follow_id
-          schema:
-            type: integer
-          required: True
-
-      responses:
-        '200':
-          description: 'Ok. You rejected a follow request.'
-        '403':
-          description: 'Forbidden action.'
-        '404':
-          description: 'Not Found'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: string
-                  message:
-                    type: string
-              examples:
-                userNotFound:
-                  value:
-                    error_code: "UserNotFound"
-                    message: "The user ID does not exist."
-                notAFollower:
-                  value:
-                    error_code: "NotAFollower"
-                    message: "The specified ID is not a follower of the user."
-
 ######### ABOUT PAGE #########
 
   /about:
 
     get:
-      operationId: R215
-      summary: 'R215: About static page'
+      operationId: R206
+      summary: 'R206: About static page'
       description: 'Shows About Page. Access USR, ADM, VST'
       tags:
         - 'M02: Users'
@@ -777,8 +374,8 @@ paths:
   /help:
 
     get:
-      operationId: R216
-      summary: 'R216: Help static page'
+      operationId: R207
+      summary: 'R207: Help static page'
       description: 'Shows Help Page. Access USR, ADM, VST'
       tags:
         - 'M02: Users'
@@ -792,8 +389,8 @@ paths:
   /faq:
 
     get:
-      operationId: R217
-      summary: 'R217: FAQ static page'
+      operationId: R208
+      summary: 'R208: FAQ static page'
       description: 'Shows FAQ Page. Access USR, ADM, VST'
       tags:
         - 'M02: Users'
@@ -807,8 +404,8 @@ paths:
   /contacts:
 
     get:
-      operationId: R218
-      summary: 'R218: Contacts static page'
+      operationId: R209
+      summary: 'R209: Contacts static page'
       description: 'Shows Contacts Page. Access USR, ADM, VST'
       tags:
         - 'M02: Users'
@@ -823,9 +420,20 @@ paths:
 
   /post/create:
 
-    post:
+    get:
       operationId: R301
-      summary: 'R301: Create post action'
+      summary: 'R301: Create post page'
+      description: 'Shows the create post page. Access: USR'
+      tags:
+        - 'M03: Posts'
+
+      responses:
+        '200':
+          description: 'Ok. Show create post UI.'
+
+    post:
+      operationId: R302
+      summary: 'R302: Create post action'
       description: 'Creates a post. Access: USR'
       tags:
         - 'M03: Posts'
@@ -855,13 +463,37 @@ paths:
                 302Failure:
                   description: 'Failed. Redirect back.'
 
+######### POST PAGE #########
+
+  /post/{id}:
+
+    get:
+      operationId: R303
+      summary: 'R303: View post page'
+      description: 'Shows the post page. Access: OWN, USR, ADM'
+      tags:
+        - 'M03: Posts'
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
+      responses:
+        '200':
+          description: 'Ok. Show post UI.'
+        '404':
+          description: 'Not Found. The post does not exist.'
+
 ######### EDIT POST #########
 
   /post/{id}/edit: 
 
     get:
-      operationId: R302
-      summary: 'R302: Edit post page'
+      operationId: R304
+      summary: 'R304: Edit post page'
       description: 'Shows the edit post page. Access: OWN, ADM'
       tags:
         - 'M03: Posts'
@@ -900,8 +532,8 @@ paths:
                     message: "The post does not belong to the user."
 
     post:
-      operationId: R303
-      summary: 'R303: Edit post action'
+      operationId: R305
+      summary: 'R305: Edit post action'
       description: 'Processes and saves the changes made by user. Access: OWN, ADM'
       tags:
         - 'M03: Posts'
@@ -943,8 +575,8 @@ paths:
   /post/{id}/delete:
 
     post:
-      operationId: R304
-      summary: 'R304: Delete post action'
+      operationId: R306
+      summary: 'R306: Delete post action'
       description: 'Deletes a post. Access: OWN, ADM'
       tags:
         - 'M03: Posts'
@@ -968,95 +600,6 @@ paths:
                   description: 'Post deleted successfully. Redirect back.'
                 302Failure:
                   description: 'Failed. Redirect back.'
-
-######### LIKE POST #########
-
-  /post/{id}/like:
-
-    post:
-      operationId: R305
-      summary: 'R305: Like post action'
-      description: 'Likes a post. Access: USR, OWN, ADM'
-      tags:
-        - 'M03: Posts'
-
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: True
-
-      responses:
-        '200':
-          description: 'Ok. You liked a post.'
-        '403':
-          description: 'Forbidden action.'
-        '404':
-          description: 'Not Found'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: string
-                  message:
-                    type: string
-              examples:
-                postNotFound:
-                  value:
-                    error_code: "PostNotFound"
-                    message: "The post ID does not exist."
-                alreadyLiked:
-                  value:
-                    error_code: "AlreadyLiked"
-                    message: "The specified post is already liked by the user."
-
-######### UNLIKE POST #########
-
-  /post/{id}/unlike:
-
-    post:
-      operationId: R306
-      summary: 'R306: Unlike post action'
-      description: 'Unlikes a post. Access: USR, OWN, ADM'
-      tags:
-        - 'M03: Posts'
-
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: True
-
-      responses:
-        '200':
-          description: 'Ok. You unliked a post.'
-        '403':
-          description: 'Forbidden action.'
-        '404':
-          description: 'Not Found'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: string
-                  message:
-                    type: string
-              examples:
-                postNotFound:
-                  value:
-                    error_code: "PostNotFound"
-                    message: "The post ID does not exist."
-                notLiked:
-                  value:
-                    error_code: "NotLiked"
-                    message: "The specified post is not liked by the user."
-
 
 ############################################ SEARCH ############################################
 
@@ -1122,20 +665,27 @@ paths:
 
 ############################################ ADMINISTRATION ############################################
 
-######### ADMIN PAGE #########
+######### ADMIN USER EDIT PAGE #########
 
-  /admin:
+  /admin/user/{id}/edit:
 
     get:
       operationId: R501
-      summary: 'R501: Admin page'
-      description: 'Shows the admin page. Access: ADM'
+      summary: 'R501: Admin edit user page'
+      description: 'Shows the admin edit user page. Access: ADM'
       tags:
         - 'M05: Administration'
 
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: True
+
       responses:
         '200':
-          description: 'Ok. Show admin UI.'
+          description: 'Ok. Show admin edit user UI.'
         '302':
           description: 'Redirect if user is not logged in.'
           headers:
@@ -1156,287 +706,74 @@ paths:
                 loginRedirect:
                   description: 'Redirect to the home page due to unauthorized access.'
                   value: '/home'
+        '404':
+          description: 'Not Found. The user does not exist.'
 
-
-######### ADMIN USERS PAGE #########
-
-  /admin/users:
-
-    get:
+    post:
       operationId: R502
-      summary: 'R502: Admin users page'
-      description: 'Shows the admin users page. Access: ADM'
-      tags:
-        - 'M05: Administration'
-
-      responses:
-        '200':
-          description: 'Ok. Show admin users UI.'
-        '302':
-          description: 'Redirect if user is not logged in.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                loginRedirect:
-                  description: 'Redirect to the login page due to unauthorized access.'
-                  value: '/login'
-        '403':
-          description: 'Forbidden. The user is not an administrator.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                loginRedirect:
-                  description: 'Redirect to the home page due to unauthorized access.'
-                  value: '/home'
-
-######### USER BLOCK #########
-
-  /admin/user/{user_id}/block:
-
-    post:
-      operationId: R503
-      summary: 'R503: Block user action'
-      description: 'Blocks a user. Access: ADM'
+      summary: 'R502: Admin edit user action'
+      description: 'Processes and saves the changes made by admin. Access: ADM'
       tags:
         - 'M05: Administration'
 
       parameters:
         - in: path
-          name: user_id
+          name: id
           schema:
             type: integer
           required: True
 
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                  username:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                    format: email
+                  password:
+                    type: string
+                    format: password
+                  confirm_password:
+                    type: string
+                    format: password
+                  role:
+                    type: string
+                    enum: [USR, ADM]
+                  bio:
+                    type: string
+              required:
+                - username
+                - name
+                - email
+                - password
+                - confirm_password
+                - role
+                - bio
+
       responses:
         '302':
-          description: 'Redirect once the user is blocked.'
+          description: 'Redirect once the new user information is processed.'
           headers:
             Location:
               schema:
                 type: string
               example:
                 302Success:
-                  description: 'User blocked successfully. Redirect back.'
+                  description: 'User edited successfully. Redirect to the user profile page.'
+                  headers:
+                    Location:
+                      schema:
+                        type: string
+                      example: '/user/{id}'
                 302Failure:
                   description: 'Failed. Redirect back.'
-        '403':
-          description: 'Forbidden. The user is not an administrator.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                loginRedirect:
-                  description: 'Redirect to the home page due to unauthorized access.'
-                  value: '/home'
-        '404':
-          description: 'Not Found'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: string
-                  message:
-                    type: string
-              examples:
-                userNotFound:
-                  value:
-                    error_code: "UserNotFound"
-                    message: "The user ID does not exist."
-                alreadyBlocked:
-                  value:
-                    error_code: "AlreadyBlocked"
-                    message: "The specified user is already blocked."
-
-
-######### USER UNBLOCK #########
-
-  /admin/user/{user_id}/unblock:
-
-    post:
-      operationId: R504
-      summary: 'R504: Unblock user action'
-      description: 'Unblocks a user. Access: ADM'
-      tags:
-        - 'M05: Administration'
-
-      parameters:
-        - in: path
-          name: user_id
-          schema:
-            type: integer
-          required: True
-
-      responses:
-        '302':
-          description: 'Redirect once the user is unblocked.'
-          headers:
-            Location:
-              schema:
-                type: string
-              example:
-                302Success:
-                  description: 'User unblocked successfully. Redirect back.'
-                302Failure:
-                  description: 'Failed. Redirect back.'
-        '403':
-          description: 'Forbidden. The user is not an administrator.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                loginRedirect:
-                  description: 'Redirect to the home page due to unauthorized access.'
-                  value: '/home'
-        '404':
-          description: 'Not Found'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: string
-                  message:
-                    type: string
-              examples:
-                userNotFound:
-                  value:
-                    error_code: "UserNotFound"
-                    message: "The user ID does not exist."
-                alreadyUnblocked:
-                  value:
-                    error_code: "AlreadyUnblocked"
-                    message: "The specified user is already unblocked."
-
-######### USER PROMOTE #########
-
-  /admin/user/{user_id}/promote:
-
-    post:
-      operationId: R505
-      summary: 'R505: Promote user action'
-      description: 'Promotes a user to administrator. Access: ADM'
-      tags:
-        - 'M05: Administration'
-
-      parameters:
-        - in: path
-          name: user_id
-          schema:
-            type: integer
-          required: True
-
-      responses:
-        '302':
-          description: 'Redirect once the user is promoted.'
-          headers:
-            Location:
-              schema:
-                type: string
-              example:
-                302Success:
-                  description: 'User promoted successfully. Redirect back.'
-                302Failure:
-                  description: 'Failed. Redirect back.'
-        '403':
-          description: 'Forbidden. The user is not an administrator.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                loginRedirect:
-                  description: 'Redirect to the home page due to unauthorized access.'
-                  value: '/home'
-        '404':
-          description: 'Not Found'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: string
-                  message:
-                    type: string
-              examples:
-                userNotFound:
-                  value:
-                    error_code: "UserNotFound"
-                    message: "The user ID does not exist."
-                alreadyPromoted:
-                  value:
-                    error_code: "AlreadyPromoted"
-                    message: "The specified user is already an administrator."
-
-######### USER DEMOTE #########
-
-  /admin/user/{user_id}/demote:
-
-    post:
-      operationId: R506
-      summary: 'R506: Demote user action'
-      description: 'Demotes a user from administrator. Access: ADM'
-      tags:
-        - 'M05: Administration'
-
-      parameters:
-        - in: path
-          name: user_id
-          schema:
-            type: integer
-          required: True
-
-      responses:
-        '302':
-          description: 'Redirect once the user is demoted.'
-          headers:
-            Location:
-              schema:
-                type: string
-              example:
-                302Success:
-                  description: 'User demoted successfully. Redirect back.'
-                302Failure:
-                  description: 'Failed. Redirect back.'
-        '403':
-          description: 'Forbidden. The user is not an administrator.'
-          headers:
-            Location:
-              schema:
-                type: string
-              examples:
-                loginRedirect:
-                  description: 'Redirect to the home page due to unauthorized access.'
-                  value: '/home'
-        '404':
-          description: 'Not Found'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: string
-                  message:
-                    type: string
-              examples:
-                userNotFound:
-                  value:
-                    error_code: "UserNotFound"
-                    message: "The user ID does not exist."
-                alreadyDemoted:
-                  value:
-                    error_code: "AlreadyDemoted"
-                    message: "The specified user is not an administrator."
 
 ############################################ COMMENTS ##############################################
 
@@ -1476,56 +813,13 @@ paths:
                 302Failure:
                   description: 'Failed. Redirect back.'
 
-######### EDIT COMMENT #########
-
-  /comment/{id}/edit:
-
-    post:
-      operationId: R602
-      summary: 'R602: Edit comment action'
-      description: 'Processes and saves the changes made by user. Access: OWN'
-      tags:
-        - 'M06: Comments'
-
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: True
-
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                content:
-                  type: string
-              required:
-                - content
-
-      responses:
-        '302':
-          description: 'Redirect once the new comment information is processed.'
-          headers:
-            Location:
-              schema:
-                type: string
-              example:
-                302Success:
-                  description: 'Comment edited successfully. Redirect back.'
-                302Failure:
-                  description: 'Failed. Redirect back.'
-
 ######### DELETE COMMENT #########
 
   /comment/{id}/delete:
 
     post:
-      operationId: R603
-      summary: 'R603: Delete comment action'
+      operationId: R602
+      summary: 'R602: Delete comment action'
       description: 'Deletes a comment. Access: OWN, ADM'
       tags:
         - 'M06: Comments'
@@ -1549,91 +843,3 @@ paths:
                   description: 'Comment deleted successfully. Redirect back.'
                 302Failure:
                   description: 'Failed. Redirect back.'
-
-######### LIKE COMMENT #########
-
-  /comment/{id}/like:
-
-    post:
-      operationId: R604
-      summary: 'R604: Like comment action'
-      description: 'Likes a comment. Access: USR, OWN, ADM'
-      tags:
-        - 'M06: Comments'
-
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: True
-
-      responses:
-        '200':
-          description: 'Ok. You liked a comment.'
-        '403':
-          description: 'Forbidden action.'
-        '404':
-          description: 'Not Found'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: string
-                  message:
-                    type: string
-              examples:
-                commentNotFound:
-                  value:
-                    error_code: "CommentNotFound"
-                    message: "The commnet ID does not exist."
-                alreadyLiked:
-                  value:
-                    error_code: "AlreadyLiked"
-                    message: "The specified comment is already liked by the user."
-
-######### UNLIKE COMMENT #########
-
-  /comment/{id}/unlike:
-
-    post:
-      operationId: R605
-      summary: 'R605: Unlike comment action'
-      description: 'Unlikes a comment. Access: USR, OWN, ADM'
-      tags:
-        - 'M06: Comments'
-
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: True
-
-      responses:
-        '200':
-          description: 'Ok. You unliked a comment.'
-        '403':
-          description: 'Forbidden action.'
-        '404':
-          description: 'Not Found'
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: string
-                  message:
-                    type: string
-              examples:
-                commentNotFound:
-                  value:
-                    error_code: "CommentNotFound"
-                    message: "The comment ID does not exist."
-                notLiked:
-                  value:
-                    error_code: "NotLiked"
-                    message: "The specified comment is not liked by the user."

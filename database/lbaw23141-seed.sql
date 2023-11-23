@@ -70,7 +70,8 @@ CREATE TABLE comments (
     author_id INTEGER REFERENCES users(user_id) NOT NULL,
     post_id INTEGER REFERENCES posts(post_id) NOT NULL,
     content TEXT,
-    date DATE NOT NULL CHECK (date <= CURRENT_DATE),
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT NULL,
     previous INTEGER REFERENCES comments(comment_id) DEFAULT NULL
 );
 
@@ -720,6 +721,27 @@ BEFORE UPDATE ON group_chats
 FOR EACH ROW
 EXECUTE FUNCTION ensure_owner_is_member();
 
+------DELETE COMMENT CASCADE------
+CREATE OR REPLACE FUNCTION delete_comment()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Delete comment likes associated with the comment
+    DELETE FROM comment_likes WHERE comment_id = OLD.comment_id;
+
+    -- Delete comments with the same previous ID
+    DELETE FROM comments WHERE previous = OLD.comment_id;
+
+    DELETE FROM notifications WHERE comment_id = OLD.comment_id;
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_delete_comment
+BEFORE DELETE ON comments
+FOR EACH ROW    
+EXECUTE FUNCTION delete_comment();
+
 ------------------------------
 -- TRANSACTIONS
 ------------------------------
@@ -807,15 +829,15 @@ VALUES
 
 
 --Insert statements for the 'comment' table
-INSERT INTO comments (author_id, post_id, content, date, previous)
+INSERT INTO comments (author_id, post_id, content, created_at, previous)
 VALUES
-    (1, 1, 'Comment on post 1 by User One.', '2023-10-26', NULL),
-    (4, 2, 'Moderator comment on post 2.', '2023-10-28', NULL),
-    (4, 8, 'I agree.', '2023-11-01', NULL),
-    (3, 9, 'You too?', '2023-11-02', NULL),
-    (3, 9, 'Why?', '2023-11-03', NULL),
-    (10, 10, 'Hello from Joe.', '2023-11-04', NULL),
-    (2, 1, 'Reply on comment one by User Two.', '2023-10-26', 1);
+    (1, 1, 'Comment on post 1 by User One.', '2023-10-26 00:00:00', NULL),
+    (4, 2, 'Moderator comment on post 2.', '2023-10-28 00:00:00', NULL),
+    (4, 8, 'I agree.', '2023-11-01 00:00:00', NULL),
+    (3, 9, 'You too?', '2023-11-02 00:00:00', NULL),
+    (3, 9, 'Why?', '2023-11-03 00:00:00', NULL),
+    (10, 10, 'Hello from Joe.', '2023-11-04 00:00:00', NULL),
+    (2, 1, 'Reply on comment one by User Two.', '2023-10-26 00:00:00', 1);
 
 
 

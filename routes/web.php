@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CommentController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -22,38 +24,32 @@ use App\Http\Controllers\Auth\RegisterController;
 */
 
 // Home
-Route::view('/', 'welcome')->name('welcome');
+Route::get('/', function () {
+    return view('welcome');
+})->middleware('guest')->name('welcome');
+
 
 Route::view('/about', 'pages.about')->name('about');
 Route::view('/help', 'pages.help')->name('help');
 Route::view('/faq', 'pages.faq')->name('faq');
 Route::view('/contacts', 'pages.contacts')->name('contacts');
 
-
+// Posts
 Route::controller(PostController::class)->group(function () {
     Route::get('/home/forYou', 'forYou')->name('forYou');
     Route::get('/home', 'list')->name('home');
     Route::get('/post/create', 'create')->name('createPost');
-    Route::post('/post', 'store')->name('storePost');
+    Route::post('/post/create', 'store')->name('storePost');
+    Route::get('/post/{id}', 'show')->name('showPost');
+    Route::get('/post/{id}/edit', 'edit')->name('editPost');
+    Route::put('/post/{id}/edit', 'update')->name('updatePost');   
+    Route::delete('/post/{id}/delete', 'delete')->name('deletePost');
 });
 
-// Cards
-Route::controller(CardController::class)->group(function () {
-    Route::get('/cards', 'list')->name('cards');
-    Route::get('/cards/{id}', 'show');
-});
-
-
-// API
-Route::controller(CardController::class)->group(function () {
-    Route::put('/api/cards', 'create');
-    Route::delete('/api/cards/{card_id}', 'delete');
-});
-
-Route::controller(ItemController::class)->group(function () {
-    Route::put('/api/cards/{card_id}', 'create');
-    Route::post('/api/item/{id}', 'update');
-    Route::delete('/api/item/{id}', 'delete');
+// Comments
+Route::controller(CommentController::class)->group(function () {
+    Route::post('/comment/create', 'store')->name('storeComment');
+    Route::delete('/comment/{id}/delete', 'delete')->name('deleteComment');
 });
 
 
@@ -74,4 +70,10 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/user/{id}', [UserController::class, 'show'])->name('user.profile');
     Route::post('/user/{id}/follow', [UserController::class, 'follow'])->name('user.follow');
     Route::post('/user/{id}/unfollow', [UserController::class, 'unfollow'])->name('user.unfollow');
+});
+
+// Admin Management
+Route::controller(AdminController::class)->group(function () {
+    Route::get('/admin/user/{id}/edit', [AdminController::class, 'showUserManagement'])->name('admin.manageUser');
+    Route::post('/admin/user/{id}/edit', [AdminController::class, 'updateUser'])->name('admin.updateUser');
 });
