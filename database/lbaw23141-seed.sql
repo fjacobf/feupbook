@@ -57,7 +57,7 @@ CREATE TABLE users (
 -- Table: posts (R02)
 CREATE TABLE posts (
     post_id SERIAL PRIMARY KEY,
-    owner_id INTEGER REFERENCES users(user_id) NOT NULL,
+    owner_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE NOT NULL,
     image TEXT,
     content TEXT,
     created_at TIMESTAMP NOT NULL,
@@ -67,18 +67,18 @@ CREATE TABLE posts (
 -- Table: comments (R03)
 CREATE TABLE comments (
     comment_id SERIAL PRIMARY KEY,
-    author_id INTEGER REFERENCES users(user_id) NOT NULL,
-    post_id INTEGER REFERENCES posts(post_id) NOT NULL,
+    author_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE NOT NULL,
+    post_id INTEGER REFERENCES posts(post_id) ON DELETE CASCADE NOT NULL,
     content TEXT,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP DEFAULT NULL,
-    previous INTEGER REFERENCES comments(comment_id) DEFAULT NULL
+    previous INTEGER REFERENCES comments(comment_id) ON DELETE CASCADE DEFAULT NULL
 );
 
 -- Table: group_chats (R07)
 CREATE TABLE group_chats (
     group_id SERIAL PRIMARY KEY,
-    owner_id INTEGER REFERENCES users(user_id) NOT NULL,
+    owner_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT
 );
@@ -86,8 +86,8 @@ CREATE TABLE group_chats (
 -- Table: messages (R05)
 CREATE TABLE messages (
     message_id SERIAL PRIMARY KEY,
-    emitter_id INTEGER REFERENCES users(user_id) NOT NULL,
-    group_id INTEGER REFERENCES group_chats(group_id) NOT NULL,
+    emitter_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE NOT NULL,
+    group_id INTEGER REFERENCES group_chats(group_id) ON DELETE CASCADE NOT NULL,
     content TEXT NOT NULL,
     date DATE NOT NULL CHECK (date <= CURRENT_DATE),
     viewed BOOLEAN NOT NULL DEFAULT false
@@ -95,8 +95,8 @@ CREATE TABLE messages (
 
 -- Table: follow_requests (R06)
 CREATE TABLE follow_requests (
-    req_id INTEGER REFERENCES users(user_id) NOT NULL,
-    rcv_id INTEGER REFERENCES users(user_id) NOT NULL,
+    req_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE NOT NULL,
+    rcv_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE NOT NULL,
     date DATE NOT NULL CHECK (date <= CURRENT_DATE),
     status request_status NOT NULL,
 	PRIMARY KEY (req_id, rcv_id)
@@ -106,45 +106,45 @@ CREATE TABLE follow_requests (
 
 -- Table: group_members (R08)
 CREATE TABLE group_members (
-    user_id INTEGER REFERENCES users(user_id),
-    group_id INTEGER REFERENCES group_chats(group_id),
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    group_id INTEGER REFERENCES group_chats(group_id) ON DELETE CASCADE,
     status request_status NOT NULL,
 	PRIMARY KEY (user_id, group_id)
 );
 
 -- Table: post_likes (R09)
 CREATE TABLE post_likes (
-    user_id INTEGER REFERENCES users(user_id),
-    post_id INTEGER REFERENCES posts(post_id),
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    post_id INTEGER REFERENCES posts(post_id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, post_id)
 );
 
 -- Table: comment_likes (R10)
 CREATE TABLE comment_likes (
-    user_id INTEGER REFERENCES users(user_id),
-    comment_id INTEGER REFERENCES comments(comment_id),
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    comment_id INTEGER REFERENCES comments(comment_id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, comment_id)
 );
 
 -- Table: mentions (R11)
 CREATE TABLE mentions (
-    post_id INTEGER REFERENCES posts(post_id),
-    user_mentioned INTEGER REFERENCES users(user_id),
+    post_id INTEGER REFERENCES posts(post_id) ON DELETE CASCADE,
+    user_mentioned INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
     PRIMARY KEY (post_id, user_mentioned)
 );
 
 -- Table: bookmarks (R12)
 CREATE TABLE bookmarks (
-    bookmarked_post INTEGER REFERENCES posts(post_id),
-    user_id INTEGER REFERENCES users(user_id),
+    bookmarked_post INTEGER REFERENCES posts(post_id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
     PRIMARY KEY (bookmarked_post, user_id)
 );
 
 -- Table: reports (R13)
 CREATE TABLE reports (
     report_id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(user_id),
-    post_id INTEGER REFERENCES posts(post_id),
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    post_id INTEGER REFERENCES posts(post_id) ON DELETE CASCADE,
     date DATE NOT NULL CHECK (date <= CURRENT_DATE),
     report_type report_types NOT NULL
 );
@@ -161,9 +161,9 @@ CREATE TABLE notifications (
         (notification_type IN ('joined_group', 'group_invite') AND comment_id IS NULL AND post_id IS NULL) OR
         (notification_type IN ('liked_post', 'comment_post') AND comment_id IS NULL AND group_id IS NULL)
     ),
-    comment_id INTEGER REFERENCES comments(comment_id),
-    post_id INTEGER REFERENCES posts(post_id),
-    group_id INTEGER REFERENCES group_chats(group_id),
+    comment_id INTEGER REFERENCES comments(comment_id) ON DELETE CASCADE,
+    post_id INTEGER REFERENCES posts(post_id) ON DELETE CASCADE,
+    group_id INTEGER REFERENCES group_chats(group_id) ON DELETE CASCADE,
     viewed BOOLEAN NOT NULL DEFAULT false
 );
 
@@ -720,27 +720,6 @@ CREATE TRIGGER ensure_owner_is_member
 BEFORE UPDATE ON group_chats
 FOR EACH ROW
 EXECUTE FUNCTION ensure_owner_is_member();
-
-------DELETE COMMENT CASCADE------
-CREATE OR REPLACE FUNCTION delete_comment()
-RETURNS TRIGGER AS $$
-BEGIN
-    -- Delete comment likes associated with the comment
-    DELETE FROM comment_likes WHERE comment_id = OLD.comment_id;
-
-    -- Delete comments with the same previous ID
-    DELETE FROM comments WHERE previous = OLD.comment_id;
-
-    DELETE FROM notifications WHERE comment_id = OLD.comment_id;
-
-    RETURN OLD;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_delete_comment
-BEFORE DELETE ON comments
-FOR EACH ROW    
-EXECUTE FUNCTION delete_comment();
 
 ------------------------------
 -- TRANSACTIONS
