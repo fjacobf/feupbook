@@ -92,10 +92,17 @@
         <img src="https://github.com/mdo.png" alt="" width="48" height="48" class="rounded-circle me-3">
         <strong>{{ $currentUser ? $currentUser->username : 'Guest' }}</strong>
       </a>
-      <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-        <li><a class="dropdown-item" href="#">Add another account</a></li>
-        <li><a class="dropdown-item" href="{{url('/logout')}}">Sign out</a></li>
-      </ul>
+      @if (Auth::check())
+        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+          <li><a class="dropdown-item" href="#">Add another account</a></li>
+          <li><a class="dropdown-item" href="{{url('/logout')}}">Sign out</a></li>
+        </ul>
+      @else
+        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+          <li><a class="dropdown-item" href="{{url('/login')}}">Sign in</a></li>
+          <li><a class="dropdown-item" href="{{url('/register')}}">New account</a></li>
+        </ul>
+      @endif
     </div>
 </div>
 

@@ -38,6 +38,13 @@
                     A: You can update your profile information in the settings section after logging in.
                 </li>
             </ul>
+
+            @if(!Auth::check())
+            <a href="{{ route('register') }}" class="btn btn-primary">Create account</a>
+            <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+            @else
+            <a href="{{ route('home') }}" class="btn btn-primary">Home</a>
+            @endif
         </div>
     </div>
 </div>

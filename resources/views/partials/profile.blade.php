@@ -55,13 +55,13 @@
                             @csrf
                             <button type="submit" class="btn btn-danger">Unfollow</button>
                         </form>
-                    @elseif ($user->followStatus() === 'waiting')
-                        {{-- Show a message indicating that the request is pending --}}
-                        <span class="text-muted">Follow request pending</span>
-                    @elseif ($user->followStatus() === 'rejected')
-                        {{-- Show a message indicating that the request was rejected --}}
-                        <span class="text-danger">Follow request rejected</span>
-                    @else
+                        @elseif ($user->followStatus() === 'waiting')
+                            {{-- Show a muted, non-clickable button indicating that the request is pending --}}
+                            <button class="btn btn-light" type="button" disabled>Request pending</button>
+                        @elseif ($user->followStatus() === 'rejected')
+                            {{-- Show a red, non-clickable button indicating that the request was rejected --}}
+                            <button class="btn btn-danger" type="button" disabled>Request rejected</button>
+                        @else
                         {{-- Show Follow button --}}
                         <form action="{{ route('user.follow', ['id' => $user->user_id]) }}" method="POST">
                             @csrf

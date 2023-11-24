@@ -27,7 +27,12 @@
                 Join the conversation, share your experiences, and be a part of the vibrant FEUP network.
             </p>
 
+            @if(!Auth::check())
             <a href="{{ route('register') }}" class="btn btn-primary">Create account</a>
+            <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+            @else
+            <a href="{{ route('home') }}" class="btn btn-primary">Home</a>
+            @endif
         </div>
     </div>
 </div>
