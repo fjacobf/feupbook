@@ -8,7 +8,7 @@
     <div class="container" style="margin-left: 280px;">
         <h1>Search Users</h1>
 
-        <form action="" method="GET">
+        <form action="{{ route('search.api') }}" method="GET" id="searchForm">
             @csrf
             <label for="query" class="mb-2">Search:</label>
             <div class="form-group d-flex align-items-center">
@@ -39,7 +39,7 @@
                 var query = document.getElementById('query').value;
 
                 // Make an AJAX request using the Fetch API
-                fetch('{{ route('search') }}?query=' + query)
+                fetch('{{ route('search.api') }}?query=' + query)
                     .then(response => response.text()) // Parse the response as JSON
                     .then(data => {
                         // Update the content area with the search results

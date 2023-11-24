@@ -74,7 +74,10 @@ Route::controller(UserController::class)->group(function () {
 });
 
 // Search
-Route::get('/search', [SearchController::class, 'search'])->name('search');
+Route::controller(SearchController::class)->group(function () {
+    Route::get('/search', [SearchController::class, 'show'])->name('search.show');
+    Route::get('/api/user', [SearchController::class, 'search'])->name('search.api');
+});
 
 // Admin Management
 Route::controller(AdminController::class)->group(function () {
