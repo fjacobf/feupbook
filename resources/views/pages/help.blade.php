@@ -27,7 +27,12 @@
                 Reach out via email at <a href="mailto:support@feupbook.com">support@feupbook.com</a> or use the contact form on our Contacts page.
             </p>
 
+            @if(!Auth::check())
             <a href="{{ route('register') }}" class="btn btn-primary">Create account</a>
+            <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+            @else
+            <a href="{{ route('home') }}" class="btn btn-primary">Home</a>
+            @endif
         </div>
     </div>
 </div>
