@@ -609,7 +609,8 @@ DECLARE
 BEGIN
     SELECT owner_id, private INTO post_owner_id, post_owner_private FROM posts INNER JOIN users ON posts.owner_id = users.user_id WHERE post_id = NEW.post_id;
 
-    IF post_owner_private = true  AND NOT EXISTS (
+    -- Check if the post is private and the commenter is not the owner of the post.
+    IF post_owner_private = true AND NEW.author_id != post_owner_id AND NOT EXISTS (
             SELECT 1
             FROM follow_requests
             WHERE req_id = NEW.author_id
@@ -617,7 +618,7 @@ BEGIN
             AND status = 'accepted'
         )
      THEN
-    RAISE EXCEPTION 'User is not allowed to comment on this post.';
+        RAISE EXCEPTION 'User is not allowed to comment on this post.';
     END IF;
     RETURN NEW;
 END;
