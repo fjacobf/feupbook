@@ -36,9 +36,7 @@ class CommentPolicy
      */
     public function create(User $user, Post $post): bool
     {
-        $postPolicy = new PostPolicy;
-
-        if($postPolicy->view($user, $post)) {
+        if($user->can('view', $post)) {
             return true;
         }
 
