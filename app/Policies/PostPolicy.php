@@ -13,7 +13,7 @@ class PostPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -24,7 +24,7 @@ class PostPolicy
         $owner = $post->user;
 
         if ($owner->private) {
-            return $user->id === $post->owner_id;
+            return $user->user_id === $post->owner_id;
         }
 
         return true;
@@ -36,7 +36,7 @@ class PostPolicy
      */
     public function create(User $user): bool
     {
-        //
+        return true;
     }
 
     /**
@@ -44,7 +44,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post): bool
     {
-        //
+        return $user->user_id === $post->owner_id;
     }
 
     /**
@@ -52,7 +52,7 @@ class PostPolicy
      */
     public function delete(User $user, Post $post): bool
     {
-        //
+        return $user->user_id === $post->owner_id;
     }
 
     /**

@@ -27,19 +27,20 @@
                         <button type="submit" class="btn btn-primary">Post</button>
                     </form>
                 </div>
-            @if (Auth::check() && Auth::id() == $post->owner_id)
-                <div class="card-footer d-flex justify-content-end">
-                    <!-- Edit Button -->
-                    <a href="{{ route('editPost', ['id' => $post->post_id]) }}" class="btn btn-primary me-2">Edit Post</a>
+                @can('update', $post)
+                    <div class="card-footer d-flex justify-content-end">
+                        <!-- Edit Button -->
+                        <a href="{{ route('editPost', ['id' => $post->post_id]) }}" class="btn btn-primary me-2">Edit Post</a>
+                @endcan
 
-                    <!-- Delete Button Form -->
-                    <form action="{{ route('deletePost', ['id' => $post->post_id]) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post?')">Delete Post</button>
-                    </form>
-                </div>
-            @endif
-
+                @can('delete', $post)
+                        <!-- Delete Button Form -->
+                        <form action="{{ route('deletePost', ['id' => $post->post_id]) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post?')">Delete Post</button>
+                        </form>
+                    </div>
+                @endcan
         </div>
 </div>

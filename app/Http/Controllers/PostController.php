@@ -27,26 +27,23 @@ class PostController extends Controller
       }
     }
 
-
-
     /**
      * Show the posts of public users. Show posts of public and private users if you are an admin.
      */
     public function list()
     {
-      // Check if user is logged in
-      if (Auth::check()) {
-          // User is logged in
-          // Check if the user is an admin
-          if (auth()->user()->user_type == 'admin') {
-              // For admin users, get all posts including private ones
+      try {
+          $this->authorize('viewAny', Post::class);
+
+          $user = auth()->user();
+
+          if ($user->user_type == 'admin') {
               $posts = Post::whereHas('user', function($query) {
-                $query->where('owner_id', '!=', Auth::id());
-            })->with('comments')
-              ->orderBy('created_at', 'desc')->paginate(10);
+                  $query->where('owner_id', '!=', Auth::id());
+              })->with('comments')
+                ->orderBy('created_at', 'desc')->paginate(10);
           } else {
-              // For non-admin users, get posts only from public users excluding the logged-in user
-              $posts = Post::whereHas('user', function($query) {
+              $posts = Post::whereHas('user', function($query) use ($user) {
                   $query->where('private', false)
                         ->where('owner_id', '!=', Auth::id());
               })->with('comments')
@@ -54,25 +51,20 @@ class PostController extends Controller
           }
 
           return view('pages.posts', ['posts' => $posts]);
-      } else {
-          // User is not logged in
+      } catch (AuthorizationException $e) {
           return redirect('/');
       }
     }
-
-
-
+    
     public function forYou()
     {
-        // Check if user is logged in
-      if (Auth::check()) {
-        // User is logged in
+      try{
+        $this->authorize('viewAny', Post::class);
+
         $user = Auth::user();
 
-        // Get the IDs of users that the current user follows
         $followingIds = $user->following()->pluck('users.user_id')->toArray();
         
-        // Fetch posts only from these users
         $posts = Post::with('user')
                     ->whereIn('owner_id', $followingIds)
                     ->orderBy('created_at', 'desc')
@@ -80,81 +72,98 @@ class PostController extends Controller
 
         return view('pages.posts', ['posts' => $posts]);
       } 
-      else {
-          // User is not logged in
-          return redirect('/');
-        }
+      catch(AuthorizationException $e){
+        return redirect('/')->withErrors(['message' => 'Log in in order to see posts']);
+      }
     }
 
     public function create()
     {
+      try
+      {  
+        $this->authorize('create', Post::class);
+
         return view('pages.createPost');
+      }
+      catch(AuthorizationException $e){
+        return redirect('/')->withErrors(['message' => 'Log in in order to create a post']);
+      }
     }
 
     public function store(Request $request)
     {
-      $validatedData = $request->validate([
-          'content' => 'required|max:1000',
-      ]);
+      try
+      {  
+        $validatedData = $request->validate([
+            'content' => 'required|max:1000',
+        ]);
 
-      $post = new Post;
-      $post->content = $validatedData['content'];
-      $post->owner_id = Auth::id(); // Set the owner_id to the current user's ID
-      $post->save();
+        $this->authorize('create', Post::class);
 
-      return redirect('/home')->with('success', 'Post created successfully!');
+        $post = new Post;
+        $post->content = $validatedData['content'];
+        $post->owner_id = Auth::id(); // Set the owner_id to the current user's ID
+        $post->save();
+
+        return redirect()->route('user.profile', ['id' => Auth::id()])->with('success', 'Post created successfully!');
+      }
+      catch(AuthorizationException $e){
+        return redirect('/')->withErrors(['message' => 'Log in in order to create a post']);
+      }
     }
 
     public function edit(string $id)
     {
-      $post = Post::findOrFail($id);
+      try{
+        $post = Post::findOrFail($id);
 
-      // Unauthorized action check
-      if (Auth::id() !== $post->owner_id) {
-          abort(403, 'Unauthorized action.');
+        $this->authorize('update', $post);
+        
+        return view('pages.editPost', ['post' => $post]);
       }
-
-      return view('pages.editPost', ['post' => $post]);
+      catch(AuthorizationException $e){
+        return redirect()->back()->withErrors(['message' => 'You are not authorized to edit this post']);
+      }
     }
 
 
     public function update(Request $request, string $id)
     {
-      // Validate the request
-      $validatedData = $request->validate([
-          'content' => 'required|max:1000', // Validation rules for the content
-      ]);
+      try
+      {
+        $validatedData = $request->validate([
+            'content' => 'required|max:1000', 
+        ]);
 
-      // Find the post
-      $post = Post::findOrFail($id);
+        $post = Post::findOrFail($id);
 
-      // Check if the authenticated user is the owner of the post
-      if (Auth::id() !== $post->owner_id) {
-          abort(403, 'Unauthorized action.');
+        $this->authorize('update', $post);
+
+        $post->content = $validatedData['content'];
+        $post->save();
+
+        return redirect()->route('user.profile', ['id' => Auth::id()])->with('success', 'Post updated successfully!');
       }
-
-      // Update the post
-      $post->content = $validatedData['content'];
-      $post->save();
-
-      // Redirect with a success message
-      return redirect()->route('user.profile', ['id' => Auth::id()])->with('success', 'Post updated successfully!');
+      catch(AuthorizationException $e){
+        return redirect('/home')->withErrors(['message' => 'You are not authorized to edit this post']);
+      }
     }
 
     public function delete(string $id)
     {
-      $post = Post::findOrFail($id);
+      try
+      {  
+        $post = Post::findOrFail($id);
 
-      // Check if the authenticated user is the owner of the post
-      if (Auth::id() !== $post->owner_id) {
-          abort(403, 'Unauthorized action.');
+        $this->authorize('delete', $post);
+
+        $post->delete();
+
+        return redirect()->route('user.profile', ['id' => Auth::id()])->with('success', 'Post deleted successfully!');
       }
-
-      // Delete the post
-      $post->delete();
-
-      // Redirect with a success message
-      return redirect()->route('user.profile', ['id' => Auth::id()])->with('success', 'Post deleted successfully!');
+      catch(AuthorizationException $e){
+        return redirect()->back()->withErrors(['message' => 'You are not authorized to delete this post']);
+      }
     }
 
 }
