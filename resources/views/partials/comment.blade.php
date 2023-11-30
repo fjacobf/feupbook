@@ -21,7 +21,7 @@
                 <textarea style="resize:none" id="content" name="content" cols="30" rows="1" placeholder="Adicione um comentário..."></textarea>
                 <input type="hidden" name="post_id" value="{{ $post->post_id }}">
                 <input type="hidden" name="comment_id" value="{{ $comment->comment_id }}">
-                <button type="submit" class="btn btn-primary">Post</button>
+                <button type="submit" class="btn btn-primary">Comment</button>
             </form>
         </div>
         <button onclick="reply({{ $comment->comment_id }})">Reply</button>
