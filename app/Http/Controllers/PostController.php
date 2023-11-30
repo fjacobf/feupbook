@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Auth\Access\AuthorizationException;
 use App\Models\Post;
 
 class PostController extends Controller
@@ -14,16 +14,20 @@ class PostController extends Controller
    /**
      * Show the post for a given id.
      */
-    public function show(string $id): View
+    public function show(string $id)
     {
-        // Get the post.
-        $post = Post::findOrFail($id); 
+      try {
+          $post = Post::with('user')->findOrFail($id);
 
-        // Use the pages.post template to display the post.
-        return view('pages.post', [
-            'post' => $post
-        ]);
+          $this->authorize('view', $post);
+
+          return view('pages.post', ['post' => $post]);
+      } catch (AuthorizationException $e) {
+          return redirect()->back()->withErrors(['message' => 'You are not authorized to view this post']);
+      }
     }
+
+
 
     /**
      * Show the posts of public users. Show posts of public and private users if you are an admin.
