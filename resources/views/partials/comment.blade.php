@@ -41,7 +41,7 @@
                 <form action="{{ route('deleteComment', ['id' => $reply->comment_id]) }}" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this comment?')">Delete</button>
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this comment?')">Delete Reply</button>
                     <input type="hidden" name="comment_id" value="{{ $reply->comment_id }}">
                 </form>
             @endif

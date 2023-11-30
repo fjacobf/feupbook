@@ -58,10 +58,7 @@ class CommentPolicy
      */
     public function delete(User $user, Comment $comment): bool
     {
-        Log::info($comment->comment_id);
-        Log::info($comment->author_id);
-        Log::info($user->user_id);
-        return true;
+        return $user->user_id === $comment->author_id;
     }
 
     /**

@@ -41,7 +41,8 @@ class CommentController extends Controller
 
     public function delete(Request $request, $id)
     {
-       
+      try
+      {  
         $comment = Comment::findOrFail($id);
         
         Log::info($comment->comment_id);
@@ -50,14 +51,15 @@ class CommentController extends Controller
 
         if ($comment) {
             // Delete replies to the comment first
-            //Comment::where('previous', $id)->delete();
+            Comment::where('previous', $id)->delete();
             // Delete the comment itself
             $comment->delete();
         }
 
         return redirect()->back()->with('success', 'Comment deleted successfully!');
       }
-      // catch(AuthorizationException $e){
-      //   return redirect()->back()->withErrors(['message' => 'You are not authorized to delete this comment']);
-      // }
+      catch(AuthorizationException $e){
+        return redirect()->back()->withErrors(['message' => 'You are not authorized to delete this comment']);
+      }
+    }
   }
