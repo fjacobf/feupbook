@@ -24,22 +24,23 @@
                             placeholder="Adicione um comentário..."></textarea> <!--textarea not auto expanding-->
                         <input type="hidden" name="post_id" id="post_id" value="{{ $post->post_id }}">
                         <input type="hidden" name="comment_id" id="comment_id" value="{{ NULL }}">
-                        <button type="submit" class="btn btn-primary">Post</button>
+                        <button type="submit" class="btn btn-primary">Comment</button>
                     </form>
                 </div>
-            @if (Auth::check() && Auth::id() == $post->owner_id)
-                <div class="card-footer d-flex justify-content-end">
-                    <!-- Edit Button -->
-                    <a href="{{ route('editPost', ['id' => $post->post_id]) }}" class="btn btn-primary me-2">Edit Post</a>
+                @can('update', $post)
+                    <div class="card-footer d-flex justify-content-end">
+                        <!-- Edit Button -->
+                        <a href="{{ route('editPost', ['id' => $post->post_id]) }}" class="btn btn-primary me-2">Edit Post</a>
+                @endcan
 
-                    <!-- Delete Button Form -->
-                    <form action="{{ route('deletePost', ['id' => $post->post_id]) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post?')">Delete Post</button>
-                    </form>
-                </div>
-            @endif
-
+                @can('delete', $post)
+                        <!-- Delete Button Form -->
+                        <form action="{{ route('deletePost', ['id' => $post->post_id]) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post?')">Delete Post</button>
+                        </form>
+                    </div>
+                @endcan
         </div>
 </div>

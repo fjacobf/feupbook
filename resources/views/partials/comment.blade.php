@@ -21,7 +21,7 @@
                 <textarea style="resize:none" id="content" name="content" cols="30" rows="1" placeholder="Adicione um comentário..."></textarea>
                 <input type="hidden" name="post_id" value="{{ $post->post_id }}">
                 <input type="hidden" name="comment_id" value="{{ $comment->comment_id }}">
-                <button type="submit" class="btn btn-primary">Post</button>
+                <button type="submit" class="btn btn-primary">Comment</button>
             </form>
         </div>
         <button onclick="reply({{ $comment->comment_id }})">Reply</button>
@@ -41,7 +41,7 @@
                 <form action="{{ route('deleteComment', ['id' => $reply->comment_id]) }}" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this comment?')">Delete</button>
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this comment?')">Delete Reply</button>
                     <input type="hidden" name="comment_id" value="{{ $reply->comment_id }}">
                 </form>
             @endif
