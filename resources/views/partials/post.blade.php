@@ -18,7 +18,7 @@
                         <p style="color: gray; font-size: 0.8rem">There are no comments on this post.</p>
                     @endforelse
 
-                    <form style="display:flex; justify-content: center" action="{{ route('storeComment') }}" method="POST">
+                    <form style="margin: 1rem; display:flex; justify-content: center" action="{{ route('storeComment') }}" method="POST">
                         @csrf
                         <textarea style="resize:none" id="content" name="content" cols="30" rows="1"
                             placeholder="Adicione um comentário..."></textarea> <!--textarea not auto expanding-->

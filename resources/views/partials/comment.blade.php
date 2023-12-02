@@ -1,60 +1,75 @@
 @if ($comment->previous == null)
-    <div>
-        <div style="display: flex; justify-content: space-between">
-            <h5 class="card-text">{{ $comment->user->username }}</h5>
-            <p>{{ $comment->date }}</p>
-        </div>
-        <div style="display:flex; justify-content: space-between">
-            <p class="card-text">{{ $comment->content }}</p>
+    <div class="d-flex flex-column ms-3">
+        <div class="d-flex justify-content-between">
+            <div class="d-flex align-items-center">
+                <strong style="margin:0; font-size:1.1rem;" class="card-text">{{ $comment->user->username }}&nbsp</strong>
+                <p class="card-text">{{ $comment->content }}</p>
+            </div>
             @if (Auth::id() == $comment->author_id)
                 <form action="{{ route('deleteComment', ['id' => $comment->comment_id]) }}" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this comment?')">Delete Comment</button>
-                    <input type="hidden" name="comment_id" id="comment_id_{{ $comment->comment_id }}" value="{{ $comment->comment_id }}">
+                    <button type="submit" class="btn"
+                        onclick="return confirm('Are you sure you want to delete this comment?')"><i style="color: red"
+                            class="bi bi-trash-fill"></i>
+                    </button>
+                    <input type="hidden" name="comment_id" id="comment_id_{{ $comment->comment_id }}"
+                        value="{{ $comment->comment_id }}">
                 </form>
             @endif
         </div>
-        <div style="display:none;" id="replyDiv{{ $comment->comment_id }}">
+        <div style="margin: 1rem; display:none;" id="replyDiv{{ $comment->comment_id }}">
             <form style="display:flex; justify-content: center" action="{{ route('storeComment') }}" method="POST">
                 @csrf
-                <textarea style="resize:none" id="content" name="content" cols="30" rows="1" placeholder="Adicione um comentário..."></textarea>
+                <textarea style="resize:none" id="content" name="content" cols="30" rows="1"
+                    placeholder="Adicione um comentário..."></textarea>
                 <input type="hidden" name="post_id" value="{{ $post->post_id }}">
                 <input type="hidden" name="comment_id" value="{{ $comment->comment_id }}">
                 <button type="submit" class="btn btn-primary">Comment</button>
             </form>
         </div>
-        <button onclick="reply({{ $comment->comment_id }})">Reply</button>
-        <hr>
+        <div style="gap:10px;" class="d-flex align-items-center ms-2">
+            <p class="m-0 comment-date">6d</p>
+            <p class="m-0 comment-likes">3 likes</p>
+            <button style="text-decoration: underline; width:4rem; padding:0;" class="btn"
+                onclick="reply({{ $comment->comment_id }})">Reply</button>
+        </div>
     </div>
 @endif
 
 @foreach ($comment->replies as $reply)
-    <div style="margin-left: 3rem">
-        <div style="display: flex; justify-content: space-between">
-            <h5 class="card-text">{{ $reply->user->username }}</h5>
-            <p>{{ $reply->date }}</p>
-        </div>
-        <div style="display: flex; justify-content: space-between">
-            <p class="card-text">{{ $reply->content }}</p>
+    <div style="margin: 0 0 0.5rem 3rem;" class="d-flex flex-column">
+        <div class="d-flex justify-content-between">
+            <div style="margin-left:10px; display:flex; align-items: center;">
+                <strong style="margin:0; font-size:1.1rem;" class="card-text">{{ $reply->user->username }}&nbsp</strong>
+                <p class="card-text">{{ $reply->content }}</p>
+            </div>
             @if (Auth::id() == $reply->author_id)
-                <form action="{{ route('deleteComment', ['id' => $reply->comment_id]) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this comment?')">Delete Reply</button>
-                    <input type="hidden" name="comment_id" value="{{ $reply->comment_id }}">
-                </form>
+            <form action="{{ route('deleteComment', ['id' => $reply->comment_id]) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn"
+                onclick="return confirm('Are you sure you want to delete this comment?')"><i style="color: red"
+                class="bi bi-trash-fill"></i></button>
+                <input type="hidden" name="comment_id" value="{{ $reply->comment_id }}">
+            </form>
             @endif
         </div>
-        <hr>
+        <div style="gap:10px;" class="d-flex align-items-center ms-2">
+            <p class="m-0 comment-date">6d</p>
+            <p class="m-0 comment-likes">3 likes</p>
+        </div>
     </div>
 @endforeach
 
 <script type="text/javascript">
-    function reply(commentId)
-    {
+    function reply(commentId) {
         let rep = document.getElementById('replyDiv' + commentId);
-        console.log(rep);
-        rep.style.display = "block";
+        if (rep.style.display === "none") {
+            rep.style.display = "block";
+        } else {
+            rep.style.display = "none";
+        }
+
     }
 </script>
