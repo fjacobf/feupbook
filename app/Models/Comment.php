@@ -40,4 +40,12 @@ class Comment extends Model
         return $this->hasMany(Comment::class, 'previous', 'comment_id');
     }
 
+    public function likes()
+    {
+        return $this->hasMany(CommentLike::class, 'comment_id', 'comment_id');
+    }
+
+    public function likeCounts() {
+        return $this->likes()->count();
+    }
 }
