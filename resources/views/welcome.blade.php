@@ -4,9 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{{ url('css/bootstrap.min_flatly.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     <title>Welcome to FEUPBook</title>
 </head>
 <body class="d-flex flex-column bg-light" style="height: 100vh;">
+
+        @if ($errors->any())
+            <div class="d-flex justify-content-center mt-2">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="max-width: 400px;">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        @endif
 
 <div class="container py-5 my-auto" style="padding-top: 5vh; padding-bottom: 5vh;">
     <div class="row align-items-center" style="flex-grow: 1;">
@@ -33,8 +47,25 @@
         </div>
     </div>
 </div>
-
-@include('partials.footer')
+<footer class="footer bg-primary text-center py-2" style="position: absolute; bottom: 0; width: 100%;">
+<div class="container">
+        <ul class="nav justify-content-center mb-1">
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{{ url('/about') }}">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{{ url('/help') }}">Help Center</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{{ url('/faq') }}">FAQ</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{{ url('/contacts') }}">Contacts</a>
+            </li>
+        </ul>
+        <div class="text-light">&copy; {{ date('Y') }} FEUPBook Corp.</div>
+</div>
+</footer>
 
 </body>
 </html>

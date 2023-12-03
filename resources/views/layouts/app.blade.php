@@ -18,13 +18,25 @@
             // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
         </script>
         <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
-        <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
     </head>
     <body>
 
-      @yield('sidebar')
+    @if ($errors->any())
+        <div class="d-flex justify-content-center mt-2">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="max-width: 400px;">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    @endif
+
+    @yield('sidebar')
       
-      @yield('content')
+    @yield('content')
 
     </body>
 </html>

@@ -6,37 +6,60 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Comment;
+use App\Models\Post;
+
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
 {
     public function store(Request $request)
     {
-      $validatedData = $request->validate([
-          'content' => 'required|max:1000',
-      ]);
+      try
+      {  
+        $validatedData = $request->validate([
+            'content' => 'required|max:1000',
+        ]);
 
-      $comment = new Comment;
-      $comment->content = $validatedData['content'];
-      $comment->author_id = Auth::id(); // Set the owner_id to the current user's ID
-      $comment->post_id = $request->post_id;
-      $comment->previous = $request->comment_id;
-      $comment->save();
+        $post = Post::findorFail($request->post_id);
 
-      return redirect()->back()->with('success', 'Comment created successfully!');
-    }
+        $this->authorize('create', [Comment::class, $post]);
 
-    public function delete($id)
-    {
-      $comment = Comment::find($id);
+        $comment = new Comment;
+        $comment->content = $validatedData['content'];
+        $comment->author_id = Auth::id(); 
+        $comment->post_id = $request->post_id;
+        $comment->previous = $request->comment_id;
+        $comment->save();
 
-      if ($comment) {
-          // Delete replies to the comment first
-          Comment::where('previous', $id)->delete();
-          // Delete the comment itself
-          $comment->delete();
+        return redirect()->back()->with('success', 'Comment created successfully!');
       }
-
-      return redirect()->back()->with('success', 'Comment deleted successfully!');
+      catch(AuthorizationException $e){
+        return redirect()->back()->withErrors(['message' => 'You are not authorized to comment on this post']);
+      }
     }
 
-}
+    public function delete(Request $request, $id)
+    {
+      try
+      {  
+        $comment = Comment::findOrFail($id);
+        
+        Log::info($comment->comment_id);
+
+        $this->authorize('delete', $comment);
+
+        if ($comment) {
+            // Delete replies to the comment first
+            Comment::where('previous', $id)->delete();
+            // Delete the comment itself
+            $comment->delete();
+        }
+
+        return redirect()->back()->with('success', 'Comment deleted successfully!');
+      }
+      catch(AuthorizationException $e){
+        return redirect()->back()->withErrors(['message' => 'You are not authorized to delete this comment']);
+      }
+    }
+  }
