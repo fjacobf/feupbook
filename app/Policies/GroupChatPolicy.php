@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Models\GroupChat;
 
 class GroupChatPolicy
 {
@@ -13,4 +14,10 @@ class GroupChatPolicy
     {
         //
     }
+
+    public function view(User $user, GroupChat $groupChat)
+    {
+        return $user->groups->contains($groupChat);
+    }
+
 }
