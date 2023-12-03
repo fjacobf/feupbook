@@ -9,38 +9,42 @@
                 <div class="card-body">
                     <h5 class="card-text text-black">{{ $post->content }}</h5>
                 </div>
-            </a>
-                <div class="card-body">
-                    <h4 class="card-text">Comments:</h4>
-                    @forelse($post->comments as $comment)
-                    @include('partials.comment', ['comment' => $comment])
-                    @empty
-                        <p style="color: gray; font-size: 0.8rem">There are no comments on this post.</p>
-                    @endforelse
+            </a> 
 
-                    <form style="display:flex; justify-content: center" action="{{ route('storeComment') }}" method="POST">
-                        @csrf
-                        <textarea style="resize:none" id="content" name="content" cols="30" rows="1"
-                            placeholder="Adicione um comentário..."></textarea> <!--textarea not auto expanding-->
-                        <input type="hidden" name="post_id" id="post_id" value="{{ $post->post_id }}">
-                        <input type="hidden" name="comment_id" id="comment_id" value="{{ NULL }}">
-                        <button type="submit" class="btn btn-primary">Comment</button>
-                    </form>
-                </div>
-                @can('update', $post)
-                    <div class="card-footer d-flex justify-content-end">
-                        <!-- Edit Button -->
-                        <a href="{{ route('editPost', ['id' => $post->post_id]) }}" class="btn btn-primary me-2">Edit Post</a>
-                @endcan
+            <div class="card-footer d-flex justify-content-around">
+                <button class="btn bi bi-heart custom-btn-like"></button>
+                <a href="{{ route('showPost', ['id' => $post->post_id]) }}" class="btn bi bi-chat custom-btn-comment"></a>
+                <button class="btn bi bi-bookmark custom-btn-bookmark"></button>
 
-                @can('delete', $post)
-                        <!-- Delete Button Form -->
-                        <form action="{{ route('deletePost', ['id' => $post->post_id]) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post?')">Delete Post</button>
-                        </form>
+                @canany(['update', 'delete'], $post)
+                    <div class="ms-auto">
+                            <a href="{{ route('editPost', ['id' => $post->post_id]) }}" class="btn btn-primary me-2">Edit Post</a>
+                            <form action="{{ route('deletePost', ['id' => $post->post_id]) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post?')">Delete Post</button>
+                            </form>
                     </div>
-                @endcan
+                @endcanany
+            </div>
         </div>
 </div>
+
+
+<!-- <div class="card-body">
+    <h4 class="card-text">Comments:</h4>
+    @forelse($post->comments as $comment)
+    @include('partials.comment', ['comment' => $comment])
+    @empty
+        <p style="color: gray; font-size: 0.8rem">There are no comments on this post.</p>
+    @endforelse
+
+    <form style="display:flex; justify-content: center" action="{{ route('storeComment') }}" method="POST">
+        @csrf
+        <textarea style="resize:none" id="content" name="content" cols="30" rows="1"
+            placeholder="Adicione um comentário..."></textarea> 
+        <input type="hidden" name="post_id" id="post_id" value="{{ $post->post_id }}">
+        <input type="hidden" name="comment_id" id="comment_id" value="{{ NULL }}">
+        <button type="submit" class="btn btn-primary">Comment</button>
+    </form>
+</div> -->

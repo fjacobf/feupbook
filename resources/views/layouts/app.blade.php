@@ -13,11 +13,12 @@
         <!-- Styles -->
         <link href="{{ url('css/bootstrap.min_flatly.css') }}" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+        <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
             // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
         </script>
-        <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     </head>
     <body>
 
