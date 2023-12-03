@@ -56,7 +56,7 @@
 
 {{-- REPLIES --}}
 
-@foreach ($comment->replies as $reply)
+@foreach ($comment->replies()->orderBy('created_at', 'desc')->get() as $reply)
     <div style="margin: 0 0 0.5rem 3rem;" class="d-flex flex-column">
         <div class="d-flex justify-content-between">
             <div style="margin-left:10px; display:flex; align-items: center;">
@@ -75,14 +75,20 @@
                         <input type="hidden" name="comment_id" value="{{ $reply->comment_id }}">
                     </form>
                 @endif
-                @if ($comment->isLiked() == true)
+                @if ($reply->isLiked() == true)
+                <form action="{{ route('comment.dislike', ['id' => $reply->comment_id]) }}" method="POST">
+                    @csrf
                     <button class="btn">
                         <i style="color: red" class="bi bi-heart-fill"></i>
                     </button>
+                </form>
                 @else
-                    <button class="btn">
-                        <i style="color: red" class="bi bi-heart"></i>
-                    </button>
+                    <form action="{{ route('comment.like', ['id' => $reply->comment_id]) }}" method="POST">
+                        @csrf
+                        <button class="btn">
+                            <i style="color: red" class="bi bi-heart"></i>
+                        </button>
+                    </form>
                 @endif
             </div>
 
