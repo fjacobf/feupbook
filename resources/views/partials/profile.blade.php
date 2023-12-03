@@ -12,7 +12,7 @@
                 <h1 class="display-4">{{ $user->name }}</h1>
                 <h3 class="text-secondary"><span>@</span>{{ $user->username }}</h3>
                 <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 10px;">
-                    @can('editSelf', $user)
+                    @can('updateSelf', $user)
                         <a href="" class="btn btn-primary" style="margin-right: 5px;">Edit Profile</a>
                     @endcan
 
