@@ -15,8 +15,10 @@ class GroupChatController extends Controller
 
     public function show(GroupChat $groupChat)
     {
+        $groupChat->load('owner', 'messages.emitter');
         return view('group_chats.show', compact('groupChat'));
     }
+
 
     // Add other CRUD operations as needed
 }
