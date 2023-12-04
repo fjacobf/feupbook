@@ -16,7 +16,12 @@
                     <button class="btn bi bi-heart custom-btn-like"></button>
                     <span>{{ $post->likesCount() }}</span>
                 </div>
-                <a href="{{ route('showPost', ['id' => $post->post_id]) }}" class="btn bi bi-chat custom-btn-comment"></a>
+
+                <div class="d-flex align-items-center">
+                    <a href="{{ route('showPost', ['id' => $post->post_id]) }}" class="btn bi bi-chat custom-btn-comment"></a>
+                    <span>{{ $post->commentsCount() }}</span>
+                </div>
+                
                 <button class="btn bi bi-bookmark custom-btn-bookmark"></button>
 
                 @canany(['update', 'delete'], $post)
