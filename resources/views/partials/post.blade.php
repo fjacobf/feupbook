@@ -12,17 +12,20 @@
             </a> 
 
             <div class="card-footer d-flex justify-content-around">
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center custom-btn-container">
                     <button class="btn bi bi-heart custom-btn-like"></button>
                     <span>{{ $post->likesCount() }}</span>
                 </div>
 
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center custom-btn-container">
                     <a href="{{ route('showPost', ['id' => $post->post_id]) }}" class="btn bi bi-chat custom-btn-comment"></a>
                     <span>{{ $post->commentsCount() }}</span>
                 </div>
-                
-                <button class="btn bi bi-bookmark custom-btn-bookmark"></button>
+
+                <div class="d-flex align-items-center custom-btn-container">
+                    <button class="btn bi bi-bookmark custom-btn-bookmark"></button>
+                    <span>{{ $post->bookmarksCount() }}</span>
+                </div>
 
                 @canany(['update', 'delete'], $post)
                     <div class="ms-auto">

@@ -1,20 +1,26 @@
-.custom-btn-like, .custom-btn-comment, .custom-btn-bookmark {
-    padding: 10px 20px; 
-    transition: background-color 0.3s;
+.custom-btn-container:hover .custom-btn-like, 
+.custom-btn-container:hover .custom-btn-like + span {
+    color: #f92525;
 }
 
-.custom-btn-like:hover {
-    color: #f92525; 
+.custom-btn-container:hover .custom-btn-like { 
     background-color: rgb(244, 185, 185);
 }
 
-.custom-btn-comment:hover {
+.custom-btn-container:hover .custom-btn-comment, 
+.custom-btn-container:hover .custom-btn-comment + span {
     color: rgb(0, 119, 0);
+}
+
+.custom-btn-container:hover .custom-btn-comment {
     background-color: rgb(181, 213, 181);
 }
 
-.custom-btn-bookmark:hover {
-    color: rgba(0, 137, 242, 0.597); 
+.custom-btn-container:hover .custom-btn-bookmark, 
+.custom-btn-container:hover .custom-btn-bookmark + span {
+    color: rgba(0, 137, 242, 0.597);
+}
+
+.custom-btn-container:hover .custom-btn-bookmark {
     background-color: rgba(159, 186, 207, 0.597);
 }
- 

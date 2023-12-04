@@ -50,4 +50,13 @@ class Post extends Model
         return $this->likes()->count();
     }
 
+    public function bookmarks()
+    {
+        return $this->hasMany(Bookmark::class, 'bookmarked_post', 'post_id');
+    }
+
+    public function bookmarksCount()
+    {
+        return $this->bookmarks()->count();
+    }
 }
