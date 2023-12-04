@@ -12,7 +12,10 @@
             </a> 
 
             <div class="card-footer d-flex justify-content-around">
-                <button class="btn bi bi-heart custom-btn-like"></button>
+                <div class="d-flex align-items-center">
+                    <button class="btn bi bi-heart custom-btn-like"></button>
+                    <span>{{ $post->likesCount() }}</span>
+                </div>
                 <a href="{{ route('showPost', ['id' => $post->post_id]) }}" class="btn bi bi-chat custom-btn-comment"></a>
                 <button class="btn bi bi-bookmark custom-btn-bookmark"></button>
 
