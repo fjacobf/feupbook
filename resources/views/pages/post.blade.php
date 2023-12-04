@@ -11,7 +11,7 @@
                 <div class="card-header d-flex justify-content-between fs-5">
                     <small><a href="{{ route('user.profile', ['id' => $post->user->user_id]) }}" class="link-primary:hover">{{$post->user->name}}</a></small>
                     <small class="text-muted"><span class="text-muted">@</span>{{ $post->user->username }}</small>
-                    <small class="text-black">{{ \Carbon\Carbon::parse($post->created_at)->format('H:i d-m-y') }}</small>
+                    <small class="text-black">{{ time_since($post->created_at) }}</small>
                 </div>
 
                 <div class="card-body">
@@ -19,19 +19,19 @@
                 </div>
 
                 <div class="card-footer d-flex justify-content-around">
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center custom-btn-container">
                         <button class="btn bi bi-heart custom-btn-like"></button>
-                        <span id="likesCount">{{ $post->likesCount() }}</span>
+                        <span>{{ $post->likesCount() }}</span>
                     </div>
 
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center custom-btn-container">
                         <a href="{{ route('showPost', ['id' => $post->post_id]) }}" class="btn bi bi-chat custom-btn-comment"></a>
-                        <span id="commentsCount">{{ $post->commentsCount() }}</span>
+                        <span>{{ $post->commentsCount() }}</span>
                     </div>
 
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center custom-btn-container">
                         <button class="btn bi bi-bookmark custom-btn-bookmark"></button>
-                        <span id="bookmarksCount">{{ $post->bookmarksCount() }}</span>
+                        <span>{{ $post->bookmarksCount() }}</span>
                     </div>
 
                     @canany(['update', 'delete'], $post)
