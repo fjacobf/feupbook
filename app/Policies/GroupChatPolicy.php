@@ -18,7 +18,6 @@ class GroupChatPolicy
 
     public function view(User $user, GroupChat $groupChat)
     {
-        Log::info('view group chats policy');
         return $user->groups->contains($groupChat);
     }
 
