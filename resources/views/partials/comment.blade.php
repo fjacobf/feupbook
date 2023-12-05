@@ -25,7 +25,7 @@
                     <button type="submit" class="btn btn-primary">Comment</button>
                 </form>
             </div>
-            <button onclick="reply({{ $comment->comment_id }})">Reply</button>
+            <button class="btn btn-primary" onclick="reply({{ $comment->comment_id }})">Reply</button>
             <hr>
         @endcan
     </div>

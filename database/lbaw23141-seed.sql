@@ -102,8 +102,6 @@ CREATE TABLE follow_requests (
 	PRIMARY KEY (req_id, rcv_id)
 );
 
-
-
 -- Table: group_members (R08)
 CREATE TABLE group_members (
     user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
