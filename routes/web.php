@@ -45,6 +45,8 @@ Route::controller(PostController::class)->group(function () {
     Route::get('/post/{id}/edit', 'edit')->name('editPost');
     Route::put('/post/{id}/edit', 'update')->name('updatePost');   
     Route::delete('/post/{id}/delete', 'delete')->name('deletePost');
+    Route::post('/post/{id}/like', 'like')->name('post.like');
+    Route::delete('/post/{id}/dislike', 'dislike')->name('post.dislike');
 });
 
 // Comments

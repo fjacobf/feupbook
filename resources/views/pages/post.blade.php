@@ -20,7 +20,18 @@
 
                 <div class="card-footer d-flex justify-content-around">
                     <div class="d-flex align-items-center custom-btn-container">
-                        <button class="btn bi bi-heart custom-btn-like"></button>
+                        @if ($post->isLiked() == true)
+                            <form action="{{ route('post.dislike', ['id' => $post->post_id]) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button style="color: red;" class="btn bi bi-heart-fill custom-btn-like"></button>
+                            </form>
+                        @else
+                            <form action="{{ route('post.like', ['id' => $post->post_id]) }}" method="POST">
+                                @csrf
+                                <button class="btn bi bi-heart custom-btn-like"></button>
+                            </form>
+                        @endif
                         <span>{{ $post->likesCount() }}</span>
                     </div>
 

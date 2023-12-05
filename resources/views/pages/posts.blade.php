@@ -30,5 +30,4 @@
     </a>
     @endcan
 </div>
-
 @endsection

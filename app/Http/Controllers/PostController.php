@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Log;
 use App\Models\Post;
 
 class PostController extends Controller
@@ -166,4 +167,36 @@ class PostController extends Controller
       }
     }
 
+    public function like($id){
+      try{
+        $post = Post::findOrFail($id);
+
+        $this->authorize('like', $post);
+
+        $post->likes()->create([
+          'user_id' => Auth::id(),
+          'post_id' => $post->post_id,
+        ]);
+
+        return redirect()->back()->with('success', 'Post liked successfully!');
+      }
+      catch(AuthorizationException $e){
+        return redirect()->back()->withErrors(['message' => 'You are not authorized to like this post']);
+      }
+    }
+
+    public function dislike($id){
+      try{
+        $post = Post::findOrFail($id);
+
+        $this->authorize('like', $post);
+
+        $post->likes()->where('user_id', Auth::id())->where('post_id', $post->post_id)->delete();
+
+        return redirect()->back()->with('success', 'Post disliked successfully!');
+      }
+      catch(AuthorizationException $e){
+        return redirect()->back()->withErrors(['message' => 'You are not authorized to dislike this post']);
+      }
+    }
 }
