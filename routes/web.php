@@ -109,3 +109,4 @@ Route::controller(AdminController::class)->group(function () {
 // Group Chat Routes
 Route::get('/group-chats', [GroupChatController::class, 'index']);
 Route::get('/group-chats/{groupChat}', [GroupChatController::class, 'show']);
+Route::post('/group-chats/{groupChat}/send-message', [GroupChatController::class, 'sendMessage'])->name('group-chats.sendMessage');

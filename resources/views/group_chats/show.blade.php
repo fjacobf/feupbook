@@ -23,6 +23,14 @@
                             </li>
                         @endforeach
                     </ul>
+                    <form method="POST" action="{{ route('group-chats.sendMessage', $groupChat->group_id) }}">
+                        @csrf
+                        <div class="form-group">
+                            <label for="content">Message:</label>
+                            <textarea class="form-control" id="content" name="content" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </form>
                 </div>
             </div>
         </div>

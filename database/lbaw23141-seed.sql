@@ -831,7 +831,7 @@ VALUES
 -- Insert statements for the 'group_members' table
 INSERT INTO group_members (user_id, group_id, status)
 VALUES
-    (2, 1, 'rejected'),
+    (2, 1, 'accepted'),
     (3, 2, 'accepted'),
     (4, 2, 'accepted'),
     (5, 3, 'accepted'),
