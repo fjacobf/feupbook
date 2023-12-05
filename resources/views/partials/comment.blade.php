@@ -7,7 +7,7 @@
         <div style="display:flex; justify-content: space-between">
             <p class="card-text">{{ $comment->content }}</p>
             @can('delete', $comment)
-                <form action="{{ route('deleteComment', ['id' => $comment->comment_id]) }}" method="POST">
+                <form action="{{ route('comment.delete', ['id' => $comment->comment_id]) }}" method="POST">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this comment?')">Delete Comment</button>
@@ -17,7 +17,7 @@
         </div>
         @can('create', [App\Models\Comment::class, $post])
             <div style="display:none;" id="replyDiv{{ $comment->comment_id }}">
-                <form style="display:flex; justify-content: center" action="{{ route('storeComment') }}" method="POST">
+                <form style="display:flex; justify-content: center" action="{{ route('comment.store') }}" method="POST">
                     @csrf
                     <textarea style="resize:none" id="content" name="content" cols="30" rows="1" placeholder="Adicione um comentário..."></textarea>
                     <input type="hidden" name="post_id" value="{{ $post->post_id }}">

@@ -36,7 +36,7 @@
                     </div>
 
                     <div class="d-flex align-items-center custom-btn-container">
-                        <a href="{{ route('showPost', ['id' => $post->post_id]) }}" class="btn bi bi-chat custom-btn-comment"></a>
+                        <a href="{{ route('post.show', ['id' => $post->post_id]) }}" class="btn bi bi-chat custom-btn-comment"></a>
                         <span>{{ $post->commentsCount() }}</span>
                     </div>
 
@@ -58,8 +58,8 @@
 
                     @canany(['update', 'delete'], $post)
                         <div class="ms-auto">
-                                <a href="{{ route('editPost', ['id' => $post->post_id]) }}" class="btn btn-primary me-2">Edit Post</a>
-                                <form action="{{ route('deletePost', ['id' => $post->post_id]) }}" method="POST" class="d-inline">
+                                <a href="{{ route('post.edit', ['id' => $post->post_id]) }}" class="btn btn-primary me-2">Edit Post</a>
+                                <form action="{{ route('post.delete', ['id' => $post->post_id]) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post?')">Delete Post</button>
@@ -69,7 +69,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form style="display:flex; justify-content: center" action="{{ route('storeComment') }}" method="POST">
+                    <form style="display:flex; justify-content: center" action="{{ route('comment.store') }}" method="POST">
                         @csrf
                         <textarea style="resize:none" id="content" name="content" cols="30" rows="1"
                             placeholder="Adicione um comentário..."></textarea> 

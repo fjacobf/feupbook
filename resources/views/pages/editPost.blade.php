@@ -7,7 +7,7 @@
 @section('content')
 <div class="container">
     <h2>Edit Post</h2>
-    <form action="{{ route('updatePost', ['id' => $post->post_id]) }}" method="POST">
+    <form action="{{ route('post.update', ['id' => $post->post_id]) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="mb-3">

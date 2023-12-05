@@ -39,13 +39,13 @@ Route::view('/contacts', 'pages.contacts')->name('contacts');
 Route::controller(PostController::class)->group(function () {
     Route::get('/home/forYou', 'forYou')->name('forYou');
     Route::get('/home', 'list')->name('home');
-    Route::get('/post/create', 'create')->name('createPost');
-    Route::post('/post/create', 'store')->name('storePost');
+    Route::get('/post/create', 'create')->name('post.create');
+    Route::post('/post/create', 'store')->name('post.store');
     Route::get('/post/bookmarks', 'listBookmarks')->name('post.bookmarks');
-    Route::get('/post/{id}', 'show')->name('showPost');
-    Route::get('/post/{id}/edit', 'edit')->name('editPost');
-    Route::put('/post/{id}/edit', 'update')->name('updatePost');   
-    Route::delete('/post/{id}/delete', 'delete')->name('deletePost');
+    Route::get('/post/{id}', 'show')->name('post.show');
+    Route::get('/post/{id}/edit', 'edit')->name('post.edit');
+    Route::put('/post/{id}/edit', 'update')->name('post.update');   
+    Route::delete('/post/{id}/delete', 'delete')->name('post.delete');
     Route::post('/post/{id}/like', 'like')->name('post.like');
     Route::delete('/post/{id}/dislike', 'dislike')->name('post.dislike');
     Route::post('/post/{id}/bookmark', 'bookmark')->name('post.bookmark');
@@ -54,8 +54,8 @@ Route::controller(PostController::class)->group(function () {
 
 // Comments
 Route::controller(CommentController::class)->group(function () {
-    Route::post('/comment/create', 'store')->name('storeComment');
-    Route::delete('/comment/{id}/delete', 'delete')->name('deleteComment');
+    Route::post('/comment/create', 'store')->name('comment.store');
+    Route::delete('/comment/{id}/delete', 'delete')->name('comment.delete');
 });
 
 
