@@ -7,6 +7,11 @@ use Illuminate\Auth\Access\Response;
 
 class UserPolicy
 {
+
+    public function __construct(){
+        //
+    }
+
     /**
      * Determine whether the user can view any models.
      */
