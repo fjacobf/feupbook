@@ -30,7 +30,6 @@ class GroupChatPolicy
     public function send(User $user, GroupChat $groupChat)
     {
         $members = $groupChat->members;
-        dd($members);
         if($members->contains($user)) {
             return true;
         } else {
