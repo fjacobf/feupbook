@@ -14,9 +14,9 @@ class Bookmark extends Model
     use HasFactory;
 
     protected $table = 'bookmarks';
-
+    protected $primaryKey = ['bookmarked_post', 'user_id'];
+    public $incrementing = false;
     public $timestamps = false;
-
     protected $fillable = [
         'bookmarked_post',
         'user_id',

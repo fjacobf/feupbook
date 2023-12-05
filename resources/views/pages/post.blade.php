@@ -41,7 +41,18 @@
                     </div>
 
                     <div class="d-flex align-items-center custom-btn-container">
-                        <button class="btn bi bi-bookmark custom-btn-bookmark"></button>
+                        @if ($post->isBookmarked() == true)
+                            <form action="{{ route('post.unbookmark', ['id' => $post->post_id]) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button style="color: blue;" class="btn bi bi-bookmark-fill custom-btn-bookmark"></button>
+                            </form>
+                        @else
+                            <form action="{{ route('post.bookmark', ['id' => $post->post_id]) }}" method="POST">
+                                @csrf
+                                <button class="btn bi bi-bookmark custom-btn-bookmark"></button>
+                            </form>
+                        @endif
                         <span>{{ $post->bookmarksCount() }}</span>
                     </div>
 

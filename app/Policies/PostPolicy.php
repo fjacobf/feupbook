@@ -65,4 +65,9 @@ class PostPolicy
     {
         return $user->can('view', $post);
     }
+
+    public function bookmark(User $user, Post $post): bool
+    {
+        return $user->can('view', $post);
+    }
 }

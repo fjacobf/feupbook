@@ -41,12 +41,15 @@ Route::controller(PostController::class)->group(function () {
     Route::get('/home', 'list')->name('home');
     Route::get('/post/create', 'create')->name('createPost');
     Route::post('/post/create', 'store')->name('storePost');
+    Route::get('/post/bookmarks', 'listBookmarks')->name('post.bookmarks');
     Route::get('/post/{id}', 'show')->name('showPost');
     Route::get('/post/{id}/edit', 'edit')->name('editPost');
     Route::put('/post/{id}/edit', 'update')->name('updatePost');   
     Route::delete('/post/{id}/delete', 'delete')->name('deletePost');
     Route::post('/post/{id}/like', 'like')->name('post.like');
     Route::delete('/post/{id}/dislike', 'dislike')->name('post.dislike');
+    Route::post('/post/{id}/bookmark', 'bookmark')->name('post.bookmark');
+    Route::delete('/post/{id}/unbookmark', 'unbookmark')->name('post.unbookmark');
 });
 
 // Comments

@@ -26,7 +26,7 @@
         </a>
       </li>
       <li>
-        <a href="#" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
+        <a href="{{route('post.bookmarks')}}" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
           <i class="bi bi-bookmark-fill me-3"></i>
           Bookmarks
         </a>
