@@ -44,11 +44,11 @@
                 <div class="profile-details-counts mt-3 d-flex justify-content-between">
                     <div class="text-center">
                         <p class="mb-0"><strong>{{ $user->followerCounts() }}</strong></p>
-                        <p class="mb-0" style="font-size: 0.8rem;">Followers</p>
+                        <a href="{{ route('user.followers', ['id' => $user->user_id ])}}" class="mb-0 text-black text-decoration-none" style="font-size: 0.8rem;">Followers</a>
                     </div>
                     <div class="text-center">
                         <p class="mb-0"><strong>{{ $user->followingCounts() }}</strong></p>
-                        <p class="mb-0" style="font-size: 0.8rem;">Following</p>
+                        <a href="{{ route('user.following', ['id' => $user->user_id ])}}" class="mb-0 text-black text-decoration-none" style="font-size: 0.8rem;">Following</a>
                     </div>
                     <div class="text-center">
                         <p class="mb-0"><strong>{{ $user->postCounts() }}</strong></p>

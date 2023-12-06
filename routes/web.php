@@ -71,6 +71,9 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/user/{id}', 'show')->name('user.profile');
     Route::post('/user/{id}/follow', 'follow')->name('user.follow');
     Route::post('/user/{id}/unfollow', 'unfollow')->name('user.unfollow');
+    Route::get('/user/{id}/followers', 'showFollowerPage')->name('user.followers');
+    Route::get('/user/{id}/following', 'showFollowingPage')->name('user.following');
+    Route::post('/user/{id}/update', 'removeFollower')->name('user.removeFollower');
 });
 
 // Search

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Http\Request;
 use App\Models\FollowRequest;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {   
@@ -57,6 +58,42 @@ class UserController extends Controller
         $followRequest = FollowRequest::where('req_id', $authUser->user_id)
             ->where('rcv_id', $user->user_id);
         // dd($followRequest);
+    
+        if ($followRequest) {
+            $followRequest->delete();
+        }
+    
+        return redirect()->back();
+    }
+
+    public function showFollowerPage($id) {
+        $user = User::find($id);
+        if (!$user) {
+            abort(404, 'User not found'); 
+        }
+        
+        $followers = $user->followers()->get();
+
+        return view('pages.followers', ['user' => $user, 'followers' => $followers]);
+    }
+
+    public function showFollowingPage($id) {
+        $user = User::find($id);
+        if (!$user) {
+            abort(404, 'User not found'); 
+        }
+        
+        $following = $user->following()->get();
+
+        return view('pages.following', ['user' => $user, 'following' => $following]);
+    }
+
+    public function removeFollower($id) {
+        $authUser = Auth::user();
+        $user = User::find($id);
+    
+        $followRequest = FollowRequest::where('req_id', $user->user_id)
+            ->where('rcv_id', $authUser->user_id);
     
         if ($followRequest) {
             $followRequest->delete();

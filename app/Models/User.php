@@ -106,5 +106,9 @@ class User extends Authenticatable // lower case plural
                     ->wherePivot('status', 'accepted'); 
     }
     
+    public function followers() {
+        return $this->belongsToMany(User::class, 'follow_requests', 'rcv_id', 'req_id')
+                    ->wherePivot('status', 'accepted');
+    }
 }
 
