@@ -69,13 +69,13 @@
                 </div>
 
                 <div class="card-body">
-                    <form style="display:flex; justify-content: center" action="{{ route('comment.store') }}" method="POST">
+                    <form class="d-flex justify-content-center" action="{{ route('comment.store') }}" method="POST">
                         @csrf
                         <textarea style="resize:none" id="content" name="content" cols="30" rows="1"
                             placeholder="Adicione um comentário..."></textarea> 
                         <input type="hidden" name="post_id" id="post_id" value="{{ $post->post_id }}">
                         <input type="hidden" name="comment_id" id="comment_id" value="{{ NULL }}">
-                        <button type="submit" class="btn btn-primary">Comment</button>
+                        <button type="submit" class="btn btn-primary ms-2">Comment</button>
                     </form>
 
                     @forelse($post->comments as $comment)

@@ -1,31 +1,33 @@
 @if ($comment->previous == null)
     <div>
-        <div style="display: flex; justify-content: space-between">
+        <div class="d-flex justify-content-between">
             <h5 class="card-text">{{ $comment->user->username }}</h5>
             <p>{{ $comment->date }}</p>
         </div>
-        <div style="display:flex; justify-content: space-between">
+        <div class="d-flex justify-content-between">
             <p class="card-text">{{ $comment->content }}</p>
-            @can('delete', $comment)
-                <form action="{{ route('comment.delete', ['id' => $comment->comment_id]) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this comment?')">Delete Comment</button>
-                    <input type="hidden" name="comment_id" id="comment_id_{{ $comment->comment_id }}" value="{{ $comment->comment_id }}">
-                </form>
-            @endcan
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" onclick="reply({{ $comment->comment_id }})">Reply</button>
+                @can('delete', $comment)
+                    <form action="{{ route('comment.delete', ['id' => $comment->comment_id]) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger ms-2" onclick="return confirm('Are you sure you want to delete this comment?')">Delete Comment</button>
+                        <input type="hidden" name="comment_id" id="comment_id_{{ $comment->comment_id }}" value="{{ $comment->comment_id }}">
+                    </form>
+                @endcan
+            </div>
         </div>
         @can('create', [App\Models\Comment::class, $post])
             <div style="display:none;" id="replyDiv{{ $comment->comment_id }}">
-                <form style="display:flex; justify-content: center" action="{{ route('comment.store') }}" method="POST">
+                <form class="d-flex justify-content-center mt-2" action="{{ route('comment.store') }}" method="POST">
                     @csrf
                     <textarea style="resize:none" id="content" name="content" cols="30" rows="1" placeholder="Adicione um comentário..."></textarea>
                     <input type="hidden" name="post_id" value="{{ $post->post_id }}">
                     <input type="hidden" name="comment_id" value="{{ $comment->comment_id }}">
-                    <button type="submit" class="btn btn-primary">Comment</button>
+                    <button type="submit" class="btn btn-primary ms-2">Comment</button>
                 </form>
             </div>
-            <button class="btn btn-primary" onclick="reply({{ $comment->comment_id }})">Reply</button>
             <hr>
         @endcan
     </div>
@@ -40,7 +42,7 @@
         <div style="display: flex; justify-content: space-between">
             <p class="card-text">{{ $reply->content }}</p>
             @can('delete', $reply)
-                <form action="{{ route('deleteComment', ['id' => $reply->comment_id]) }}" method="POST">
+                <form action="{{ route('comment.delete', ['id' => $reply->comment_id]) }}" method="POST">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this comment?')">Delete Reply</button>
