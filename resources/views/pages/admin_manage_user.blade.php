@@ -55,7 +55,16 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary">Update User</button>
+
                     </form>
+                    @if ($user->user_type !== 'deleted')
+                        <form class="mt-2 d-flex" action="{{ route('admin.deleteUser', ['id' => $user->user_id]) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="btn btn-danger">Delete User</button>
+                            <p>Warning: This action is permanent!</p>
+                        </form>
+                    @endif
                 </div>
             </div>
         </div>

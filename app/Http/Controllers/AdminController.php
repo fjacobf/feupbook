@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Access\AuthorizationException;
 
@@ -16,7 +17,7 @@ class AdminController extends Controller
             $user = User::findOrFail($id);
             
             $this->authorize('viewAdminInterface', $user);
-
+            Log::info('after authorize');
             $userTypes = ['normal_user', 'admin', 'suspended'];
 
             return view('pages.admin_manage_user', compact('user', 'userTypes'));
@@ -31,7 +32,7 @@ class AdminController extends Controller
         {    
             $user = User::findOrFail($id);
 
-            $this->authorize('updateAdmin', $user);
+            $this->authorize('updateAsAdmin', $user);
 
             $rules = [
                 'username' => 'required|string|max:255|unique:users,username,' . $user->user_id. ',user_id',
@@ -62,6 +63,22 @@ class AdminController extends Controller
         catch(AuthorizationException $e){
             return redirect()->route('user.profile', ['id' => $user->user_id])
                         ->withErrors(['message' => 'You are not authorized to update the info of this user']);
+        }
+    }
+
+    public function deleteUser($id) {
+        try
+        {    
+            $user = User::findOrFail($id);
+
+            $this->authorize('deleteAsAdmin', $user);
+
+            $user->update(['user_type' => 'deleted']);
+
+            return redirect()->route('home')->with('success', 'User deleted successfully.');
+        }
+        catch(AuthorizationException $e){
+            return redirect()->route('home')->withErrors(['message' => 'You are not authorized to delete this user']);
         }
     }
 }
