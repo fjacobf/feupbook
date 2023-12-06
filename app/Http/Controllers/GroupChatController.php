@@ -33,22 +33,36 @@ class GroupChatController extends Controller
     }
 
     public function sendMessage(Request $request, GroupChat $groupChat)
-{
-    try {
-        $this->authorize('send', $groupChat);
-    } catch (AuthorizationException $e) {
-        // Redirect to a different page if the user does not have the permission to send a message
-        return redirect('/group-chats')->withErrors(['message' => 'You are not authorized to send a message to this group chat']);
+    {
+        try {
+            $this->authorize('send', $groupChat);
+        } catch (AuthorizationException $e) {
+            // Redirect to a different page if the user does not have the permission to send a message
+            return redirect('/group_chats' . $groupChat->id)->withErrors(['message' => 'You are not authorized to send a message to this group chat']);
+        }
+
+        $message = new Message;
+        $message->content = $request->input('content');
+        $message->emitter_id = auth()->id();
+        $message->group_id = $groupChat->group_id;
+        $message->date = date('Y-m-d');
+        $message->viewed = false;
+        $message->save();
+
+        // TODO: IMPLEMENT AJAX IN MESSAGE SENT
+
+        return response()->json('Message sent');
     }
 
-    $message = new Message;
-    $message->content = $request->input('content');
-    $message->emitter_id = auth()->id();
-    $message->group_id = $groupChat->id;
-    $message->date = date('Y-m-d');
-    $message->viewed = false;
-    $message->save();
+    public function getMessages(GroupChat $groupChat)
+    {
+        try {
+            $this->authorize('view', $groupChat);
+        } catch (AuthorizationException $e) {
+            // Redirect to a different page if the user does not have the permission to send a message
+            return redirect('/group_chats' . $groupChat->id)->withErrors(['message' => 'You are not authorized to view this group chat']);
+        }
+        return response()->json($groupChat->messages()->with('emitter')->get());
 
-    return response()->json('Message sent');
-}
+    }
 }
