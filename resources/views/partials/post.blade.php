@@ -29,18 +29,11 @@
 
                 <div class="d-flex align-items-center custom-btn-container">
                     @if ($post->isBookmarked() == true)
-                        <form action="{{ route('post.unbookmark', ['id' => $post->post_id]) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button style="color: blue;" class="btn bi bi-bookmark-fill custom-btn-bookmark"></button>
-                        </form>
+                        <button id="btn-bookmark-{{ $post->post_id }}" class="btn bi bi-bookmark-fill custom-btn-bookmark" onclick="handleBookmark({{$post->post_id}},'unbookmark')"></button>
                     @else
-                        <form action="{{ route('post.bookmark', ['id' => $post->post_id]) }}" method="POST">
-                            @csrf
-                            <button class="btn bi bi-bookmark custom-btn-bookmark"></button>
-                        </form>
+                        <button id="btn-bookmark-{{ $post->post_id }}" class="btn bi bi-bookmark custom-btn-bookmark" onclick="handleBookmark({{$post->post_id}},'bookmark')"></button>
                     @endif
-                    <span>{{ $post->bookmarksCount() }}</span>
+                    <span id="bookmark-count-{{ $post->post_id }}">{{ $post->bookmarksCount() }}</span>
                 </div>
 
                 @canany(['update', 'delete'], $post)

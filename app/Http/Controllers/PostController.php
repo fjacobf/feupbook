@@ -229,10 +229,10 @@ class PostController extends Controller
           'bookmarked_post' => $post->post_id,
         ]);
 
-        return redirect()->back()->with('success', 'Post bookmarked successfully!');
+        return response()->json(['status' => 200, 'message' => 'Post bookmarked successfully!']);
       }
       catch(AuthorizationException $e){
-        return redirect()->back()->withErrors(['message' => 'You are not authorized to bookmark this post']);
+        return response()->json(['error' => 'You are not authorized to bookmark this post'], 403);
       }
     }
 
@@ -244,10 +244,10 @@ class PostController extends Controller
 
         $post->bookmarks()->where('user_id', Auth::id())->where('bookmarked_post', $post->post_id)->delete();
 
-        return redirect()->back()->with('success', 'Post unbookmarked successfully!');
+        return response()->json(['status' => 200, 'message' => 'Post unbookmarked successfully!']);
       }
       catch(AuthorizationException $e){
-        return redirect()->back()->withErrors(['message' => 'You are not authorized to unbookmark this post']);
+        return response()->json(['error' => 'You are not authorized to unbookmark this post'], 403);
       }
     }
 }
