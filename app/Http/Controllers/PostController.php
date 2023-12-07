@@ -178,10 +178,10 @@ class PostController extends Controller
           'post_id' => $post->post_id,
         ]);
 
-        return redirect()->back()->with('success', 'Post liked successfully!');
+        return response()->json(['status' => 200]);
       }
       catch(AuthorizationException $e){
-        return redirect()->back()->withErrors(['message' => 'You are not authorized to like this post']);
+        return response()->json(['error' => 'You are not authorized to like this post'], 403);
       }
     }
 
@@ -192,11 +192,11 @@ class PostController extends Controller
         $this->authorize('like', $post);
 
         $post->likes()->where('user_id', Auth::id())->where('post_id', $post->post_id)->delete();
-
-        return redirect()->back()->with('success', 'Post disliked successfully!');
+        
+        return response()->json(['status' => 200]);
       }
       catch(AuthorizationException $e){
-        return redirect()->back()->withErrors(['message' => 'You are not authorized to dislike this post']);
+        return response()->json(['error' => 'You are not authorized to dislike this post'], 403);
       }
     }
 }

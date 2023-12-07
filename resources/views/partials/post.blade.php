@@ -14,19 +14,12 @@
             <div class="card-footer d-flex justify-content-around">
                 <div class="d-flex align-items-center custom-btn-container">
                     @if ($post->isLiked() == true)
-                        <form action="{{ route('post.dislike', ['id' => $post->post_id]) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button style="color: red;" class="btn bi bi-heart-fill custom-btn-like"></button>
-                        </form>
+                        <button id="btn-{{ $post->post_id }}" class="btn bi bi-heart-fill custom-btn-like" onclick="handleLikeDislike({{$post->post_id}},'dislike')"></button>
                     @else
-                        <form action="{{ route('post.like', ['id' => $post->post_id]) }}" method="POST">
-                            @csrf
-                            <button class="btn bi bi-heart custom-btn-like"></button>
-                        </form>
+                        <button id="btn-{{ $post->post_id }}" class="btn bi bi-heart custom-btn-like" onclick="handleLikeDislike({{$post->post_id}},'like')"></button>
                     @endif
 
-                    <span>{{ $post->likesCount() }}</span>
+                    <span id="like-count-{{ $post->post_id }}">{{ $post->likesCount() }}</span>
                 </div>
 
                 <div class="d-flex align-items-center custom-btn-container">
@@ -53,49 +46,4 @@
         </div>
 </div>
 
-<!-- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Add event listeners to like buttons
-        document.querySelectorAll('.btn.bi-heart').forEach(function (button) {
-            button.addEventListener('click', function (event) {
-                event.preventDefault(); // Prevent the default button action
-                let postId = this.id.split('-').pop();
-                handleLikeDislike(postId, 'like');
-            });
-        });
 
-        // Add event listeners to dislike buttons
-        document.querySelectorAll('.btn.bi-heart-fill').forEach(function (button) {
-            button.addEventListener('click', function (event) {
-                event.preventDefault(); // Prevent the default button action
-                let postId = this.id.split('-').pop();
-                handleLikeDislike(postId, 'dislike');
-            });
-        });
-    });
-
-    function handleLikeDislike(postId, action) {
-        let url = '/post/' + postId + '/' + action;
-        let method = action === 'like' ? 'POST' : 'DELETE';
-
-        fetch(url, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({ post_id: postId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Update the like button and like count here
-            if(action === 'like') {
-                document.getElementById('like-btn-' + postId).classList.add('liked');
-            } else {
-                document.getElementById('like-btn-' + postId).classList.remove('liked');
-            }
-            document.getElementById('like-count-' + postId).textContent = data.likeCount;
-        })
-        .catch(error => console.error('Error:', error));
-    }
-</script> -->
