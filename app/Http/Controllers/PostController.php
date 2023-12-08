@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Log;
 use App\Models\Post;
+use App\Models\User;
+use App\Models\Mention;
 
 class PostController extends Controller
 {
@@ -105,6 +107,19 @@ class PostController extends Controller
         $post->content = $validatedData['content'];
         $post->owner_id = Auth::id(); // Set the owner_id to the current user's ID
         $post->save();
+
+        preg_match_all('/@(\w+)/', $post->content, $matches);
+        $usernames = $matches[1];
+
+        foreach ($usernames as $username) {
+            $mentionedUser = User::where('username', $username)->first();
+            if ($mentionedUser) {
+                Mention::create([
+                    'post_id' => $post->post_id,
+                    'user_mentioned' => $mentionedUser->user_id
+                ]);
+            }
+        }
 
         return redirect()->route('user.profile', ['id' => Auth::id()])->with('success', 'Post created successfully!');
       }
