@@ -101,5 +101,38 @@ class UserController extends Controller
     
         return redirect()->back();
     }
+
+    public function showEditPage($id) {
+        $user = User::find($id);
+
+        $this->authorize('updateSelf', $user);
+
+        if (!$user) {
+            abort(404, 'User not found'); 
+        }
+
+        return view('pages.edit_profile', ['user' => $user]);
+    }
+
+    public function updateProfile($id) {
+        $user = User::find($id);
+
+        $this->authorize('updateSelf', $user);
+
+        if (!$user) {
+            abort(404, 'User not found'); 
+        }
+
+        $validatedData = request()->validate([
+            'name' => 'required|max:255',
+            'username' => 'required|max:255|unique:users,username,' . $user->user_id. ',user_id',
+            'private' => 'required',
+            'bio' => 'max:255',
+        ]);
+
+       $user->update($validatedData);
+
+        return redirect()->route('user.profile', ['id' => $user->user_id]);
+    }
     
 }

@@ -73,7 +73,9 @@ Route::controller(UserController::class)->group(function () {
     Route::post('/user/{id}/unfollow', 'unfollow')->name('user.unfollow');
     Route::get('/user/{id}/followers', 'showFollowerPage')->name('user.followers');
     Route::get('/user/{id}/following', 'showFollowingPage')->name('user.following');
-    Route::post('/user/{id}/update', 'removeFollower')->name('user.removeFollower');
+    Route::get('/user/{id}/edit', 'showEditPage')->name('user.showEditPage');
+    Route::put('/user/{id}/update', 'updateProfile')->name('user.updateProfile');
+    Route::post('/user/{id}/removefollower', 'removeFollower')->name('user.removeFollower');
 });
 
 // Search

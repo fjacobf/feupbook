@@ -13,7 +13,7 @@
                 <h3 class="text-secondary"><span>@</span>{{ $user->username }}</h3>
                 <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 10px;">
                     @can('updateSelf', $user)
-                        <a href="" class="btn btn-primary" style="margin-right: 5px;">Edit Profile</a>
+                        <a href="{{ route('user.showEditPage', ['id' => $user->user_id])}}" class="btn btn-primary" style="margin-right: 5px;">Edit Profile</a>
                     @endcan
 
                     @can('viewAdminInterface', $user)
@@ -44,11 +44,19 @@
                 <div class="profile-details-counts mt-3 d-flex justify-content-between">
                     <div class="text-center">
                         <p class="mb-0"><strong>{{ $user->followerCounts() }}</strong></p>
-                        <a href="{{ route('user.followers', ['id' => $user->user_id ])}}" class="mb-0 text-black text-decoration-none" style="font-size: 0.8rem;">Followers</a>
+                        @can('viewFollowPages', $user)
+                            <a href="{{ route('user.followers', ['id' => $user->user_id ])}}" class="mb-0 text-black text-decoration-none" style="font-size: 0.8rem;">Followers</a>
+                        @else
+                            <p class="mb-0" style="font-size: 0.8rem;">Followers</p>
+                        @endcan
                     </div>
                     <div class="text-center">
                         <p class="mb-0"><strong>{{ $user->followingCounts() }}</strong></p>
-                        <a href="{{ route('user.following', ['id' => $user->user_id ])}}" class="mb-0 text-black text-decoration-none" style="font-size: 0.8rem;">Following</a>
+                        @can('viewFollowPages', $user)
+                            <a href="{{ route('user.following', ['id' => $user->user_id ])}}" class="mb-0 text-black text-decoration-none" style="font-size: 0.8rem;">Following</a>
+                        @else
+                            <p class="mb-0" style="font-size: 0.8rem;">Following</p>
+                        @endcan
                     </div>
                     <div class="text-center">
                         <p class="mb-0"><strong>{{ $user->postCounts() }}</strong></p>
