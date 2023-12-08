@@ -126,11 +126,11 @@ class UserController extends Controller
         $validatedData = request()->validate([
             'name' => 'required|max:255',
             'username' => 'required|max:255|unique:users,username,' . $user->user_id. ',user_id',
-            'private' => 'required',
+            'private' => 'boolean',
             'bio' => 'max:255',
         ]);
 
-       $user->update($validatedData);
+        $user->update(array_merge($validatedData, ['private' => request('private', 0)]));
 
         return redirect()->route('user.profile', ['id' => $user->user_id]);
     }

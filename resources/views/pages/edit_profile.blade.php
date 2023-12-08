@@ -28,7 +28,7 @@
             <div class="mb-3">
                 <label for="private" class="form-label">Profile privacy</label>
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="private" name="private" {{ $user->private ? 'checked' : '' }}>
+                    <input type="checkbox" class="form-check-input" value="1" id="private" name="private" {{ $user->private ? 'checked' : '' }}>
                     <label class="form-check-label" for="private">Private</label>
                 </div>
                 <div id="privateHelp" class="form-text">If your profile is private, only your followers will be able to see your posts.</div>
