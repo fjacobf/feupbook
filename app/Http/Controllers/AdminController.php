@@ -81,4 +81,20 @@ class AdminController extends Controller
             return redirect()->route('home')->withErrors(['message' => 'You are not authorized to delete this user']);
         }
     }
+
+    public function restoreUser($id) {
+        try
+        {    
+            $user = User::findOrFail($id);
+
+            $this->authorize('restoreAccount', $user);
+
+            $user->update(['user_type' => 'normal_user']);
+
+            return redirect()->route('home')->with('success', 'User restored successfully.');
+        }
+        catch(AuthorizationException $e){
+            return redirect()->route('home')->withErrors(['message' => 'You are not authorized to restore this user']);
+        }
+    }
 }

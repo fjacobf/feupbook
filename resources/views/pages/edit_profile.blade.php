@@ -35,5 +35,26 @@
             </div>
             <button type="submit" class="btn btn-primary">Update Profile</button>
         </form>
+        <hr/>
+        <h2>Update Password</h2>
+        <form action="" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="mb-3">
+                <label for="email" class="form-label">Re-enter your email</label>
+                <input type="email" class="form-control" id="currentPassword" name="currentPassword">
+                <div id="currentPasswordHelp" class="form-text">Enter your email. You will recieve a ticket which will allow your password reset.</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Password</button>
+        </form>
+        <hr/>
+        <h2>Account Deletion</h2>
+        <form action="{{ route('user.deleteProfile', [ 'id' => $user->user_id ])}}" method="POST">
+            @csrf
+            @method('PUT')
+            <button type="submit" class="btn btn-danger">Delete Account</button>
+            <div id="deleteHelp" class="form-text">Deleting your account is permanent! <br>
+            Only an admin can help you restore your account later.</div>
+        </form>
     </div>
 @endsection

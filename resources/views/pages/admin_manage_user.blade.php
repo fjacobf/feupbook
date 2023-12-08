@@ -62,7 +62,12 @@
                             @csrf
                             @method('PUT')
                             <button type="submit" class="btn btn-danger">Delete User</button>
-                            <p>Warning: This action is permanent!</p>
+                        </form>
+                    @else
+                        <form class="mt-2 d-flex" action="{{ route('admin.restoreUser', ['id' => $user->user_id]) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="btn btn-success">Restore User</button>
                         </form>
                     @endif
                 </div>

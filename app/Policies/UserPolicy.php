@@ -61,6 +61,16 @@ class UserPolicy
         return ($user->user_id === $model->user_id || $user->user_type == 'admin') || $model->private == false;
     }
 
+    public function deleteSelf(User $user, User $model): bool
+    {
+        return $user->user_id === $model->user_id;
+    }
+
+    public function restoreAccount(User $user, User $model): bool
+    {
+        return $user->user_type == 'admin';
+    }
+
     /**
      * Determine whether the user can delete the model.
      */

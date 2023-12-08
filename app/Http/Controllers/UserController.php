@@ -135,4 +135,21 @@ class UserController extends Controller
         return redirect()->route('user.profile', ['id' => $user->user_id]);
     }
     
+    public function deleteProfile($id) {
+        $user = User::find($id);
+
+        $this->authorize('deleteSelf', $user);
+
+        if (!$user) {
+            abort(404, 'User not found'); 
+        }
+
+        $user->update(['user_type' => 'deleted']);
+
+        if (Auth::check()) {
+            Auth::logout();
+        }
+
+        return redirect()->route('home')->with('success', 'User deleted successfully.');
+    }
 }
