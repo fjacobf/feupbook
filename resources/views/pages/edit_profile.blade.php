@@ -57,7 +57,7 @@
         <form action="{{ route('user.deleteProfile', [ 'id' => $user->user_id ])}}" method="POST">
             @csrf
             @method('PUT')
-            <button type="submit" class="btn btn-danger">Delete Account</button>
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete your account?')">Delete Account</button>
             <div id="deleteHelp" class="form-text">Deleting your account is permanent! <br>
             Only an admin can help you restore your account later.</div>
         </form>

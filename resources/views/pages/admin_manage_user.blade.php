@@ -61,13 +61,13 @@
                         <form class="mt-2 d-flex" action="{{ route('admin.deleteUser', ['id' => $user->user_id]) }}" method="POST">
                             @csrf
                             @method('PUT')
-                            <button type="submit" class="btn btn-danger">Delete User</button>
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Delete user account?')">Delete User</button>
                         </form>
                     @else
                         <form class="mt-2 d-flex" action="{{ route('admin.restoreUser', ['id' => $user->user_id]) }}" method="POST">
                             @csrf
                             @method('PUT')
-                            <button type="submit" class="btn btn-success">Restore User</button>
+                            <button type="submit" class="btn btn-success" onclick="return confirm('Restore user account?')">Restore User</button>
                         </form>
                     @endif
                 </div>
