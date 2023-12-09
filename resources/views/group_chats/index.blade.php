@@ -1,10 +1,13 @@
 @extends('layouts.app')
 
 @section('sidebar')
-    {{-- @include('partials.sidebar') --}}
+    <div class="col-md-4">
+        @include('partials.sidebar')
+    </div>
 @endsection
 
 @section('content')
+    <div class="col-md-8">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-8 offset-md-3">
@@ -27,37 +30,34 @@
                         </ul>
                     @endif
                 </div>
-            </div>
-        </div>
-        <div class="input-group">
-            <input type="text" name="query" id="query" class="form-control" style="max-width: 300px;" placeholder="Enter username">
-            <div class="input-group-append">
-                <button type="button" class="btn btn-primary" id="search_button">Search</button>
-            </div>
-        </div>
-        <form action={{ route('group-chats.create.api') }} method="POST">
-            @csrf
-            <label for="name" class="mb-2">Group Name:</label>
-            <div class="form-group">
-                <input type="text" name="name" id="name" class="form-control" required>
-            </div>
-
-            <label for="description" class="mb-2">Group Description:</label>
-            <div class="form-group">
-                <textarea name="description" id="description" class="form-control" rows="3" required></textarea>
-            </div>
-
-            <label for="query" class="mb-2">Search:</label>
-            <div class="form-group d-flex align-items-center">
-                <select name="usernames[]" id="userDropdown" multiple>
-                    <!-- Options should be populated with the users of the app -->
-                </select>
-            </div>
-
-            <input type="submit" value="Create Group Chat">
-        </form>
-
+                <div class="input-group">
+                    <input type="text" name="query" id="query" class="form-control" style="max-width: 300px;" placeholder="Enter username">
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-primary" id="search_button">Search</button>
+                    </div>
+                </div>
+                <form action={{ route('group-chats.create.api') }} method="POST">
+                    @csrf
+                    <label for="name" class="mb-2">Group Name:</label>
+                    <div class="form-group">
+                        <input type="text" name="name" id="name" class="form-control" required>
+                    </div>
         
+                    <label for="description" class="mb-2">Group Description:</label>
+                    <div class="form-group">
+                        <textarea name="description" id="description" class="form-control" rows="3" required></textarea>
+                    </div>
+        
+                    <label for="query" class="mb-2">Search:</label>
+                    <div class="form-group d-flex align-items-center">
+                        <select name="usernames[]" id="userDropdown" multiple>
+                            <!-- Options should be populated with the users of the app -->
+                        </select>
+                    </div>
+                    <input type="submit" value="Create Group Chat">
+                </form>
+            </div>
+        </div>
         <script>
             document.getElementById('search_button').addEventListener('click', function (event) {
                 event.preventDefault();
@@ -74,5 +74,6 @@
                     .catch(error => console.error('Error:', error));
             });
         </script>
+    </div>
     </div>
 @endsection

@@ -110,6 +110,10 @@ Route::controller(AdminController::class)->group(function () {
 // Group Chat Routes
 Route::get('/group-chats', [GroupChatController::class, 'index']);
 Route::get('/group-chats/{groupChat}', [GroupChatController::class, 'show']);
+Route::get('/group-chats/{groupChat}/edit', [GroupChatController::class, 'edit'])->name('group-chats.edit');
 Route::post('/group-chats/{groupChat}/send-message', [GroupChatController::class, 'sendMessage'])->name('group-chats.sendMessage');
 Route::get('/group-chats/{groupChat}/messages', [GroupChatController::class, 'getMessages'])->name('group-chats.getMessages');
 Route::post('/api/group-chats/create', [GroupChatController::class, 'create'])->name('group-chats.create.api');
+Route::post('/api/group-chats/{groupChat}/add-member', [GroupChatController::class, 'addMember'])->name('group-chats.addMember.api');
+Route::post('/api/group-chats/{groupChat}/remove-member', [GroupChatController::class, 'removeMember'])->name('group-chats.removeMember.api');
+Route::delete('/api/group-chats/{groupChat}/delete', [GroupChatController::class, 'delete'])->name('group-chats.delete.api');

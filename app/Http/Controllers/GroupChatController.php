@@ -28,6 +28,16 @@ class GroupChatController extends Controller
         }
     }
 
+    public function edit(GroupChat $groupChat)
+    {
+        try {
+            $this->authorize('update', $groupChat);
+            return view('group_chats.edit', compact('groupChat'));
+        } catch (AuthorizationException) {
+            return redirect()->back()->withErrors(['message' => 'You are not authorized to edit this group chat']);
+        }
+    }
+
     public function create(Request $request)
     {
         // Validate the request
@@ -63,7 +73,61 @@ class GroupChatController extends Controller
         $groupChat->save();
 
         // Redirect to the new group chat page
-        return redirect('/group-chats/' . $groupChat->id);
+        return redirect('/group-wchats/' . $groupChat->group_id);
+    }
+
+    public function addMember(Request $request, GroupChat $groupChat)
+    {
+        // Validate the request
+        $validatedData = $request->validate([
+            'username' => 'required|string|exists:users,username',
+        ]);
+
+        // Find the User model for the username
+        $user = User::where('username', $validatedData['username'])->first();
+
+        // Add the user to the group chat
+        $groupChat->addMember($user);
+
+        // Save the group chat
+        $groupChat->save();
+
+        // Redirect to the group chat page
+        return redirect('/group-chats/' . $groupChat->group_id);
+    }
+
+    public function removeMember(Request $request, GroupChat $groupChat)
+    {
+        // Validate the request
+        $validatedData = $request->validate([
+            'username' => 'required|string|exists:users,username',
+        ]);
+
+        // Find the User model for the username
+        $user = User::where('username', $validatedData['username'])->first();
+
+        // Remove the user from the group chat
+        $groupChat->removeMember($user);
+
+        // Save the group chat
+        $groupChat->save();
+
+        // Redirect to the group chat page
+        return redirect('/group-chats/' . $groupChat->group_id);
+    }
+
+    public function delete(Request $request, GroupChat $groupChat)
+    {
+        // Validate the request
+        $validatedData = $request->validate([
+            'group_id' => 'required|integer|exists:group_chats,group_id',
+        ]);
+
+        // Delete the group chat
+        $groupChat->delete();
+
+        // Redirect to the group chats page
+        return redirect('/group-chats');
     }
 
     public function sendMessage(Request $request, GroupChat $groupChat)

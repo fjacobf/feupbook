@@ -35,4 +35,14 @@ class GroupChatPolicy
             return false;
         }
     }
+
+    public function update(User $user, GroupChat $groupChat)
+    {
+        // check if user is owner
+        if($groupChat->owner_id == $user->user_id) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
