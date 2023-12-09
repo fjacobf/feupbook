@@ -32,4 +32,14 @@ class GroupChat extends Model
             ->withPivot('status'); // If you need to access the 'status' column in the pivot table
     }
 
+    public function addMember(User $user)
+    {
+        $this->members()->attach($user->id);
+    }
+
+    public function removeMember(User $user)
+    {
+        $this->members()->detach($user->id);
+    }
+
 }

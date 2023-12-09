@@ -28,7 +28,6 @@ class SearchController extends Controller
         $query = $request->input('query');
 
         $users = User::where('username', 'ILIKE', "%$query%")->get();
-
         return response()->json($users);
     }
 }

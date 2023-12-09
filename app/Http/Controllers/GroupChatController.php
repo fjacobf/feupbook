@@ -6,6 +6,7 @@ use App\Models\GroupChat;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use App\Models\Message;
+use App\Models\User;
 
 class GroupChatController extends Controller
 {
@@ -27,9 +28,42 @@ class GroupChatController extends Controller
         }
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return view('group_chats.create');
+        // Validate the request
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'usernames' => 'required|array',
+            'usernames.*' => 'exists:users,username',
+        ]);
+
+        // Create a new GroupChat
+        $groupChat = new GroupChat;
+        $groupChat->name = $validatedData['name'];
+        $groupChat->description = $validatedData['description'];
+        
+        // Set the authenticated user as the owner of the group chat
+        $groupChat->owner_id = auth()->id();
+        $groupChat->save();
+
+        // Add the authenticated user to the usernames array
+        $usernames = $validatedData['usernames'];
+        $usernames[] = auth()->user()->username;
+
+        // Find the User models for each username
+        $users = User::whereIn('username', $usernames)->get();
+
+        // Add each user to the group chat
+        foreach ($users as $user) {
+            $groupChat->addMember($user);
+        }
+
+        // Save the group chat
+        $groupChat->save();
+
+        // Redirect to the new group chat page
+        return redirect('/group-chats/' . $groupChat->id);
     }
 
     public function sendMessage(Request $request, GroupChat $groupChat)
