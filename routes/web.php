@@ -94,6 +94,7 @@ Route::controller(UserController::class)->group(function () {
 // Search
 Route::controller(SearchController::class)->group(function () {
     Route::get('/search','show')->name('search.show');
+    Route::get('/api/user_json', 'search_json')->name('search_json.api');
     Route::get('/api/user', 'search')->name('search.api');
 });
 

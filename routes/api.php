@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Route;
 // Chats
 use App\Http\Controllers\GroupChatController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserControllerAuth;
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,3 +32,5 @@ Route::prefix('group-chats')->group(function () {
     Route::get('/{groupChat}', [GroupChatController::class, 'show']);
     // Add other routes for CRUD operations as needed
 });
+
+Route::get('/search_json', [SearchController::class, 'search_json']);
