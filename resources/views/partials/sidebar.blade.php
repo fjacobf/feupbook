@@ -46,6 +46,20 @@
         @endguest
       </li>
       <li>
+        @auth
+        <a href="{{ route('notifications.list', ['id' => auth()->user()->user_id]) }}" class="nav-link {{ request()->routeIs('notifications.list') && (request()->route()->parameter('id') == auth()->user()->user_id) ? 'active' : 'link-dark' }} py-2" style="font-size: 1.25rem;">
+          <i class="bi bi-person-circle me-3"></i>
+          Notifications
+        </a>
+        @endauth
+        @guest
+        <a href="{{ route('login') }}" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
+          <i class="bi bi-person-circle me-3"></i>
+          Notifications
+        </a>
+        @endguest
+      </li>
+      <li>
         <a href="#" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
           <i class="bi bi-gear-fill me-3"></i>
           Settings

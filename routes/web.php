@@ -12,6 +12,7 @@ use App\Http\Controllers\CommentController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,4 +84,9 @@ Route::controller(SearchController::class)->group(function () {
 Route::controller(AdminController::class)->group(function () {
     Route::get('/admin/user/{id}/edit', 'showUserManagement')->name('admin.manageUser');
     Route::post('/admin/user/{id}/edit', 'updateUser')->name('admin.updateUser');
+});
+
+//notifications
+Route::controller(NotificationController::class)->group(function () {
+    Route::get('/notifications/{id}', 'list')->name('notifications.list');
 });
