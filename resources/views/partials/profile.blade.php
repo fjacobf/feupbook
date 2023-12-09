@@ -4,9 +4,9 @@
 
 @section('profile')
 
-<section id="profile" class="flex-grow-1" style="margin-left: 280px;">
-    <section id="profile-details" class="d-flex justify-content-center">
-        <div class="profile-details">
+<section id="profile" class="col">
+    <section id="profile-details" class="d-flex justify-content-center w-100">
+        <div class="profile-details w-25">
             <!-- <img> User profile pic here </img> -->
             <div class="profile-details-text border-black mb-4">
                 <h1 class="display-4">{{ $user->name }}</h1>
@@ -17,12 +17,12 @@
                     @endcan
 
                     @can('viewAdminInterface', $user)
-                        <a href="{{ route('admin.manageUser', ['id' => $user->user_id]) }}" class="btn btn-primary">Manage User's Account</a>
+                        <a href="{{ route('admin.manageUser', ['id' => $user->user_id]) }}" class="btn btn-danger">Manage User's Account</a>
                     @endcan
 
                 </div>
                 @if ($user->private)
-                    <div class="alert alert-warning" role="alert">
+                    <div class="d-flex justify-content-center alert alert-warning" role="alert">
                         <strong>Private Profile</strong>
                     </div>
                 @else
@@ -79,8 +79,8 @@
     <h2 class="mb-4 text-center">Posts from this user</h2>
     @if ((Auth::check() && Auth::user()->user_id == $user->user_id) || !$user->private || (Auth::Check() && Auth::user()->user_type == 'admin') || (Auth::check() && $user->isFollowing()))
         @if ($user->posts()->count() > 0)
-            <div class="container-lg d-flex justify-content-center align-items-center w-100">
-                <ul class="list-unstyled mb-4">
+            <div class="container-lg d-flex justify-content-center align-items-center w-50">
+                <ul class="list-unstyled mb-4 w-100">
                         @foreach ($user->posts()->orderBy('created_at', 'desc')->get() as $post)
                             @include('partials.post', ['post' => $post])
                         @endforeach

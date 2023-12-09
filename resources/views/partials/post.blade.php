@@ -1,5 +1,5 @@
 <div class="post mt-4">
-        <div class="card" style="width: 50em;">
+        <div class="card">
             <div class="card-header d-flex justify-content-between fs-5">
                 <small><a href="{{ route('user.profile', ['id' => $post->user->user_id]) }}" class="link-primary:hover text-decoration-none">{{$post->user->name}}</a></small>
                 <small class="text-muted"><span class="text-muted">@</span>{{ $post->user->username }}</small>
@@ -44,11 +44,11 @@
 
                 @canany(['update', 'delete'], $post)
                     <div class="ms-auto">
-                            <a href="{{ route('post.edit', ['id' => $post->post_id]) }}" class="btn btn-primary me-2">Edit Post</a>
+                            <a href="{{ route('post.edit', ['id' => $post->post_id]) }}" class="btn btn-primary bi-pencil-fill me-2"></a>
                             <form action="{{ route('post.delete', ['id' => $post->post_id]) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post?')">Delete Post</button>
+                                <button type="submit" class="btn btn-danger bi-trash-fill" onclick="return confirm('Are you sure you want to delete this post?')"></button>
                             </form>
                     </div>
                 @endcanany

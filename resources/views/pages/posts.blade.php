@@ -5,15 +5,15 @@
 @endsection
 
 @section('content')
-<div class="flex-grow-1" style="margin-left: 280px;">
+<div class="col">
     <div class="d-flex justify-content-center">
         <div class="btn-group mt-3" role="group" aria-label="Post filters">
             <a href="{{ route('forYou') }}" class="btn btn-lg {{ request()->routeIs('forYou') ? 'btn-primary' : 'btn-secondary' }}" style="width: 150px;">For You</a>
             <a href="{{ route('home') }}" class="btn btn-lg {{ request()->routeIs('home') ? 'btn-primary' : 'btn-secondary' }}" style="width: 150px;">Feed</a>
         </div>
     </div>
-    <div class="container-lg d-flex justify-content-center align-items-center w-100">
-        <ul class="list-unstyled mb-4">
+    <div class="container-lg d-flex justify-content-center align-items-center w-50">
+        <ul class="list-unstyled mb-4 w-100">
             @forelse($posts as $post)
                 @include('partials.post', ['post' => $post])
             @empty

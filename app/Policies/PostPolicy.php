@@ -30,7 +30,7 @@ class PostPolicy
         $owner = $post->user;
 
         if ($owner->private) {
-            return $user->user_id === $post->owner_id;
+            return ($user->user_id === $post->owner_id) || $user->user_type === 'admin';
         }
 
         return true;

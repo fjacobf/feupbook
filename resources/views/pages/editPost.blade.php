@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-<div class="flex-grow-1" style="margin-left: 280px;">
+<div class="col-9">
     <div class="d-flex justify-content-center">
         <h3 class="bg-primary text-white rounded mt-3 p-2">Edit Post</h3>
     </div>
