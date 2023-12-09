@@ -152,4 +152,22 @@ class UserController extends Controller
 
         return redirect()->route('home')->with('success', 'User deleted successfully.');
     }
+
+    public function updatePassword($id) {
+        $user = User::find($id);
+
+        $this->authorize('updateSelf', $user);
+
+        if (!$user) {
+            abort(404, 'User not found'); 
+        }
+
+        $validatedData = request()->validate([
+            'new_password' => 'required|min:8|confirmed',
+        ]);
+
+        $user->update(['password' => bcrypt($validatedData['new_password'])]);
+
+        return redirect()->route('user.profile', ['id' => $user->user_id]);
+    }
 }

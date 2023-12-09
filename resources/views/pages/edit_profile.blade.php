@@ -37,13 +37,18 @@
         </form>
         <hr/>
         <h2>Update Password</h2>
-        <form action="" method="POST">
+        <form action="{{ route('user.updatePassword', [ 'id' => $user->user_id ])}}" method="POST">
             @csrf
             @method('PUT')
             <div class="mb-3">
-                <label for="email" class="form-label">Re-enter your email</label>
-                <input type="email" class="form-control" id="currentPassword" name="currentPassword">
-                <div id="currentPasswordHelp" class="form-text">Enter your email. You will recieve a ticket which will allow your password reset.</div>
+                <label for="new_password" class="form-label">New Password</label>
+                <input type="password" class="form-control" id="new_password" name="new_password" aria-describedby="newPasswordHelp">
+                <div id="newPasswordHelp" class="form-text">Enter your new password.</div>
+            </div>
+            <div class="mb-3">
+                <label for="confirm_password" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" id="confirm_password" name="new_password_confirmation" aria-describedby="confirmPasswordHelp">
+                <div id="confirmPasswordHelp" class="form-text">Confirm your new password.</div>
             </div>
             <button type="submit" class="btn btn-primary">Update Password</button>
         </form>

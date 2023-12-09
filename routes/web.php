@@ -77,6 +77,7 @@ Route::controller(UserController::class)->group(function () {
     Route::put('/user/{id}/delete', 'deleteProfile')->name('user.deleteProfile');
     Route::put('/user/{id}/update', 'updateProfile')->name('user.updateProfile');
     Route::post('/user/{id}/removefollower', 'removeFollower')->name('user.removeFollower');
+    Route::put('/user/{id}/password', 'updatePassword')->name('user.updatePassword');
 });
 
 // Search
