@@ -109,7 +109,6 @@ class PostController extends Controller
         $post->owner_id = Auth::id();
 
         if ($request->hasFile('image')) {
-          Log::info('has image');
           $imageName = time() . '.' . $request->image->extension();
           $request->image->move(public_path('images'), $imageName);
           $post->image = 'images/' . $imageName;
@@ -165,6 +164,20 @@ class PostController extends Controller
         $this->authorize('update', $post);
 
         $post->content = $validatedData['content'];
+
+        if ($request->has('remove_image') && $post->image) {
+          if (file_exists(public_path($post->image))) {
+              unlink(public_path($post->image));
+          }
+          $post->image = null;
+        }
+  
+        if ($request->hasFile('image')) {
+          $imageName = time().'.'.$request->image->extension();  
+          $request->image->move(public_path('images'), $imageName);
+          $post->image = 'images/'.$imageName; // Save new image path to the database
+        }
+
         $post->save();
 
         preg_match_all('/@(\w+)/', $post->content, $matches);
