@@ -99,13 +99,22 @@ class PostController extends Controller
       {  
         $validatedData = $request->validate([
             'content' => 'required|max:1000',
+            'image' => 'file|mimes:jpeg,png,jpg,jpe,gif,svg|max:5048',
         ]);
 
         $this->authorize('create', Post::class);
 
         $post = new Post;
         $post->content = $validatedData['content'];
-        $post->owner_id = Auth::id(); // Set the owner_id to the current user's ID
+        $post->owner_id = Auth::id();
+
+        if ($request->hasFile('image')) {
+          Log::info('has image');
+          $imageName = time() . '.' . $request->image->extension();
+          $request->image->move(public_path('images'), $imageName);
+          $post->image = 'images/' . $imageName;
+        }
+
         $post->save();
 
         preg_match_all('/@(\w+)/', $post->content, $matches);
