@@ -158,6 +158,22 @@ class PostController extends Controller
         $post->content = $validatedData['content'];
         $post->save();
 
+        preg_match_all('/@(\w+)/', $post->content, $matches);
+        $usernames = $matches[1];
+
+        $post->mentions()->delete();
+
+        foreach ($usernames as $username) {
+            $mentionedUser = User::where('username', $username)->first();
+            if ($mentionedUser) {
+                // Create or update the Mention
+                Mention::updateOrCreate(
+                    ['post_id' => $post->post_id, 'user_mentioned' => $mentionedUser->user_id],
+                    ['post_id' => $post->post_id, 'user_mentioned' => $mentionedUser->user_id]
+                );
+            }
+        }
+
         return redirect()->route('user.profile', ['id' => Auth::id()])->with('success', 'Post updated successfully!');
       }
       catch(AuthorizationException $e){
