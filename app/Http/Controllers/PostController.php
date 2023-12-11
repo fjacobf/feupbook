@@ -99,13 +99,21 @@ class PostController extends Controller
       {  
         $validatedData = $request->validate([
             'content' => 'required|max:1000',
+            'image' => 'file|mimes:jpeg,png,jpg,jpe,gif,svg|max:5048',
         ]);
 
         $this->authorize('create', Post::class);
 
         $post = new Post;
         $post->content = $validatedData['content'];
-        $post->owner_id = Auth::id(); // Set the owner_id to the current user's ID
+        $post->owner_id = Auth::id();
+
+        if ($request->hasFile('image')) {
+          $imageName = time() . '.' . $request->image->extension();
+          $request->image->move(public_path('images'), $imageName);
+          $post->image = 'images/' . $imageName;
+        }
+
         $post->save();
 
         preg_match_all('/@(\w+)/', $post->content, $matches);
@@ -156,6 +164,20 @@ class PostController extends Controller
         $this->authorize('update', $post);
 
         $post->content = $validatedData['content'];
+
+        if ($request->has('remove_image') && $post->image) {
+          if (file_exists(public_path($post->image))) {
+              unlink(public_path($post->image));
+          }
+          $post->image = null;
+        }
+  
+        if ($request->hasFile('image')) {
+          $imageName = time().'.'.$request->image->extension();  
+          $request->image->move(public_path('images'), $imageName);
+          $post->image = 'images/'.$imageName; // Save new image path to the database
+        }
+
         $post->save();
 
         preg_match_all('/@(\w+)/', $post->content, $matches);

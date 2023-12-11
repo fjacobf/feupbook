@@ -23,6 +23,9 @@
                     }, $post->content);
                     ?>
                     <h5 class="card-text text-black">{!! $postContent !!}</h5>
+                    @if ($post->image)
+                        <img src="{{ asset($post->image) }}" class="rounded mx-auto d-block w-50" alt="">
+                    @endif
                 </div>
 
                 <div class="card-footer d-flex justify-content-around">

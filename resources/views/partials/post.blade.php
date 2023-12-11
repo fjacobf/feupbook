@@ -13,6 +13,9 @@
                 }, $post->content);
                 ?>
                 <h5 class="card-text text-black">{!! $postContent !!}</h5>
+                @if ($post->image)
+                    <img src="{{ asset($post->image) }}" class="rounded mx-auto d-block w-50" alt="">
+                @endif
             </div>
             <div class="d-flex justify-content-end">
                 <a href="{{ route('post.show', ['id' => $post->post_id]) }}" class="text-decoration-none text-info me-2 mb-1">Go to post</a> 
