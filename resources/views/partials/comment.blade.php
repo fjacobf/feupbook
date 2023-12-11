@@ -1,21 +1,37 @@
 @if ($comment->previous == null)
-    <div>
+    <div class="d-flex flex-column ms-3">
         <div class="d-flex justify-content-between">
-            <h5 class="card-text">{{ $comment->user->username }}</h5>
-            <p>{{ $comment->date }}</p>
-        </div>
-        <div class="d-flex justify-content-between">
-            <p class="card-text">{{ $comment->content }}</p>
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-primary" onclick="reply({{ $comment->comment_id }})">Reply</button>
+            <div class="d-flex align-items-center">
+                <strong style="margin:0; font-size:1.1rem;" class="card-text">{{ $comment->user->username }}&nbsp</strong>
+                <p class="card-text">{{ $comment->content }}</p>
+            </div>
+            <div class="buttons d-flex">
                 @can('delete', $comment)
-                    <form action="{{ route('comment.delete', ['id' => $comment->comment_id]) }}" method="POST">
+                    <form action="{{ route('deleteComment', ['id' => $comment->comment_id]) }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger ms-2" onclick="return confirm('Are you sure you want to delete this comment?')">Delete Comment</button>
+                        <button type="submit" class="btn"
+                            onclick="return confirm('Are you sure you want to delete this comment?')"><i style="color: red"
+                                class="bi bi-trash-fill"></i>
+                        </button>
                         <input type="hidden" name="comment_id" id="comment_id_{{ $comment->comment_id }}" value="{{ $comment->comment_id }}">
                     </form>
                 @endcan
+                @if ($comment->isLiked() == true)
+                <form action="{{ route('comment.dislike', ['id' => $comment->comment_id]) }}" method="POST">
+                    @csrf
+                    <button class="btn">
+                        <i style="color: red" class="bi bi-heart-fill"></i>
+                    </button>
+                </form>
+                @else
+                    <form action="{{ route('comment.like', ['id' => $comment->comment_id]) }}" method="POST">
+                        @csrf
+                        <button class="btn">
+                            <i style="color: red" class="bi bi-heart"></i>
+                        </button>
+                    </form>
+                @endif
             </div>
         </div>
         @can('create', [App\Models\Comment::class, $post])
@@ -28,29 +44,55 @@
                     <button type="submit" class="btn btn-primary ms-2">Comment</button>
                 </form>
             </div>
-            <hr>
+            <div style="gap:10px;" class="d-flex align-items-center ms-2">
+                <p class="m-0 comment-date">6d</p>
+                <p class="m-0 comment-likes">{{$comment->likeCounts()}} likes</p>
+                <button style="text-decoration: underline; width:4rem; padding:0;" class="btn"
+                    onclick="reply({{ $comment->comment_id }})">Reply</button>
+            </div>
         @endcan
     </div>
 @endif
 
-@foreach ($comment->replies as $reply)
-    <div style="margin-left: 3rem">
-        <div style="display: flex; justify-content: space-between">
-            <h5 class="card-text">{{ $reply->user->username }}</h5>
-            <p>{{ $reply->date }}</p>
+@foreach ($comment->replies()->orderBy('created_at', 'desc')->get() as $reply)
+    <div style="margin: 0 0 0.5rem 3rem;" class="d-flex flex-column">
+        <div class="d-flex justify-content-between">
+            <div style="margin-left:10px; display:flex; align-items: center;">
+                <strong style="margin:0; font-size:1.1rem;" class="card-text">{{ $reply->user->username }}&nbsp</strong>
+                <p class="card-text">{{ $reply->content }}</p>
+            </div>
+            <div class="buttons d-flex">
+                @can('delete', $reply)
+                    <form action="{{ route('deleteComment', ['id' => $reply->comment_id]) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn"
+                        onclick="return confirm('Are you sure you want to delete this comment?')"><i style="color: red"
+                        class="bi bi-trash-fill"></i></button>
+                        <input type="hidden" name="comment_id" value="{{ $reply->comment_id }}">
+                    </form>
+                @endcan
+                @if ($reply->isLiked() == true)
+                    <form action="{{ route('comment.dislike', ['id' => $reply->comment_id]) }}" method="POST">
+                        @csrf
+                        <button class="btn">
+                            <i style="color: red" class="bi bi-heart-fill"></i>
+                        </button>
+                    </form>
+                @else
+                    <form action="{{ route('comment.like', ['id' => $reply->comment_id]) }}" method="POST">
+                        @csrf
+                        <button class="btn">
+                            <i style="color: red" class="bi bi-heart"></i>
+                        </button>
+                    </form>
+                @endif
+            </div>
         </div>
-        <div style="display: flex; justify-content: space-between">
-            <p class="card-text">{{ $reply->content }}</p>
-            @can('delete', $reply)
-                <form action="{{ route('comment.delete', ['id' => $reply->comment_id]) }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this comment?')">Delete Reply</button>
-                    <input type="hidden" name="comment_id" value="{{ $reply->comment_id }}">
-                </form>
-            @endcan
+        <div style="gap:10px;" class="d-flex align-items-center ms-2">
+            <p class="m-0 comment-date">6d</p>
+            <p class="m-0 comment-likes"> {{$reply->likeCounts()}} likes</p>
         </div>
-        <hr>
     </div>
 @endforeach
 
@@ -58,7 +100,11 @@
     function reply(commentId)
     {
         let rep = document.getElementById('replyDiv' + commentId);
-        console.log(rep);
-        rep.style.display = "block";
+
+        if (rep.style.display === "none") {
+            rep.style.display = "block";
+        } else {
+            rep.style.display = "none";
+        }
     }
 </script>
