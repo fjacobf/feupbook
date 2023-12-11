@@ -13,8 +13,13 @@
 
             <div class="card-footer d-flex justify-content-around">
                 <div class="d-flex align-items-center custom-btn-container">
-                    <button class="btn bi bi-heart custom-btn-like"></button>
-                    <span>{{ $post->likesCount() }}</span>
+                    @if ($post->isLiked() == true)
+                        <button id="btn-{{ $post->post_id }}" class="btn bi bi-heart-fill custom-btn-like" onclick="handleLikeDislike({{$post->post_id}},'dislike')"></button>
+                    @else
+                        <button id="btn-{{ $post->post_id }}" class="btn bi bi-heart custom-btn-like" onclick="handleLikeDislike({{$post->post_id}},'like')"></button>
+                    @endif
+
+                    <span id="like-count-{{ $post->post_id }}">{{ $post->likesCount() }}</span>
                 </div>
 
                 <div class="d-flex align-items-center custom-btn-container">
@@ -40,3 +45,5 @@
             </div>
         </div>
 </div>
+
+

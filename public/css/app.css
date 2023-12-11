@@ -24,3 +24,7 @@
 .custom-btn-container:hover .custom-btn-bookmark {
     background-color: rgba(159, 186, 207, 0.597);
 }
+
+.bi-heart-fill {
+    color: #f92525;
+}

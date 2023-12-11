@@ -50,6 +50,10 @@ class Post extends Model
         return $this->likes()->count();
     }
 
+    public function isLiked(){
+        return $this->likes()->where('user_id', auth()->user()->user_id)->exists();
+    }
+
     public function bookmarks()
     {
         return $this->hasMany(Bookmark::class, 'bookmarked_post', 'post_id');
