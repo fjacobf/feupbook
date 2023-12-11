@@ -877,19 +877,19 @@ VALUES
     (5, 5),
     (7, 7);
 
--- Insert statements for the 'mentions' table
-INSERT INTO mentions (post_id, user_mentioned)
-VALUES
-    (1, 2),
-    (2, 1),
-    (3, 10),
-    (4, 3),
-    (5, 4),
-    (6, 1),
-    (7, 2),
-    (8, 9),
-    (9, 10),
-    (10, 1);
+-- -- Insert statements for the 'mentions' table
+-- INSERT INTO mentions (post_id, user_mentioned)
+-- VALUES
+--     (1, 2),
+--     (2, 1),
+--     (3, 10),
+--     (4, 3),
+--     (5, 4),
+--     (6, 1),
+--     (7, 2),
+--     (8, 9),
+--     (9, 10),
+--     (10, 1);
 
 -- Insert statements for the 'bookmarks' table
 INSERT INTO bookmarks (bookmarked_post, user_id)

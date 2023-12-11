@@ -15,7 +15,13 @@
                 </div>
 
                 <div class="card-body">
-                    <h5 class="card-text text-black">{{ $post->content }}</h5>
+                    <?php
+                    $postContent = preg_replace_callback('/@(\w+)/', function($matches) {
+                        $user = \App\Models\User::where('username', $matches[1])->first();
+                        return $user ? '<a class="link-primary:hover text-decoration-none" href="' . route('user.profile', ['id' => $user->user_id]) . '">' . $matches[0] . '</a>' : $matches[0];
+                    }, $post->content);
+                    ?>
+                    <h5 class="card-text text-black">{!! $postContent !!}</h5>
                 </div>
 
                 <div class="card-footer d-flex justify-content-around">
@@ -75,7 +81,9 @@
                     @forelse($post->comments()->orderBy('created_at', 'desc')->get() as $comment)
                     @include('partials.comment', ['comment' => $comment])
                     @empty
-                        <p style="color: gray; font-size: 0.8rem">There are no comments on this post.</p>
+                        <div class="d-flex justify-content-center">
+                            <p class="text-secondary mt-3 mb-0">There are no comments on this post.</p>
+                        </div>
                     @endforelse
                 </div>
 

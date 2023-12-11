@@ -67,4 +67,9 @@ class Post extends Model
     public function isBookmarked(){
         return $this->bookmarks()->where('user_id', auth()->user()->user_id)->exists();
     }
+
+    public function mentions(): HasMany
+    {
+        return $this->hasMany(Mention::class, 'post_id', 'post_id');
+    }
 }
