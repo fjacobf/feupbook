@@ -5,12 +5,12 @@
 @endsection
 
 @section('content')
-<div class="flex-grow-1" style="margin-left: 280px;">
+<div class="col-9">
    <div class="d-flex justify-content-center">
       <h3 class="bg-primary text-white rounded mt-3 p-2">Bookmarks</h3>
    </div>
-   <div class="container-lg d-flex justify-content-center align-items-center w-100">
-      <ul class="list-unstyled mb-4">
+   <div class="container-lg d-flex justify-content-center align-items-center w-50">
+      <ul class="list-unstyled mb-4 w-100">
          @forelse($posts as $post)
             @include('partials.post', ['post' => $post])
          @empty

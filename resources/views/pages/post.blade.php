@@ -5,7 +5,8 @@
 @endsection
 
 @section('content')
-    <section class="d-flex justify-content-center" style="margin-left: 280px;">
+<div class="col">
+    <section class="d-flex justify-content-center">
         <div class="post mt-4">
             <div class="card" style="width: 50em;">
                 <div class="card-header d-flex justify-content-between fs-5">
@@ -90,4 +91,5 @@
             </div>
         </div>
     </section>
+</div>
 @endsection
