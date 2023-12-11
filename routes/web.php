@@ -70,19 +70,19 @@ Route::controller(RegisterController::class)->group(function () {
 
 // User
 Route::controller(UserController::class)->group(function () {
-    Route::get('/user/{id}', [UserController::class, 'show'])->name('user.profile');
-    Route::post('/user/{id}/follow', [UserController::class, 'follow'])->name('user.follow');
-    Route::post('/user/{id}/unfollow', [UserController::class, 'unfollow'])->name('user.unfollow');
+    Route::get('/user/{id}', 'show')->name('user.profile');
+    Route::post('/user/{id}/follow', 'follow')->name('user.follow');
+    Route::post('/user/{id}/unfollow', 'unfollow')->name('user.unfollow');
 });
 
 // Search
 Route::controller(SearchController::class)->group(function () {
-    Route::get('/search', [SearchController::class, 'show'])->name('search.show');
-    Route::get('/api/user', [SearchController::class, 'search'])->name('search.api');
+    Route::get('/search','show')->name('search.show');
+    Route::get('/api/user', 'search')->name('search.api');
 });
 
 // Admin Management
 Route::controller(AdminController::class)->group(function () {
-    Route::get('/admin/user/{id}/edit', [AdminController::class, 'showUserManagement'])->name('admin.manageUser');
-    Route::post('/admin/user/{id}/edit', [AdminController::class, 'updateUser'])->name('admin.updateUser');
+    Route::get('/admin/user/{id}/edit', 'showUserManagement')->name('admin.manageUser');
+    Route::post('/admin/user/{id}/edit', 'updateUser')->name('admin.updateUser');
 });
