@@ -9,23 +9,12 @@
                 <div class="card-body">
                     <h5 class="card-text text-black">{{ $post->content }}</h5>
                 </div>
-            </a>
-                <div class="card-body">
-                    <h4 class="card-text">Comments:</h4>
-                    @forelse($post->comments()->orderBy('created_at', 'desc')->get() as $comment)
-                    @include('partials.comment', ['comment' => $comment])
-                    @empty
-                        <p style="color: gray; font-size: 0.8rem">There are no comments on this post.</p>
-                    @endforelse
+            </a> 
 
-                    <form style="margin: 1rem; display:flex; justify-content: center" action="{{ route('storeComment') }}" method="POST">
-                        @csrf
-                        <textarea style="resize:none" id="content" name="content" cols="30" rows="1"
-                            placeholder="Adicione um comentário..."></textarea> <!--textarea not auto expanding-->
-                        <input type="hidden" name="post_id" id="post_id" value="{{ $post->post_id }}">
-                        <input type="hidden" name="comment_id" id="comment_id" value="{{ NULL }}">
-                        <button type="submit" class="btn btn-primary">Comment</button>
-                    </form>
+            <div class="card-footer d-flex justify-content-around">
+                <div class="d-flex align-items-center custom-btn-container">
+                    <button class="btn bi bi-heart custom-btn-like"></button>
+                    <span>{{ $post->likesCount() }}</span>
                 </div>
 
                 <div class="d-flex align-items-center custom-btn-container">
