@@ -37,7 +37,7 @@ DROP FUNCTION IF EXISTS reject_inappropriate_posts CASCADE;
 DROP FUNCTION IF EXISTS create_group_owner CASCADE;
 
 -- Create ENUM types
-CREATE TYPE user_types AS ENUM ('normal_user', 'admin', 'suspended');
+CREATE TYPE user_types AS ENUM ('normal_user', 'admin', 'suspended', 'deleted');
 CREATE TYPE notification_types AS ENUM ('liked_comment', 'reply_comment', 'request_follow', 'started_following', 'accepted_follow', 'joined_group', 'group_invite', 'liked_post', 'comment_post');
 CREATE TYPE report_types AS ENUM ('harassment', 'hate_speech', 'inappropriate_content', 'spam', 'self_harm');
 CREATE TYPE request_status AS ENUM ('accepted', 'rejected', 'waiting');

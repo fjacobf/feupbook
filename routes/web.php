@@ -78,6 +78,13 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/user/{id}', 'show')->name('user.profile');
     Route::post('/user/{id}/follow', 'follow')->name('user.follow');
     Route::post('/user/{id}/unfollow', 'unfollow')->name('user.unfollow');
+    Route::get('/user/{id}/followers', 'showFollowerPage')->name('user.followers');
+    Route::get('/user/{id}/following', 'showFollowingPage')->name('user.following');
+    Route::get('/user/{id}/edit', 'showEditPage')->name('user.showEditPage');
+    Route::put('/user/{id}/delete', 'deleteProfile')->name('user.deleteProfile');
+    Route::put('/user/{id}/update', 'updateProfile')->name('user.updateProfile');
+    Route::post('/user/{id}/removefollower', 'removeFollower')->name('user.removeFollower');
+    Route::put('/user/{id}/password', 'updatePassword')->name('user.updatePassword');
 });
 
 // Search
@@ -90,4 +97,6 @@ Route::controller(SearchController::class)->group(function () {
 Route::controller(AdminController::class)->group(function () {
     Route::get('/admin/user/{id}/edit', 'showUserManagement')->name('admin.manageUser');
     Route::post('/admin/user/{id}/edit', 'updateUser')->name('admin.updateUser');
+    Route::post('/admin/user/{id}/delete', 'deleteUser')->name('admin.deleteUser');
+    Route::put('/admin/user/{id}/restore', 'restoreUser')->name('admin.restoreUser');
 });

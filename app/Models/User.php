@@ -111,5 +111,9 @@ class User extends Authenticatable // lower case plural
         return $this->hasMany(Comment::class, 'user_id', 'user_id');
     }
     
+    public function followers() {
+        return $this->belongsToMany(User::class, 'follow_requests', 'rcv_id', 'req_id')
+                    ->wherePivot('status', 'accepted');
+    }
 }
 
