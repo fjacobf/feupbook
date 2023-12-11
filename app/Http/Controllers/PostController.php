@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\AuthorizationException;
 use App\Models\Post;
 
-use Illuminate\Support\Facades\Log;
-
 class PostController extends Controller
 {
    /**
