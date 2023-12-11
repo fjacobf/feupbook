@@ -7,7 +7,7 @@
             </div>
             <div class="buttons d-flex">
                 @can('delete', $comment)
-                    <form action="{{ route('deleteComment', ['id' => $comment->comment_id]) }}" method="POST">
+                    <form action="{{ route('comment.delete', ['id' => $comment->comment_id]) }}" method="POST">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn"
@@ -63,7 +63,7 @@
             </div>
             <div class="buttons d-flex">
                 @can('delete', $reply)
-                    <form action="{{ route('deleteComment', ['id' => $reply->comment_id]) }}" method="POST">
+                    <form action="{{ route('comment.delete', ['id' => $reply->comment_id]) }}" method="POST">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn"
