@@ -5,15 +5,22 @@
 @endsection
 
 @section('content')
-<div class="container">
-    <h2>Create Post</h2>
-    <form action="{{ route('storePost') }}" method="POST">
+<div class="flex-grow-1" style="margin-left: 280px;">
+    <div class="d-flex justify-content-center">
+        <h3 class="bg-primary text-white rounded mt-3 p-2">Create Post</h3>
+    </div>
+
+    <form class="container-lg d-flex flex-column align-items-center w-100" action="{{ route('post.store') }}" method="POST">
         @csrf
-        <div class="mb-3">
-            <label for="content" class="form-label">Post Content</label>
-            <textarea class="form-control" id="content" name="content" rows="3"></textarea>
+        <div class="d-flex flex-column justify-content-start w-50">
+            <label for="content" class="form-label mb-3 h5">Post Content</label>
+            <textarea class="form-control w-100" id="content" name="content" rows="3"></textarea>
+            <div class="w-25">
+                <button type="submit" class="btn btn-primary btn-sm mt-3">
+                    <p class="h5 mb-1"> Submit</p>
+                </button>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
 @endsection

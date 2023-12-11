@@ -63,4 +63,8 @@ class Post extends Model
     {
         return $this->bookmarks()->count();
     }
+
+    public function isBookmarked(){
+        return $this->bookmarks()->where('user_id', auth()->user()->user_id)->exists();
+    }
 }

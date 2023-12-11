@@ -199,4 +199,55 @@ class PostController extends Controller
         return response()->json(['error' => 'You are not authorized to dislike this post'], 403);
       }
     }
+
+    public function listBookmarks()
+    {
+      try {
+        $this->authorize('viewAny', Post::class);
+
+        $user = auth()->user();
+
+        $posts = Post::whereHas('bookmarks', function($query) use ($user) {
+          $query->where('user_id', $user->user_id);
+        })->with('comments')
+          ->orderBy('created_at', 'desc')->paginate(10);
+
+        return view('pages.bookmarks', ['posts' => $posts]);
+      } catch (AuthorizationException $e) {
+        return redirect('/');
+      }
+    }
+
+    public function bookmark($id){
+      try{
+        $post = Post::findOrFail($id);
+
+        $this->authorize('bookmark', $post);
+
+        $post->bookmarks()->create([
+          'user_id' => Auth::id(),
+          'bookmarked_post' => $post->post_id,
+        ]);
+
+        return response()->json(['status' => 200, 'message' => 'Post bookmarked successfully!']);
+      }
+      catch(AuthorizationException $e){
+        return response()->json(['error' => 'You are not authorized to bookmark this post'], 403);
+      }
+    }
+
+    public function unbookmark($id){
+      try{
+        $post = Post::findOrFail($id);
+
+        $this->authorize('bookmark', $post);
+
+        $post->bookmarks()->where('user_id', Auth::id())->where('bookmarked_post', $post->post_id)->delete();
+
+        return response()->json(['status' => 200, 'message' => 'Post unbookmarked successfully!']);
+      }
+      catch(AuthorizationException $e){
+        return response()->json(['error' => 'You are not authorized to unbookmark this post'], 403);
+      }
+    }
 }

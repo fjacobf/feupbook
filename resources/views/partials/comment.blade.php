@@ -36,12 +36,12 @@
         </div>
         @can('create', [App\Models\Comment::class, $post])
             <div style="display:none;" id="replyDiv{{ $comment->comment_id }}">
-                <form style="display:flex; justify-content: center" action="{{ route('storeComment') }}" method="POST">
+                <form class="d-flex justify-content-center mt-2" action="{{ route('comment.store') }}" method="POST">
                     @csrf
                     <textarea style="resize:none" id="content" name="content" cols="30" rows="1" placeholder="Adicione um comentário..."></textarea>
                     <input type="hidden" name="post_id" value="{{ $post->post_id }}">
                     <input type="hidden" name="comment_id" value="{{ $comment->comment_id }}">
-                    <button type="submit" class="btn btn-primary">Comment</button>
+                    <button type="submit" class="btn btn-primary ms-2">Comment</button>
                 </form>
             </div>
             <div style="gap:10px;" class="d-flex align-items-center ms-2">

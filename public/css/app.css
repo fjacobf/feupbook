@@ -1,30 +1,22 @@
-.custom-btn-container:hover .custom-btn-like, 
-.custom-btn-container:hover .custom-btn-like + span {
+.custom-btn-like:hover {
     color: #f92525;
-}
-
-.custom-btn-container:hover .custom-btn-like { 
     background-color: rgb(244, 185, 185);
 }
 
-.custom-btn-container:hover .custom-btn-comment, 
-.custom-btn-container:hover .custom-btn-comment + span {
+.custom-btn-comment:hover {
     color: rgb(0, 119, 0);
-}
-
-.custom-btn-container:hover .custom-btn-comment {
     background-color: rgb(181, 213, 181);
 }
 
-.custom-btn-container:hover .custom-btn-bookmark, 
-.custom-btn-container:hover .custom-btn-bookmark + span {
+.custom-btn-bookmark:hover {
     color: rgba(0, 137, 242, 0.597);
-}
-
-.custom-btn-container:hover .custom-btn-bookmark {
     background-color: rgba(159, 186, 207, 0.597);
 }
 
 .bi-heart-fill {
     color: #f92525;
+}
+
+.card-footer .bi-bookmark-fill{
+    color: rgba(0, 21, 255, 0.597);
 }
