@@ -56,7 +56,7 @@
                         <button type="submit" class="btn btn-primary">Comment</button>
                     </form>
 
-                    @forelse($post->comments as $comment)
+                    @forelse($post->comments()->orderBy('created_at', 'desc')->get() as $comment)
                     @include('partials.comment', ['comment' => $comment])
                     @empty
                         <p style="color: gray; font-size: 0.8rem">There are no comments on this post.</p>
