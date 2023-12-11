@@ -59,11 +59,11 @@
 
                     @canany(['update', 'delete'], $post)
                         <div class="ms-auto">
-                                <a href="{{ route('post.edit', ['id' => $post->post_id]) }}" class="btn btn-primary me-2">Edit Post</a>
+                                <a href="{{ route('post.edit', ['id' => $post->post_id]) }}" class="btn btn-primary bi-pencil-fill me-2"></a>
                                 <form action="{{ route('post.delete', ['id' => $post->post_id]) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post?')">Delete Post</button>
+                                    <button type="submit" class="btn btn-danger bi-trash-fill" onclick="return confirm('Are you sure you want to delete this post?')"></button>
                                 </form>
                         </div>
                     @endcanany
