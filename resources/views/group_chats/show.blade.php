@@ -65,7 +65,38 @@
                 
                 xhr.open('GET', '/group-chats/{{ $groupChat->group_id }}/messages', true);
                 xhr.send();
-            }, 2000);
+            }, 200);
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var form = document.querySelector('form');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+        
+                var formData = new FormData(form);
+                var request = new XMLHttpRequest();
+                request.open('POST', "{{ route('group-chats.sendMessage', $groupChat->group_id) }}");
+                request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                request.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+        
+                request.onload = function() {
+                    if (request.status >= 200 && request.status < 400) {
+                        // Success!
+                        console.log(request.responseText);
+                    } else {
+                        // We reached our target server, but it returned an error
+                        console.error('Server error');
+                    }
+                };
+        
+                request.onerror = function() {
+                    // There was a connection error of some sort
+                    console.error('Connection error');
+                };
+        
+                request.send(formData);
+            });
         });
     </script>
 @endsection
