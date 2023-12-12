@@ -64,9 +64,11 @@ class GroupChatController extends Controller
         // Find the User models for each username
         $users = User::whereIn('username', $usernames)->get();
 
-        // Add each user to the group chat
+        // Add each user to the group chat except for the creator
         foreach ($users as $user) {
-            $groupChat->addMember($user);
+            if ($user->user_id != auth()->id()) {
+                $groupChat->addMember($user);
+            }
         }
 
         // Save the group chat

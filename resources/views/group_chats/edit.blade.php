@@ -34,12 +34,12 @@
 
                         <button type="submit" class="btn btn-primary">Update</button>
                     </form>
-                    {{-- <h2>Users in this group chat:</h2>
+                    <h2>Users in this group chat:</h2>
                     <ul>
-                        @foreach ($groupChat->users as $user)
+                        @foreach ($groupChat->members as $user)
                             <li>{{ $user->name }}</li>
                         @endforeach
-                    </ul> --}}
+                    </ul>
                 </div>
             </div>
         </div>

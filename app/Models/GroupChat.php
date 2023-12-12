@@ -34,12 +34,12 @@ class GroupChat extends Model
 
     public function addMember(User $user)
     {
-        $this->members()->attach($user->id);
+        $this->members()->attach($user->user_id, ['status' => 'waiting']);
     }
 
     public function removeMember(User $user)
     {
-        $this->members()->detach($user->id);
+        $this->members()->detach($user->user_id);
     }
 
 }
