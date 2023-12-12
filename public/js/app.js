@@ -90,3 +90,24 @@ function toggleContent(postId, action) {
         }
     }
 }
+
+let nextPageUrl = '{{ $posts->nextPageUrl() }}';
+
+function loadMorePosts() {
+    console.log(nextPageUrl);
+    if (!nextPageUrl) return; 
+
+    fetch(nextPageUrl)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('post-list').insertAdjacentHTML('beforeend', data.posts);
+            nextPageUrl = data.next_page_url;
+
+            if (!nextPageUrl) {
+                document.getElementById('load-more').style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading more posts:', error);
+        });
+}

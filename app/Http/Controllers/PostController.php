@@ -53,6 +53,12 @@ class PostController extends Controller
                 ->orderBy('created_at', 'desc')->paginate(10);
           }
 
+          if (request()->ajax()) {
+            return response()->json([
+                'posts' => $posts
+            ]);
+          }
+
           return view('pages.posts', ['posts' => $posts]);
       } catch (AuthorizationException $e) {
           return redirect('/');

@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="container-lg d-flex justify-content-center align-items-center w-50">
-        <ul class="list-unstyled mb-4 w-100">
+        <ul id="post-list" class="list-unstyled mb-4 w-100">
             @forelse($posts as $post)
                 @include('partials.post', ['post' => $post])
             @empty
@@ -22,6 +22,9 @@
                     <p>When the user starts following other users, their posts will be displayed here.</p>
                 </div>
             @endforelse
+            @if ($posts->hasMorePages())
+                <button id="load-more" class="btn btn-info mt-3" onclick="loadMorePosts()">See More Posts</button>
+            @endif
         </ul>
     </div>
     @can('create', App\Models\Post::class)
