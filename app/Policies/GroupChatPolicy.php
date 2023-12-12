@@ -19,30 +19,20 @@ class GroupChatPolicy
     public function view(User $user, GroupChat $groupChat)
     {
         $members = $groupChat->members;
-        if($members->contains($user)) {
-            return true;
-        } else {
-            return false;
-        }    
+        return ($members->contains($user) && $members->where('user_id', $user->user_id)->first()->pivot->status == 'accepted');
     }
 
     public function send(User $user, GroupChat $groupChat)
     {
         $members = $groupChat->members;
-        if($members->contains($user)) {
-            return true;
-        } else {
-            return false;
-        }
+        // return true if users is member and pivot status is accepted
+        return ($members->contains($user) && $members->where('user_id', $user->user_id)->first()->pivot->status == 'accepted');
     }
 
     public function update(User $user, GroupChat $groupChat)
     {
         // check if user is owner
-        if($groupChat->owner_id == $user->user_id) {
-            return true;
-        } else {
-            return false;
-        }
+        return ($groupChat->owner_id == $user->user_id);
+
     }
 }
