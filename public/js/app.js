@@ -61,3 +61,18 @@ function handleBookmark(postId, action) {
        }
    })
 }
+
+function toggleContent(postId, action) {
+    var shortContent = document.getElementById('short-content-' + postId);
+    var fullContent = document.getElementById('full-content-' + postId);
+
+    if (shortContent && fullContent) {
+        if (action === 'more') {
+            shortContent.classList.add('d-none');
+            fullContent.classList.remove('d-none');
+        } else if (action === 'less') {
+            fullContent.classList.add('d-none');
+            shortContent.classList.remove('d-none');
+        }
+    }
+}
