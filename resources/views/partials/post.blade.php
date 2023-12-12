@@ -1,4 +1,4 @@
-<div class="post mt-4">
+<div class="post mt-4" id="post-{{$post->post_id}}">
         <div class="card">
             <div class="card-header d-flex justify-content-between fs-5">
                 <small><a href="{{ route('user.profile', ['id' => $post->user->user_id]) }}" class="link-primary:hover text-decoration-none">{{$post->user->name}}</a></small>
