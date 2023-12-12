@@ -36,7 +36,14 @@ class GroupChatController extends Controller
     {
         try {
             $this->authorize('update', $groupChat);
-            return view('group_chats.edit', compact('groupChat'));
+            // make variables for accepted and waiting members
+            $acceptedMembers = $groupChat->members->filter(function ($member) {
+                return $member->pivot->status == 'accepted';
+            });
+            $waitingMembers = $groupChat->members->filter(function ($member) {
+                return $member->pivot->status == 'waiting';
+            });
+            return view('group_chats.edit', compact('groupChat', 'acceptedMembers', 'waitingMembers'));
         } catch (AuthorizationException) {
             return redirect()->back()->withErrors(['message' => 'You are not authorized to edit this group chat']);
         }

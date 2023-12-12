@@ -34,12 +34,28 @@
 
                         <button type="submit" class="btn btn-primary">Update</button>
                     </form>
-                    <h2>Users in this group chat:</h2>
+                    <h2>Users accepted in this group chat:</h2>
                     <ul>
-                        @foreach ($groupChat->members as $user)
-                            <li>{{ $user->name }}</li>
+                        @foreach ($acceptedMembers as $member)
+                            <li>
+                                <a href="{{ route('user.profile', ['id' => $member->user_id]) }}">
+                                    {{ $member->name }}
+                                </a>
+                            </li>
                         @endforeach
                     </ul>
+
+                    <h2>Waiting for these users to accept the invite:</h2>
+                    <ul>
+                        @foreach ($waitingMembers as $pendingMember)
+                            <li>
+                                <a href="{{ route('user.profile', ['id' => $pendingMember->user_id]) }}">
+                                    {{ $pendingMember->name }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+
                 </div>
             </div>
         </div>
