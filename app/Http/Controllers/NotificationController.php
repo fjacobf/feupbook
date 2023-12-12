@@ -30,4 +30,25 @@ class NotificationController extends Controller
         return redirect('/')->withErrors(['message' => 'Log in in order to notifications']);
       }
     }
+
+    public function reload(Request $request)
+    {
+      try{
+        $this->authorize('viewAny', Notification::class);
+
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $user = User::find($request->input('query'));
+
+        $notifications =  Notification::where('notified_user', $user->user_id)
+                    ->orderBy('date', 'desc')->get();
+        
+        return view('partials.notification', compact('notifications'));
+      } 
+      catch(AuthorizationException $e){
+        return redirect('/')->withErrors(['message' => 'Log in in order to notifications']);
+      }
+    }
 }

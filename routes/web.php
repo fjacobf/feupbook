@@ -89,4 +89,5 @@ Route::controller(AdminController::class)->group(function () {
 //notifications
 Route::controller(NotificationController::class)->group(function () {
     Route::get('/notifications/{id}', 'list')->name('notifications.list');
+    Route::get('/api/notifications', 'reload')->name('notifications.api');
 });
