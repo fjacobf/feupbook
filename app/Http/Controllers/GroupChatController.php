@@ -14,9 +14,9 @@ class GroupChatController extends Controller
     {
         $userGroups = auth()->user()->groups()->get();
         // select only the groups the user can view
-        $userGroups = $userGroups->filter(function ($group) {
-            return auth()->user()->can('view', $group);
-        });
+        // $userGroups = $userGroups->filter(function ($group) {
+        //     return auth()->user()->can('view', $group);
+        // });
 
         return view('group_chats.index', compact('userGroups'));
     }
@@ -192,5 +192,37 @@ class GroupChatController extends Controller
         }
         return response()->json($groupChat->messages()->with('emitter')->get());
 
+    }
+
+    public function acceptInvite(Request $request, GroupChat $groupChat)
+    {
+        // Get the current user
+        $user = $request->user();
+
+        // Check if the user is a member of the group chat
+        if ($groupChat->members->contains($user)) {
+            // Update the status in the pivot table
+            $groupChat->members()->updateExistingPivot($user->user_id, ['status' => 'accepted']);
+            
+            return redirect()->back()->with('message', 'You have accepted the invite.');
+        } else {
+            return redirect()->back()->withErrors(['message' => 'You are not a member of this group chat.']);
+        }
+    }
+
+    public function rejectInvite(Request $request, GroupChat $groupChat)
+    {
+        // Get the current user
+        $user = $request->user();
+
+        // Check if the user is a member of the group chat
+        if ($groupChat->members->contains($user)) {
+            // Update the status in the pivot table
+            $groupChat->members()->updateExistingPivot($user->user_id, ['status' => 'rejected']);
+            
+            return redirect()->back()->with('message', 'You have rejected the invite.');
+        } else {
+            return redirect()->back()->withErrors(['message' => 'You are not a member of this group chat.']);
+        }
     }
 }

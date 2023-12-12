@@ -25,6 +25,17 @@
                                     </a>
                                     <p class="mb-1">{{ $groupChat->description }}</p>
                                     <small>Owner: {{ $groupChat->owner->name }}</small>
+                                    {{-- check if user has status waiting in group-chats table --}}
+                                    @if ($groupChat->memberStatus(auth()->user()) == 'waiting')
+                                        <form action="{{ route('group-chats.acceptInvite.api', $groupChat->group_id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success">Accept Invite</button>
+                                        </form>
+                                        <form action="{{ route('group-chats.rejectInvite.api', $groupChat->group_id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger">Reject Invite</button>
+                                        </form>
+                                    @endif
                                 </li>
                             @endforeach
                         </ul>
