@@ -98,7 +98,7 @@ class PostController extends Controller
       try
       {  
         $validatedData = $request->validate([
-            'content' => 'required|max:1000',
+            'content' => 'required|max:2000',
             'image' => 'file|mimes:jpeg,png,jpg,jpe,gif,svg|max:5048',
         ]);
 
@@ -156,7 +156,7 @@ class PostController extends Controller
       try
       {
         $validatedData = $request->validate([
-            'content' => 'required|max:1000', 
+            'content' => 'required|max:2000', 
         ]);
 
         $post = Post::findOrFail($id);
@@ -175,7 +175,7 @@ class PostController extends Controller
         if ($request->hasFile('image')) {
           $imageName = time().'.'.$request->image->extension();  
           $request->image->move(public_path('images'), $imageName);
-          $post->image = 'images/'.$imageName; // Save new image path to the database
+          $post->image = 'images/'.$imageName;
         }
 
         $post->save();

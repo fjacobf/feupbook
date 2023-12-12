@@ -31,33 +31,62 @@ function handleLikeDislike(postId, action) {
 }
 
 function handleBookmark(postId, action) {
-   let url = '/post/' + postId + '/' + action;
-   let method = action === 'bookmark' ? 'POST' : 'DELETE';
+    let url = '/post/' + postId + '/' + action;
+    let method = action === 'bookmark' ? 'POST' : 'DELETE';
 
-   fetch(url, {
-       method: method,
-       headers: {
-           'Content-Type': 'application/json',
-           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-       },
-       body: JSON.stringify({ post_id: postId })
-   })
-   .then(response => response.json())
-   .then(data => {
-       if(action === 'bookmark') {
-            document.getElementById('btn-bookmark-' + postId).setAttribute('onclick', 'handleBookmark(' + postId + ', \'unbookmark\')');
-            document.getElementById('btn-bookmark-' + postId).classList.remove('bi-bookmark');
-            document.getElementById('btn-bookmark-' + postId).classList.add('bi-bookmark-fill');
-            let bookmarkCount = parseInt(document.getElementById('bookmark-count-' + postId).textContent);
-            bookmarkCount++;
-            document.getElementById('bookmark-count-' + postId).textContent = bookmarkCount;
-       } else {
-            document.getElementById('btn-bookmark-' + postId).setAttribute('onclick', 'handleBookmark(' + postId + ', \'bookmark\')');
-            document.getElementById('btn-bookmark-' + postId).classList.remove('bi-bookmark-fill');
-            document.getElementById('btn-bookmark-' + postId).classList.add('bi-bookmark');
-            let bookmarkCount = parseInt(document.getElementById('bookmark-count-' + postId).textContent);
-            bookmarkCount--;
-            document.getElementById('bookmark-count-' + postId).textContent = bookmarkCount;
-       }
-   })
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ post_id: postId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(action === 'bookmark') {
+            // Update button to reflect bookmarked status
+            updateBookmarkButton(postId, true);
+        } else {
+            // Update button to reflect unbookmarked status
+            updateBookmarkButton(postId, false);
+            
+            // Remove post from DOM if on bookmarks page
+            if (window.location.href.includes('/bookmarks')) {
+                document.getElementById('post-' + postId).remove();
+            }
+        }
+    });
+}
+
+function updateBookmarkButton(postId, isBookmarked) {
+    let button = document.getElementById('btn-bookmark-' + postId);
+    let bookmarkCountElement = document.getElementById('bookmark-count-' + postId);
+    let bookmarkCount = parseInt(bookmarkCountElement.textContent);
+
+    if(isBookmarked) {
+        button.setAttribute('onclick', 'handleBookmark(' + postId + ', \'unbookmark\')');
+        button.classList.replace('bi-bookmark', 'bi-bookmark-fill');
+        bookmarkCountElement.textContent = bookmarkCount + 1;
+    } else {
+        button.setAttribute('onclick', 'handleBookmark(' + postId + ', \'bookmark\')');
+        button.classList.replace('bi-bookmark-fill', 'bi-bookmark');
+        bookmarkCountElement.textContent = bookmarkCount - 1;
+    }
+}
+
+
+function toggleContent(postId, action) {
+    var shortContent = document.getElementById('short-content-' + postId);
+    var fullContent = document.getElementById('full-content-' + postId);
+
+    if (shortContent && fullContent) {
+        if (action === 'more') {
+            shortContent.classList.add('d-none');
+            fullContent.classList.remove('d-none');
+        } else if (action === 'less') {
+            fullContent.classList.add('d-none');
+            shortContent.classList.remove('d-none');
+        }
+    }
 }
