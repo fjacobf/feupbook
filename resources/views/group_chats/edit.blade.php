@@ -11,7 +11,7 @@
                 <div class="mt-4">
                     <h1>Edit Group Chat</h1>
 
-                    <form method="POST" action="{{ route('group-chats.edit', $groupChat->group_id) }}">
+                    <form method="POST" action="{{ route('group-chats.update.api', $groupChat->group_id) }}">
                         @csrf
                         <div class="form-group">
                             <label for="name">Name:</label>
@@ -23,8 +23,23 @@
                             <textarea class="form-control" id="description" name="description" required>{{ $groupChat->description }}</textarea>
                         </div>
 
+                        {{-- <div class="form-group">
+                            <label for="users">Add Users:</label>
+                            <select multiple class="form-control" id="users" name="users[]">
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
+                            </select>
+                        </div> --}}
+
                         <button type="submit" class="btn btn-primary">Update</button>
                     </form>
+                    {{-- <h2>Users in this group chat:</h2>
+                    <ul>
+                        @foreach ($groupChat->users as $user)
+                            <li>{{ $user->name }}</li>
+                        @endforeach
+                    </ul> --}}
                 </div>
             </div>
         </div>

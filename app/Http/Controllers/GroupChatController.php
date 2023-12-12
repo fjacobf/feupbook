@@ -73,7 +73,7 @@ class GroupChatController extends Controller
         $groupChat->save();
 
         // Redirect to the new group chat page
-        return redirect('/group-wchats/' . $groupChat->group_id);
+        return redirect('/group-chats/' . $groupChat->group_id);
     }
 
     public function addMember(Request $request, GroupChat $groupChat)
@@ -110,6 +110,23 @@ class GroupChatController extends Controller
         $groupChat->removeMember($user);
 
         // Save the group chat
+        $groupChat->save();
+
+        // Redirect to the group chat page
+        return redirect('/group-chats/' . $groupChat->group_id);
+    }
+
+    public function update(Request $request, GroupChat $groupChat)
+    {
+        // Validate the request
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+        ]);
+
+        // Update the group chat
+        $groupChat->name = $validatedData['name'];
+        $groupChat->description = $validatedData['description'];
         $groupChat->save();
 
         // Redirect to the group chat page
