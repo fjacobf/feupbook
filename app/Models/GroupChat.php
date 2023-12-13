@@ -25,4 +25,11 @@ class GroupChat extends Model
     {
         return $this->hasMany(Message::class, 'group_id');
     }
+    
+    public function members()
+    {
+        return $this->belongsToMany(User::class, 'group_members', 'group_id', 'user_id')
+            ->withPivot('status'); // If you need to access the 'status' column in the pivot table
+    }
+
 }

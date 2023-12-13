@@ -29,10 +29,3 @@ Route::prefix('group-chats')->group(function () {
     Route::get('/{groupChat}', [GroupChatController::class, 'show']);
     // Add other routes for CRUD operations as needed
 });
-
-// Message Routes
-Route::prefix('messages')->group(function () {
-    Route::get('/', [MessageController::class, 'index']);
-    Route::get('/{message}', [MessageController::class, 'show']);
-    // Add other routes for CRUD operations as needed
-});
