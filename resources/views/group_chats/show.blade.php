@@ -18,9 +18,11 @@
 
                     <h2>Messages</h2>
 
-                    <div id="chat" class="mt-3 mb-3" style="height: 400px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; border-radius: 5px;"></div>
+                    <div id="chat" class="mt-3 mb-3 chat-box">
+                        <!-- Messages will be dynamically added here -->
+                    </div>
 
-                    <form method="POST" action="{{ route('group-chats.sendMessage', $groupChat->group_id) }}">
+                    <form id="messageForm" method="POST" action="{{ route('group-chats.sendMessage', $groupChat->group_id) }}">
                         @csrf
                         <div class="form-group">
                             <label for="content">Message:</label>
@@ -35,6 +37,18 @@
 
     <script>            
         document.addEventListener('DOMContentLoaded', function() {
+            var chatBox = document.querySelector('#chat');
+
+            // Function to scroll the chat box to the bottom
+            function scrollToBottom() {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+
+            // Initial scroll to bottom
+            scrollToBottom();
+
+            let message_length = 0;
+
             setInterval(function() {
                 var xhr = new XMLHttpRequest();
                 
@@ -43,22 +57,18 @@
                         if (xhr.status === 200) {
                             let messages = JSON.parse(xhr.responseText);
                             let html = '';
-                            messages.forEach(function(message) {
-                                if (message.emitter.id === {{ auth()->id() }}) {
-                                    html += '<div class="text-right">';
+                            if(messages.length > message_length) {
+                                messages.forEach(function(message) {
+                                    html += '<div class="message ' + (message.emitter.id === {{ auth()->id() }} ? 'text-right' : 'text-left') + '">';
                                     html += '<p><strong>' + message.emitter.name + '</strong></p>';
                                     html += '<p>' + message.content + '</p>';
                                     html += '<p><small>' + message.date + '</small></p>';
                                     html += '</div>';
-                                } else {
-                                    html += '<div class="text-left">';
-                                    html += '<p><strong>' + message.emitter.name + '</strong></p>';
-                                    html += '<p>' + message.content + '</p>';
-                                    html += '<p><small>' + message.date + '</small></p>';
-                                    html += '</div>';
-                                }
-                            });
-                            document.querySelector('#chat').innerHTML = html;
+                                });
+                                chatBox.innerHTML = html;
+                                message_length = messages.length;
+                                scrollToBottom();
+                            }
                         }
                     }
                 };
@@ -67,10 +77,11 @@
                 xhr.send();
             }, 200);
         });
-    </script>
-    <script>
+
         document.addEventListener('DOMContentLoaded', function() {
-            var form = document.querySelector('form');
+            var form = document.querySelector('#messageForm');
+            var chatBox = document.querySelector('#chat');
+
             form.addEventListener('submit', function(event) {
                 event.preventDefault();
         
@@ -84,6 +95,9 @@
                     if (request.status >= 200 && request.status < 400) {
                         // Success!
                         console.log(request.responseText);
+
+                        // Scroll to bottom after sending a new message
+                        scrollToBottom();
                     } else {
                         // We reached our target server, but it returned an error
                         console.error('Server error');
@@ -99,4 +113,32 @@
             });
         });
     </script>
+    <style>
+        .chat-box {
+            height: 400px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .message p {
+            margin: 0;
+        }
+
+        .message text-right {
+            background-color: #dff0d8;
+        }
+
+        .message text-left {
+            background-color: #d9edf7;
+        }
+    </style>
 @endsection
