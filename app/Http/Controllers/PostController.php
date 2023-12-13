@@ -54,8 +54,14 @@ class PostController extends Controller
           }
 
           if (request()->ajax()) {
+            Log::info('Request is ajax');
+            $renderedPosts = $posts->map(function ($post) {
+              return view('partials.post', ['post' => $post])->render();
+            });
+
             return response()->json([
-                'posts' => $posts
+              'posts' => $renderedPosts,
+              'next_page_url' => $posts->nextPageUrl()
             ]);
           }
 
@@ -78,6 +84,18 @@ class PostController extends Controller
                     ->whereIn('owner_id', $followingIds)
                     ->orderBy('created_at', 'desc')
                     ->paginate(10);
+
+        if (request()->ajax()) {
+          Log::info('Request is ajax');
+          $renderedPosts = $posts->map(function ($post) {
+            return view('partials.post', ['post' => $post])->render();
+          });
+
+          return response()->json([
+            'posts' => $renderedPosts,
+            'next_page_url' => $posts->nextPageUrl()
+          ]);
+        }
 
         return view('pages.posts', ['posts' => $posts]);
       } 

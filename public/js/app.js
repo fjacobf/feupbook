@@ -91,19 +91,26 @@ function toggleContent(postId, action) {
     }
 }
 
-let nextPageUrl = '{{ $posts->nextPageUrl() }}';
+
 
 function loadMorePosts() {
-    console.log(nextPageUrl);
+    let postList = document.getElementById('post-list');
+    let nextPageUrl = postList.dataset.nextPageUrl;
+    console.log('Next page URL:', nextPageUrl);
     if (!nextPageUrl) return; 
 
-    fetch(nextPageUrl)
+    fetch(nextPageUrl, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
         .then(response => response.json())
         .then(data => {
-            document.getElementById('post-list').insertAdjacentHTML('beforeend', data.posts);
-            nextPageUrl = data.next_page_url;
+            const postsHtml = data.posts.join('');
+            postList.insertAdjacentHTML('beforeend', postsHtml);
+            postList.dataset.nextPageUrl = data.next_page_url;
 
-            if (!nextPageUrl) {
+            if (!data.next_page_url) {
                 document.getElementById('load-more').style.display = 'none';
             }
         })
