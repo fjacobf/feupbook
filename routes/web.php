@@ -101,4 +101,6 @@ Route::controller(AdminController::class)->group(function () {
     Route::post('/admin/user/{id}/edit', 'updateUser')->name('admin.updateUser');
     Route::post('/admin/user/{id}/delete', 'deleteUser')->name('admin.deleteUser');
     Route::put('/admin/user/{id}/restore', 'restoreUser')->name('admin.restoreUser');
+    Route::put('/admin/user/{id}/suspend', 'suspendUser')->name('admin.suspendUser');
+    Route::put('/admin/user/{id}/unsuspend', 'unsuspendUser')->name('admin.unsuspendUser');
 });

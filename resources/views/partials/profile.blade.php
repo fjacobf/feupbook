@@ -27,6 +27,10 @@
                 <div class="alert alert-danger" role="alert">
                         <strong>This Account is Deleted!</strong>
                     </div>
+                @elseif ($user->user_type === 'suspended')
+                <div class="alert alert-danger" role="alert">
+                    <strong>This Account is Suspended!</strong>
+                </div>
                 @else
                 <div class="alert alert-success" role="alert">
                     <strong>Public Profile</strong>
@@ -93,18 +97,23 @@
             <hr/>
             <h2 class="mb-4 text-center">Posts from this user</h2>
             @if ((Auth::check() && Auth::user()->user_id == $user->user_id) || !$user->private || (Auth::Check() && Auth::user()->user_type == 'admin') || (Auth::check() && $user->isFollowing()))
-            @if ($user->posts()->count() > 0)
+            @if ($user->user_type === 'deleted')
+                <div class="alert alert-danger mt-4 mb-4">
+                    <h4 class="alert-danger">This account was deleted!</h4>
+                    <p>Can't show posts from deleted accounts.</p>
+                </div>
+            @elseif ($user->user_type === 'suspended')
+                <div class="alert alert-danger mt-4 mb-4">
+                    <h4 class="alert-danger">This account is suspended!</h4>
+                    <p>This user's posts will be available once they are unrestricted.</p>
+                </div>
+            @elseif ($user->posts()->count() > 0)
             <div class="container-lg d-flex justify-content-center align-items-center w-50">
                 <ul class="list-unstyled mb-4 w-100">
                         @foreach ($user->posts()->orderBy('created_at', 'desc')->get() as $post)
                             @include('partials.post', ['post' => $post])
                         @endforeach
                     </ul>
-                </div>
-            @elseif ($user->user_type === 'deleted')
-                <div class="alert alert-danger mt-4 mb-4">
-                    <h4 class="alert-danger">This account was deleted!</h4>
-                    <p>Can't show posts from deleted accounts.</p>
                 </div>
             @else
                 <div class="alert alert-info mt-4 mb-4" role="alert">

@@ -39,6 +39,16 @@ class UserPolicy
         return $user->user_type == 'admin' && $userToDelete->user_type != 'admin';
     }
 
+    public function suspendAsAdmin(User $user, User $userToSuspend)
+    {
+        return $user->user_type == 'admin' && $userToSuspend->user_type != 'admin';
+    }
+
+    public function unrestrictAsAdmin(User $user, User $userToRestore)
+    {
+        return $user->user_type == 'admin' && $userToRestore->user_type != 'admin';
+    }
+
     /**
      * Determine whether the user can create models.
      */
