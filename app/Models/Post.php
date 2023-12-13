@@ -59,4 +59,5 @@ class Post extends Model
     {
         return $this->bookmarks()->count();
     }
+
 }

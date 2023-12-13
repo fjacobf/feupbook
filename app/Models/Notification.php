@@ -22,6 +22,7 @@ class Notification extends Model
         'comment_id',
         'post_id',
         'group_id',
+        'user_id',
         'viewed',
     ];
 
@@ -32,4 +33,8 @@ class Notification extends Model
         return $this->belongsTo(User::class, 'notified_user','user_id');
     }
 
+    public function comment(): BelongsTo
+    {
+        return $this->belongsTo(Comment::class, 'comment_id', 'comment_id');
+    }
 }
