@@ -3,6 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+// Chats
+use App\Http\Controllers\GroupChatController;
+use App\Http\Controllers\MessageController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,4 +20,19 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+// Chats
+// Group Chat Routes
+Route::prefix('group-chats')->group(function () {
+    Route::get('/', [GroupChatController::class, 'index']);
+    Route::get('/{groupChat}', [GroupChatController::class, 'show']);
+    // Add other routes for CRUD operations as needed
+});
+
+// Message Routes
+Route::prefix('messages')->group(function () {
+    Route::get('/', [MessageController::class, 'index']);
+    Route::get('/{message}', [MessageController::class, 'show']);
+    // Add other routes for CRUD operations as needed
 });

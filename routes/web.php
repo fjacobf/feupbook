@@ -13,6 +13,10 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
+// Chats
+use App\Http\Controllers\GroupChatController;
+use App\Http\Controllers\MessageController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -100,3 +104,12 @@ Route::controller(AdminController::class)->group(function () {
     Route::post('/admin/user/{id}/delete', 'deleteUser')->name('admin.deleteUser');
     Route::put('/admin/user/{id}/restore', 'restoreUser')->name('admin.restoreUser');
 });
+
+// Chats
+// Group Chat Routes
+Route::get('/group-chats', [GroupChatController::class, 'index']);
+Route::get('/group-chats/{groupChat}', [GroupChatController::class, 'show']);
+
+// Message Routes
+Route::get('/messages', [MessageController::class, 'index']);
+Route::get('/messages/{message}', [MessageController::class, 'show']);
