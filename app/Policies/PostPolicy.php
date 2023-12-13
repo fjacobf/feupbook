@@ -50,7 +50,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post): bool
     {
-        return $user->user_id === $post->owner_id;
+        return $user->user_id === $post->owner_id || $user->user_type == 'admin';
     }
 
     /**
