@@ -26,8 +26,7 @@ class UserPolicy
      */
     public function viewAdminInterface(User $user, User $model): bool
     {
-        Log::info('viewAdminInterface in user policy');
-        return $user->user_type == 'admin';
+        return ($user->user_type == 'admin' && $model->user_type != 'admin') && $user->user_id != $model->user_id;
     }
 
     public function updateAsAdmin(User $user, User $userToUpdate)

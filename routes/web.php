@@ -85,6 +85,8 @@ Route::controller(UserController::class)->group(function () {
     Route::put('/user/{id}/update', 'updateProfile')->name('user.updateProfile');
     Route::post('/user/{id}/removefollower', 'removeFollower')->name('user.removeFollower');
     Route::put('/user/{id}/password', 'updatePassword')->name('user.updatePassword');
+    Route::get('/user/{id}/bookmarks', 'showBookmarks')->name('user.bookmarks');
+    Route::put('/user/{id}/updatePicture', 'updateProfilePicture')->name('user.updateProfilePicture');
 });
 
 // Search

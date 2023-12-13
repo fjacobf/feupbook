@@ -7,55 +7,54 @@
 <section id="profile" class="col">
     <section id="profile-details" class="d-flex justify-content-center w-100">
         <div class="profile-details w-25">
-            <!-- <img> User profile pic here </img> -->
             <div class="profile-details-text border-black mb-4">
                 <h1 class="display-4">{{ $user->name }}</h1>
                 <h3 class="text-secondary"><span>@</span>{{ $user->username }}</h3>
                 <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 10px;">
                     @can('updateSelf', $user)
                         <a href="{{ route('user.showEditPage', ['id' => $user->user_id])}}" class="btn btn-primary" style="margin-right: 5px;">Edit Profile</a>
-                    @endcan
-
-                    @can('viewAdminInterface', $user)
+                        @endcan
+                        
+                        @can('viewAdminInterface', $user)
                         <a href="{{ route('admin.manageUser', ['id' => $user->user_id]) }}" class="btn btn-danger">Manage User's Account</a>
-                    @endcan
+                        @endcan
                 </div>
                 @if ($user->private)
-                    <div class="d-flex justify-content-center alert alert-warning" role="alert">
-                        <strong>Private Profile</strong>
-                    </div>
+                <div class="d-flex justify-content-center alert alert-warning" role="alert">
+                    <strong>Private Profile</strong>
+                </div>
                 @elseif ($user->user_type === 'deleted')
-                    <div class="alert alert-danger" role="alert">
+                <div class="alert alert-danger" role="alert">
                         <strong>This Account is Deleted!</strong>
                     </div>
                 @else
-                    <div class="alert alert-success" role="alert">
-                        <strong>Public Profile</strong>
-                    </div>
+                <div class="alert alert-success" role="alert">
+                    <strong>Public Profile</strong>
+                </div>
                 @endif
                 @if ($user->user_type !== 'deleted')
-                    <div class="card mt-3">
-                        <div class="card-body">
-                            <h5 class="card-title">Biography</h5>
-                            <p class="card-text">{{ $user->bio }}</p>
-                        </div>
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Biography</h5>
+                        <p class="card-text">{{ $user->bio }}</p>
+                    </div>
                     </div>
                 </div>
                 <div class="profile-details-counts mt-3 d-flex justify-content-between">
                     <div class="text-center">
                         <p class="mb-0"><strong>{{ $user->followerCounts() }}</strong></p>
                         @can('viewFollowPages', $user)
-                            <a href="{{ route('user.followers', ['id' => $user->user_id ])}}" class="mb-0 text-black text-decoration-none" style="font-size: 0.8rem;">Followers</a>
+                        <a href="{{ route('user.followers', ['id' => $user->user_id ])}}" class="mb-0 text-black text-decoration-none" style="font-size: 0.8rem;">Followers</a>
                         @else
-                            <p class="mb-0" style="font-size: 0.8rem;">Followers</p>
+                        <p class="mb-0" style="font-size: 0.8rem;">Followers</p>
                         @endcan
                     </div>
                     <div class="text-center">
                         <p class="mb-0"><strong>{{ $user->followingCounts() }}</strong></p>
                         @can('viewFollowPages', $user)
-                            <a href="{{ route('user.following', ['id' => $user->user_id ])}}" class="mb-0 text-black text-decoration-none" style="font-size: 0.8rem;">Following</a>
+                        <a href="{{ route('user.following', ['id' => $user->user_id ])}}" class="mb-0 text-black text-decoration-none" style="font-size: 0.8rem;">Following</a>
                         @else
-                            <p class="mb-0" style="font-size: 0.8rem;">Following</p>
+                        <p class="mb-0" style="font-size: 0.8rem;">Following</p>
                         @endcan
                     </div>
                     <div class="text-center">
@@ -63,35 +62,38 @@
                         <p class="mb-0" style="font-size: 0.8rem;">Posts</p>
                     </div>
                     @if (Auth::check() && Auth::user()->user_id != $user->user_id)
-                        @if ($user->followStatus() === 'accepted')
-                            {{-- Show Unfollow button --}}
-                            <form action="{{ route('user.unfollow', ['id' => $user->user_id]) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-danger">Unfollow</button>
-                            </form>
-                            @elseif ($user->followStatus() === 'waiting')
-                                {{-- Show a muted, non-clickable button indicating that the request is pending --}}
-                                <button class="btn btn-light" type="button" disabled>Request pending</button>
-                            @elseif ($user->followStatus() === 'rejected')
-                                {{-- Show a red, non-clickable button indicating that the request was rejected --}}
-                                <button class="btn btn-danger" type="button" disabled>Request rejected</button>
-                            @else
-                            {{-- Show Follow button --}}
-                            <form action="{{ route('user.follow', ['id' => $user->user_id]) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-primary">Follow</button>
-                            </form>
-                        @endif
+                    @if ($user->followStatus() === 'accepted')
+                    {{-- Show Unfollow button --}}
+                    <form action="{{ route('user.unfollow', ['id' => $user->user_id]) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">Unfollow</button>
+                    </form>
+                    @elseif ($user->followStatus() === 'waiting')
+                    {{-- Show a muted, non-clickable button indicating that the request is pending --}}
+                    <button class="btn btn-light" type="button" disabled>Request pending</button>
+                    @elseif ($user->followStatus() === 'rejected')
+                    {{-- Show a red, non-clickable button indicating that the request was rejected --}}
+                    <button class="btn btn-danger" type="button" disabled>Request rejected</button>
+                    @else
+                    {{-- Show Follow button --}}
+                    <form action="{{ route('user.follow', ['id' => $user->user_id]) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-primary">Follow</button>
+                    </form>
+                    @endif
                     @endif
                 </div>
             </div>
-        @endif
-    </section>
-    <section id="profile-feed" class="mt-4">
-    <hr/>
-    <h2 class="mb-4 text-center">Posts from this user</h2>
-    @if ((Auth::check() && Auth::user()->user_id == $user->user_id) || !$user->private || (Auth::Check() && Auth::user()->user_type == 'admin') || (Auth::check() && $user->isFollowing()))
-        @if ($user->posts()->count() > 0)
+            <div class="profile-picture mt-4">
+                <img src="{{ asset('images/profile_pics/' . $user->avatar) }}" class="rounded-circle profile-pic-border" style="width: 150px; height: 150px;">
+            </div>
+            @endif
+        </section>
+        <section id="profile-feed" class="mt-4">
+            <hr/>
+            <h2 class="mb-4 text-center">Posts from this user</h2>
+            @if ((Auth::check() && Auth::user()->user_id == $user->user_id) || !$user->private || (Auth::Check() && Auth::user()->user_type == 'admin') || (Auth::check() && $user->isFollowing()))
+            @if ($user->posts()->count() > 0)
             <div class="container-lg d-flex justify-content-center align-items-center w-50">
                 <ul class="list-unstyled mb-4 w-100">
                         @foreach ($user->posts()->orderBy('created_at', 'desc')->get() as $post)
