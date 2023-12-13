@@ -12,7 +12,7 @@
                     <h1>{{ $groupChat->name }}</h1>
                     <p>Description: {{ $groupChat->description }}</p>
                     <p>Owner: {{ $groupChat->owner->name }}</p>
-                    @if (auth()->user()->id === $groupChat->owner->id)
+                    @if (auth()->user()->user_id === $groupChat->owner->user_id)
                         <a href="{{ route('group-chats.edit', $groupChat->group_id) }}" class="btn btn-primary">Edit</a>
                     @endif
 
