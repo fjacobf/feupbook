@@ -12,7 +12,7 @@ class GroupChatController extends Controller
 {
     public function index()
     {
-        $userGroups = auth()->user()->groups()->get();
+        $userGroups = auth()->user()->groups()->simplePaginate(10);
         // select only the groups the user can view
         // $userGroups = $userGroups->filter(function ($group) {
         //     return auth()->user()->can('view', $group);

@@ -37,6 +37,9 @@
                             </li>
                         @endforeach
                     </ul>
+                    @if ($userGroups->hasPages())
+                        {{ $userGroups->links() }}
+                    @endif
                 @endif
             </div>
         </div>
