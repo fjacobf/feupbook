@@ -18,9 +18,10 @@
 
                     <h2>Messages</h2>
 
-                    <div id="chat" class="mt-3 mb-3 chat-box">
+                    <div id="chat" class="mt-3 mb-3 chat-box p-3 rounded">
                         <!-- Messages will be dynamically added here -->
                     </div>
+                    
 
                     <form id="messageForm" method="POST" action="{{ route('group-chats.sendMessage', $groupChat->group_id) }}">
                         @csrf
@@ -59,10 +60,10 @@
                             let html = '';
                             if(messages.length > message_length) {
                                 messages.forEach(function(message) {
-                                    html += '<div class="message ' + (message.emitter.id === {{ auth()->id() }} ? 'text-right' : 'text-left') + '">';
-                                    html += '<p><strong>' + message.emitter.name + '</strong></p>';
-                                    html += '<p>' + message.content + '</p>';
-                                    html += '<p><small>' + message.date + '</small></p>';
+                                    html += '<div class="message ' + (message.emitter.user_id === {{ auth()->user()->user_id }} ? 'text-right bg-primary text-white' : 'text-left bg-light') + '">';
+                                    html += '<p class="font-weight-bold mb-0">' + message.emitter.name + '</p>';
+                                    html += '<p class="mb-0">' + message.content + '</p>';
+                                    html += '<p class="small">' + message.date + '</p>';
                                     html += '</div>';
                                 });
                                 chatBox.innerHTML = html;
@@ -133,12 +134,16 @@
             margin: 0;
         }
 
-        .message text-right {
-            background-color: #dff0d8;
+        .message .small {
+            font-size: 0.7rem;
         }
 
-        .message text-left {
-            background-color: #d9edf7;
+        .text-right {
+            text-align: right;
+        }
+
+        .text-left {
+            text-align: left;
         }
     </style>
 @endsection
