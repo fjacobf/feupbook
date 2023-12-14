@@ -29,7 +29,8 @@
     </div>
     @can('create', App\Models\Post::class)
     <a href="{{ url('/post/create') }}" class="btn btn-primary btn-lg position-fixed bottom-0 end-0 m-3">
-        <i class="bi bi-plus-lg"></i> Add Post
+        <i class="bi bi-plus-lg"></i> 
+        <p class="d-none d-sm-inline">Add Post</p>
     </a>
     @endcan
 </div>

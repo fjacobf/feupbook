@@ -50,8 +50,7 @@
             <div style="gap:10px;" class="d-flex align-items-center ms-2">
                 <p class="m-0 comment-date">6d</p>
                 <p class="m-0 comment-likes">{{$comment->likeCounts()}} likes</p>
-                <button style="text-decoration: underline; width:4rem; padding:0;" class="btn"
-                    onclick="reply({{ $comment->comment_id }})">Reply</button>
+                <button  class="btn btn-primary btn-sm" onclick="reply({{ $comment->comment_id }})">Reply</button>
             </div>
         @endcan
     </div>
