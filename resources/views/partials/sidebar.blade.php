@@ -21,7 +21,7 @@
           </a>
         </li>
         <li>
-          <a href="#" class="nav-link link-dark py-2" style="font-size: 1.25rem;">
+          <a href="{{url('/group-chats')}}" class="nav-link {{ request()->is('group-chats') ? 'active' : 'link-dark' }} py-2" style="font-size: 1.25rem;">
             <i class="bi bi-chat-dots-fill me-3"></i>
             <p class="d-none d-sm-inline m-0">Messages</p>
           </a>
