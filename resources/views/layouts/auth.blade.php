@@ -18,7 +18,7 @@
         </script>
         <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     </head>
-    <body>
+    <body class="d-flex flex-column vh-100">
         <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
@@ -29,7 +29,7 @@
 
         @yield('content')
         
-        <footer class="footer bg-primary text-center py-2" style="position: absolute; bottom: 0; width: 100%;">
+        <footer class="footer bg-primary text-center py-2 mt-auto">
             @yield('footer')
         </footer>
     </body>

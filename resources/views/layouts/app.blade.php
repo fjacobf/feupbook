@@ -22,7 +22,7 @@
         </script>
     </head>
     <body>
-        <div class="container-fluid h-100">
+        <div class="d-flex vh-100 overflow-hidden">
             @if ($errors->any())
                 <div class="d-flex justify-content-center mt-2">
                     <div class="alert alert-danger alert-dismissible fade show" role="alert" style="max-width: 400px;">
@@ -36,11 +36,9 @@
                 </div>
             @endif
 
-            <div class="row h-100">
-                @yield('sidebar')
-                
-                @yield('content')
-            </div>
+            @yield('sidebar')
+            
+            @yield('content')
         </div>
     </body>
 </html>

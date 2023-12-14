@@ -5,12 +5,12 @@
 @endsection
 
 @section('content')
-<div class="col-9">
+<div class="d-flex flex-column align-items-center ms-auto me-auto w-100">
     <div class="d-flex justify-content-center">
         <h3 class="bg-primary text-white rounded mt-3 p-2">Create Post</h3>
     </div>
 
-    <form class="container-lg d-flex flex-column align-items-center w-100" enctype="multipart/form-data" action="{{ route('post.store') }}" method="POST">
+    <form class="d-flex flex-column align-items-center w-75" enctype="multipart/form-data" action="{{ route('post.store') }}" method="POST">
         @csrf
         <div class="d-flex flex-column justify-content-start w-50">
             <label for="content" class="form-label mb-3 h5">Post Content</label>

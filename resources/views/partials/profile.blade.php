@@ -4,7 +4,7 @@
 
 @section('profile')
 
-<section id="profile" class="col">
+<section id="profile" class="col overflow-auto">
     <section id="profile-details" class="d-flex justify-content-center w-100">
         <div class="profile-details w-25">
             <div class="profile-details-text border-black mb-4">
@@ -48,7 +48,7 @@
                     <div class="text-center">
                         <p class="mb-0"><strong>{{ $user->followerCounts() }}</strong></p>
                         @can('viewFollowPages', $user)
-                        <a href="{{ route('user.followers', ['id' => $user->user_id ])}}" class="mb-0 text-black text-decoration-none" style="font-size: 0.8rem;">Followers</a>
+                        <a href="{{ route('user.followers', ['id' => $user->user_id ])}}" class="mb-0 text-info text-decoration-none" style="font-size: 0.8rem;">Followers</a>
                         @else
                         <p class="mb-0" style="font-size: 0.8rem;">Followers</p>
                         @endcan
@@ -56,7 +56,7 @@
                     <div class="text-center">
                         <p class="mb-0"><strong>{{ $user->followingCounts() }}</strong></p>
                         @can('viewFollowPages', $user)
-                        <a href="{{ route('user.following', ['id' => $user->user_id ])}}" class="mb-0 text-black text-decoration-none" style="font-size: 0.8rem;">Following</a>
+                        <a href="{{ route('user.following', ['id' => $user->user_id ])}}" class="mb-0 text-info text-decoration-none" style="font-size: 0.8rem;">Following</a>
                         @else
                         <p class="mb-0" style="font-size: 0.8rem;">Following</p>
                         @endcan
