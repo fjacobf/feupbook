@@ -3,8 +3,7 @@
 @section('content')
 
 <div class="container d-flex flex-column justify-content-center align-items-center m-auto">
-    <div class="w-50">
-        <form method="POST" action="{{ route('login') }}">
+        <form class="w-50" method="POST" action="{{ route('login') }}" style="max-width: 500px;">
             {{ csrf_field() }}
             <div class="mb-3">
                 <label for="email" class="form-label">E-mail</label>
@@ -32,7 +31,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary">Login</button>
-            <a class="btn btn-outline-secondary" href="{{ route('register') }}">Register</a>
+            <a class="btn btn-outline-secondary text-decoration-none" href="{{ route('register') }}">Register</a>
 
             @if (session('success'))
                 <p class="success mt-3">
@@ -40,7 +39,6 @@
                 </p>
             @endif
         </form>
-    </div>
 
     <div class="login-link mt-3 text-center">
         Don't have an account? <a href="{{ route('register') }}" class="sign-in-link">Sign up</a>

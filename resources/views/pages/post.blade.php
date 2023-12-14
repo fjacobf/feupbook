@@ -63,18 +63,19 @@
                         <span>{{ $post->bookmarksCount() }}</span>
                     </div>
 
-                    <div class="ms-auto">
-                        @can('update', $post)
-                            <a href="{{ route('post.edit', ['id' => $post->post_id]) }}" class="btn btn-primary bi-pencil-fill me-2"></a>
-                        @endcan
-                        @can('delete', $post)
+                    @can('delete', $post)
+                        <div class="ms-auto">
+                            @can('update', $post)
+                                <a href="{{ route('post.edit', ['id' => $post->post_id]) }}" class="btn btn-primary bi-pencil-fill me-2"></a>
+                            @endcan
+                    
                             <form action="{{ route('post.delete', ['id' => $post->post_id]) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger bi-trash-fill" onclick="return confirm('Are you sure you want to delete this post?')"></button>
                             </form>
-                        @endcan
-                    </div>
+                        </div>
+                    @endcan
                 </div>
 
                 <div class="card-body">
