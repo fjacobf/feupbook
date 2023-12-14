@@ -761,19 +761,66 @@ $$ LANGUAGE plpgsql;
 ------------------------------
 
 -- Insert statements for the 'users' table
+INSERT INTO users (username, email, password, name, bio, private, user_type, avatar)
+VALUES
+    ('john_doe', 'john.doe@example.com', '$2a$12$GE0k/yA1x88VMc48xmgiEeLWnbDCxqDuyUMm3RT9QBEj.GdP0BzjW', 'John Doe', 'Computer Science student at University X', false, 'normal_user', '1702594210.jpg'),
+    ('alice_smith', 'alice.smith@example.com', '$2a$12$GE0k/yA1x88VMc48xmgiEeLWnbDCxqDuyUMm3RT9QBEj.GdP0BzjW', 'Alice Smith', 'Mathematics enthusiast', true, 'normal_user', '1702594395.jpg'),
+    ('prof_jones', 'prof.jones@example.com', '$2a$12$hCqEe5DSo019ZZsRY9xFfOpVHlZ642xSjZIxWKx3xmveCOYBMISj6', 'Professor Jones', 'Teaching Physics at University X', false, 'normal_user', '1702594478.jpg'),
+    ('gcostell0', 'gcostell0@simplemachines.org', '$2a$12$Pw1yagUYBgvoMqcGGv8McOkRXS4WMO/a6S7RH.HjmmlmQQyPHueMG', 'Glynis Costell', 'Administrator at University X', false, 'admin', '1702596523.jpg'),
+    ('wleftwich1', 'wleftwich1@howstuffworks.com', '$2a$12$XQefcocDGnOoS5Cl4Q9Vw.ChpEzIH2Ft4uxD8E9spoVX2ijO2JdZG', 'Wittie Leftwich', 'Second Administrator at University X', true, 'admin', '1702596680.jpg'),
+    ('fcassel2', 'fcassel2@thetimes.co.uk', '$2a$12$5FBTo8/npT5CBquqcxIBduolFG3JsT1l6iLLAUhfInmJ.gfBELiiu', 'Fernanda Cassel', 'Teaching Assistant for Physics course', false, 'normal_user', '1702596806.jpg'),
+    ('ssetterington3', 'ssetterington3@nymag.com', '$2a$12$Cqrwqn4G58jRZdGgOUFH7uM9dt5I5tFWyItYpMquC7If8TndQNIdO', 'Sue Setterington', 'Teaching Assistant for Mathematics course', false, 'normal_user', '1702596887.jpg'),
+    ('mloudyan4', 'mloudyan4@wikimedia.org', '$2a$12$ByMwcBrT3hICpLZTbop0XuBHRJ9BOS71olRdbXU92QTXk0jxGfLqi', 'Madelyn Loudyan', 'Account suspended due to violation of university policies', false, 'normal_user', '1702596982.jpg'),
+    ('dsesons5', 'dsesons5@webmd.com', '$2a$12$K2UnxG3ulT4HxlZKj/tFr.AJ3zimcjLPTQDHgKZdP/z6xJlW1ITH2', 'Dasie Sesons', 'Second account suspended', false, 'normal_user', '1702597147.jpg'),
+    ('jane_doe', 'jane.doe@example.com', '$2a$12$pL/fXwZkS4vihbITTltNV.fA5G4IQYVrts0Ds2wf9gtKm/VXeK8yO', 'Jane Doe', 'Studying Computer Engineering at University X', false, 'normal_user', '1702597217.jpg');
+
 INSERT INTO users (username, email, password, name, bio, private, user_type)
 VALUES
-    ('john_doe', 'john.doe@example.com', '$2a$12$goYowY.ccXyLR8so94t3y.jEXtVs7.IDFworUJqqxIGmMd4XhrITa', 'John Doe', 'Computer Science student at University X', false, 'normal_user'),
-    ('alice_smith', 'alice.smith@example.com', '$2a$12$GE0k/yA1x88VMc48xmgiEeLWnbDCxqDuyUMm3RT9QBEj.GdP0BzjW', 'Alice Smith', 'Mathematics enthusiast', true, 'normal_user'),
-    ('prof_jones', 'prof.jones@example.com', '$2a$12$hCqEe5DSo019ZZsRY9xFfOpVHlZ642xSjZIxWKx3xmveCOYBMISj6', 'Professor Jones', 'Teaching Physics at University X', false, 'normal_user'),
-    ('admin1', 'admin1@example.com', '$2a$12$Pw1yagUYBgvoMqcGGv8McOkRXS4WMO/a6S7RH.HjmmlmQQyPHueMG', 'Admin One', 'Administrator at University X', false, 'admin'),
-    ('admin2', 'admin2@example.com', '$2a$12$XQefcocDGnOoS5Cl4Q9Vw.ChpEzIH2Ft4uxD8E9spoVX2ijO2JdZG', 'Admin Two', 'Second Administrator at University X', true, 'admin'),
-    ('ta_physics', 'ta_physics@example.com', '$2a$12$5FBTo8/npT5CBquqcxIBduolFG3JsT1l6iLLAUhfInmJ.gfBELiiu', 'TA Physics', 'Teaching Assistant for Physics course', false, 'normal_user'),
-    ('ta_math', 'ta_math@example.com', '$2a$12$Cqrwqn4G58jRZdGgOUFH7uM9dt5I5tFWyItYpMquC7If8TndQNIdO', 'TA Math', 'Teaching Assistant for Mathematics course', false, 'normal_user'),
-    ('banned_user', 'banned_user@example.com', '$2a$12$ByMwcBrT3hICpLZTbop0XuBHRJ9BOS71olRdbXU92QTXk0jxGfLqi', 'Banned User', 'Account suspended due to violation of university policies', false, 'normal_user'),
-    ('banned_user2', 'banned_user2@example.com', '$2a$12$K2UnxG3ulT4HxlZKj/tFr.AJ3zimcjLPTQDHgKZdP/z6xJlW1ITH2', 'Banned User 2', 'Second account suspended', false, 'normal_user'),
-    ('jane_doe', 'jane.doe@example.com', '$2a$12$pL/fXwZkS4vihbITTltNV.fA5G4IQYVrts0Ds2wf9gtKm/VXeK8yO', 'Jane Doe', 'Studying Computer Engineering at University X', false, 'suspended');
-
+    ('jwoolhouse0', 'jwoolhouse0@amazon.co.uk', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Juliane Woolhouse', 'Fully-configurable scalable instruction set', true, 'normal_user'),
+    ('lsimonds1', 'lsimonds1@cdc.gov', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Lesley Simonds', 'Re-contextualized needs-based firmware', false, 'suspended'),
+    ('gfairney2', 'gfairney2@privacy.gov.au', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Georgiana Fairney', 'Multi-layered multi-state budgetary management', true, 'admin'),
+    ('lmallord3', 'lmallord3@toplist.cz', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Ludovika Mallord', 'Persistent optimizing local area network', true, 'normal_user'),
+    ('bscutts4', 'bscutts4@facebook.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Boy Scutts', 'Streamlined uniform strategy', true, 'suspended'),
+    ('abryns5', 'abryns5@go.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Ash Bryns', 'Re-engineered actuating customer loyalty', true, 'suspended'),
+    ('dhallam6', 'dhallam6@friendfeed.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Dmitri Hallam', 'Seamless needs-based productivity', false, 'admin'),
+    ('sazam7', 'sazam7@ihg.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Selma Azam', 'Organic bi-directional customer loyalty', true, 'admin'),
+    ('mwemes8', 'mwemes8@nhs.uk', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Mira Wemes', 'Expanded methodical support', true, 'normal_user'),
+    ('koldford9', 'koldford9@foxnews.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Korney Oldford', 'Diverse needs-based groupware', false, 'admin'),
+    ('kkaszpera', 'kkaszpera@reverbnation.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Kimberly Kaszper', 'Mandatory human-resource implementation', false, 'normal_user'),
+    ('amacconnechieb', 'amacconnechieb@prlog.org', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Alfons MacConnechie', 'Face to face solution-oriented encoding', true, 'suspended'),
+    ('smcturleyc', 'smcturleyc@pbs.org', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Sarena McTurley', 'Enhanced fresh-thinking forecast', false, 'suspended'),
+    ('maleevyd', 'maleevyd@nps.gov', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Milzie Aleevy', 'Secured 24/7 conglomeration', true, 'admin'),
+    ('cliversleye', 'cliversleye@examiner.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Cindelyn Liversley', 'Self-enabling intangible open system', true, 'normal_user'),
+    ('kfiremanf', 'kfiremanf@seesaa.net', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Katrine Fireman', 'Networked zero tolerance challenge', false, 'suspended'),
+    ('evillarg', 'evillarg@state.gov', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Ethel Villar', 'Distributed leading edge emulation', true, 'suspended'),
+    ('fennionh', 'fennionh@aol.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Filide Ennion', 'Fully-configurable grid-enabled capacity', true, 'normal_user'),('scheethami', 'scheethami@jiathis.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Sylas Cheetham', 'Organic global website', true, 'admin'),
+    ('dcocksedgej', 'dcocksedgej@utexas.edu', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Debera Cocksedge', 'Sharable 5th generation circuit', false, 'suspended'),
+    ('gtrendlek', 'gtrendlek@miibeian.gov.cn', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Gerry Trendle', 'Re-engineered fault-tolerant alliance', false, 'admin'),
+    ('jrosternl', 'jrosternl@exblog.jp', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Jennifer Rostern', 'Reduced dynamic ability', false, 'suspended'),
+    ('ikeechm', 'ikeechm@bigcartel.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Ilario Keech', 'Re-contextualized bifurcated knowledge base', false, 'normal_user'),
+    ('rdufouren', 'rdufouren@dedecms.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Roth Dufoure', 'Advanced dynamic access', true, 'admin'),
+    ('lmacterrellyo', 'lmacterrellyo@tamu.edu', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Leopold MacTerrelly', 'Fundamental regional attitude', true, 'admin'),
+    ('wtaylersonp', 'wtaylersonp@wikia.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Waldemar Taylerson', 'Re-engineered didactic utilisation', false, 'admin'),
+    ('gmanieq', 'gmanieq@360.cn', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Giorgi Manie', 'User-friendly exuding definition', false, 'suspended'),
+    ('cmackailer', 'cmackailer@wordpress.org', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Carole MacKaile', 'Progressive user-facing solution', true, 'admin'),
+    ('tcutridges', 'tcutridges@godaddy.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Terry Cutridge', 'Digitized coherent protocol', true, 'suspended'),
+    ('abrowert', 'abrowert@list-manage.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Anallese Brower', 'Enhanced optimal core', false, 'suspended'),
+    ('graitu', 'graitu@pcworld.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Golda Rait', 'Robust client-driven migration', false, 'suspended'),
+    ('bjestecov', 'bjestecov@storify.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Brandea Jesteco', 'Expanded local task-force', false, 'suspended'),
+    ('ajoplinw', 'ajoplinw@japanpost.jp', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Alisha Joplin', 'Business-focused demand-driven task-force', true, 'admin'),
+    ('ncroserx', 'ncroserx@oracle.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Nettie Croser', 'Networked attitude-oriented ability', false, 'suspended'),
+    ('wborrelly', 'wborrelly@deviantart.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Winifred Borrell', 'Integrated explicit hub', true, 'normal_user'),
+    ('ooshavlanz', 'ooshavlanz@slashdot.org', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Olympe O''Shavlan', 'Decentralized zero tolerance benchmark', true, 'suspended'),
+    ('rmaccague10', 'rmaccague10@dropbox.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Rosanne MacCague', 'User-friendly neutral service-desk', true, 'suspended'),('cgarlicke11', 'cgarlicke11@sourceforge.net', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Cordie Garlicke', 'Automated full-range archive', false, 'normal_user'),
+    ('vkershow12', 'vkershow12@wp.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Vinny Kershow', 'Phased even-keeled function', true, 'admin'),
+    ('mdysart13', 'mdysart13@indiatimes.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Miguelita Dysart', 'Exclusive modular middleware', true, 'normal_user'),
+    ('rhevner14', 'rhevner14@ebay.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Richardo Hevner', 'Phased client-driven circuit', false, 'admin'),
+    ('dtrevaskis15', 'dtrevaskis15@friendfeed.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Donnamarie Trevaskis', 'Persistent dynamic encoding', false, 'normal_user'),
+    ('dpolo16', 'dpolo16@ifeng.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Deni Polo', 'Versatile 24 hour website', false, 'normal_user'),
+    ('sdelieu17', 'sdelieu17@etsy.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Sayers Delieu', 'Upgradable even-keeled model', true, 'admin'),
+    ('dcalifornia18', 'dcalifornia18@flavors.me', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Dmitri California', 'Future-proofed background software', true, 'admin'),
+    ('cgartin19', 'cgartin19@histats.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Cathee Gartin', 'Re-contextualized context-sensitive frame', false, 'admin'),
+    ('nhatto1a', 'nhatto1a@desdev.cn', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Norine Hatto', 'Distributed incremental capacity', true, 'suspended');
 -- Insert statements for the 'follow_requests' table
 INSERT INTO follow_requests (req_id, rcv_id, date, status)
 VALUES
