@@ -2,8 +2,8 @@
 
 @section('content')
 
-<div class="container d-flex p-2 justify-content-center align-items-center">
-    <div class="w-25">
+<div class="container d-flex flex-column justify-content-center align-items-center m-auto">
+    <div class="w-50">
         <form method="POST" action="{{ route('login') }}">
             {{ csrf_field() }}
             <div class="mb-3">
@@ -40,10 +40,10 @@
                 </p>
             @endif
         </form>
+    </div>
 
-        <div class="login-link mt-3 text-center">
-            Don't have an account? <a href="{{ route('register') }}" class="sign-in-link">Sign up</a>
-        </div>
+    <div class="login-link mt-3 text-center">
+        Don't have an account? <a href="{{ route('register') }}" class="sign-in-link">Sign up</a>
     </div>
 </div>
 

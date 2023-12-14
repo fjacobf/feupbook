@@ -1,8 +1,8 @@
 @extends('layouts.auth')
 
 @section('content')
-<div class="container d-flex p-2 justify-content-center">
-    <div class="w-25">
+<div class="container d-flex justify-content-center align-items-center m-auto">
+    <div class="w-50">
             <form method="POST" action="{{ route('register') }}" class="mt-5">
                 {{ csrf_field() }}
 
