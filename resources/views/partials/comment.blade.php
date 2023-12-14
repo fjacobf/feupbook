@@ -2,7 +2,10 @@
     <div class="d-flex flex-column ms-3">
         <div class="d-flex justify-content-between">
             <div class="d-flex align-items-center">
-                <strong style="margin:0; font-size:1.1rem;" class="card-text">{{ $comment->user->username }}&nbsp</strong>
+                <div>
+                    <img src="{{ asset('images/profile_pics/' . $comment->user->avatar) }}" class="rounded-circle" style="width: 20px; height: 20px;">
+                    <strong style="margin:0; font-size:1.1rem;" class="card-text">{{ $comment->user->username }}&nbsp</strong>
+                </div>
                 <p class="card-text">{{ $comment->content }}</p>
             </div>
             <div class="buttons d-flex">
@@ -58,7 +61,10 @@
     <div style="margin: 0 0 0.5rem 3rem;" class="d-flex flex-column">
         <div class="d-flex justify-content-between">
             <div style="margin-left:10px; display:flex; align-items: center;">
-                <strong style="margin:0; font-size:1.1rem;" class="card-text">{{ $reply->user->username }}&nbsp</strong>
+                <div>
+                    <img src="{{ asset('images/profile_pics/' . $reply->user->avatar) }}" class="rounded-circle" style="width: 20px; height: 20px;">
+                    <strong style="margin:0; font-size:1.1rem;" class="card-text">{{ $reply->user->username }}&nbsp</strong>
+                </div>
                 <p class="card-text">{{ $reply->content }}</p>
             </div>
             <div class="buttons d-flex">

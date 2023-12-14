@@ -85,6 +85,8 @@ Route::controller(UserController::class)->group(function () {
     Route::put('/user/{id}/update', 'updateProfile')->name('user.updateProfile');
     Route::post('/user/{id}/removefollower', 'removeFollower')->name('user.removeFollower');
     Route::put('/user/{id}/password', 'updatePassword')->name('user.updatePassword');
+    Route::get('/user/{id}/bookmarks', 'showBookmarks')->name('user.bookmarks');
+    Route::put('/user/{id}/updatePicture', 'updateProfilePicture')->name('user.updateProfilePicture');
 });
 
 // Search
@@ -99,4 +101,6 @@ Route::controller(AdminController::class)->group(function () {
     Route::post('/admin/user/{id}/edit', 'updateUser')->name('admin.updateUser');
     Route::post('/admin/user/{id}/delete', 'deleteUser')->name('admin.deleteUser');
     Route::put('/admin/user/{id}/restore', 'restoreUser')->name('admin.restoreUser');
+    Route::put('/admin/user/{id}/suspend', 'suspendUser')->name('admin.suspendUser');
+    Route::put('/admin/user/{id}/unsuspend', 'unsuspendUser')->name('admin.unsuspendUser');
 });

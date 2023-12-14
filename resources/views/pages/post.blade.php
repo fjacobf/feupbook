@@ -10,7 +10,10 @@
         <div class="post mt-4">
             <div class="card" style="width: 50em;">
                 <div class="card-header d-flex justify-content-between fs-5">
-                    <small><a href="{{ route('user.profile', ['id' => $post->user->user_id]) }}" class="link-primary:hover">{{$post->user->name}}</a></small>
+                    <div>
+                        <img src="{{ asset('images/profile_pics/' . $post->user->avatar) }}" class="rounded-circle" style="width: 25px; height: 25px;">
+                        <small><a href="{{ route('user.profile', ['id' => $post->user->user_id]) }}" class="link-primary:hover">{{$post->user->name}}</a></small>
+                    </div>
                     <small class="text-muted"><span class="text-muted">@</span>{{ $post->user->username }}</small>
                     <small class="text-black">{{ time_since($post->created_at) }}</small>
                 </div>

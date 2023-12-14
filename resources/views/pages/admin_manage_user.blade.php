@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="container">
+    <div class="col container">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
@@ -57,6 +57,19 @@
                         <button type="submit" class="btn btn-primary">Update User</button>
 
                     </form>
+                    @if ($user->user_type !== 'suspended')
+                        <form class="mt-2 d-flex" action="{{ route('admin.suspendUser', ['id' => $user->user_id]) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="btn btn-warning" onclick="return confirm('Suspend user account?')">Suspend User</button>
+                        </form>
+                    @else
+                        <form class="mt-2 d-flex" action="{{ route('admin.unsuspendUser', ['id' => $user->user_id]) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="btn btn-success" onclick="return confirm('Unsuspend user account?')">Unsuspend User</button>
+                        </form>
+                    @endif
                     @if ($user->user_type !== 'deleted')
                         <form class="mt-2 d-flex" action="{{ route('admin.deleteUser', ['id' => $user->user_id]) }}" method="POST">
                             @csrf
