@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\FollowRequest;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
@@ -170,4 +171,35 @@ class UserController extends Controller
 
         return redirect()->route('user.profile', ['id' => $user->user_id]);
     }
+
+    public function updateProfilePicture($id) {
+        try {
+            $user = User::find($id);
+            
+            if (!$user) {
+                abort(404, 'User not found');
+            }
+
+            $this->authorize('updateSelf', $user);
+            
+            request()->validate([
+                'profile_picture' => 'image|mimes:jpeg,png,jpg|max:2048',
+            ]);
+    
+            if ($user->avatar) {
+                if (file_exists(public_path('images/profile_pics/' . $user->avatar)) && $user->avatar != 'default_avatar.png') {
+                    unlink(public_path('images/profile_pics/' . $user->avatar));
+                }
+            }
+    
+            $imageName = time() . '.' . request()->profile_picture->extension();
+            request()->profile_picture->move(public_path('images/profile_pics/'), $imageName);
+            
+            $user->update(['avatar' => $imageName]);
+    
+            return redirect()->route('user.profile', ['id' => $user->user_id]);
+        } catch (AuthorizationException $e) {
+            return redirect()->route('home')->withErrors(['message' => 'You are not authorized to do this.']);
+        }
+    }    
 }

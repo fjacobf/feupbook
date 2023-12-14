@@ -53,6 +53,19 @@
             <button type="submit" class="btn btn-primary">Update Password</button>
         </form>
         <hr class="w-50"/>
+        <h2>Change profile picture</h2>
+        <form action="{{ route('user.updateProfilePicture', [ 'id' => $user->user_id ])}}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+            <div class="mb-3">
+                <h5>Current profile picture:</h5>
+                <img src="{{ asset('images/profile_pics/' . $user->avatar) }}" alt="Profile picture" class="img-thumbnail" style="width: 200px; height: 200px;">
+                <input type="file" class="form-control w-50" id="profile_picture" name="profile_picture" aria-describedby="profilePictureHelp">
+                <div id="profilePictureHelp" class="form-text">Upload a new profile picture.</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Profile Picture</button>
+        </form>
+        <hr class="w-50"/>
         <h2>Account Deletion</h2>
         <form action="{{ route('user.deleteProfile', [ 'id' => $user->user_id ])}}" method="POST">
             @csrf

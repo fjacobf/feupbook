@@ -90,3 +90,31 @@ function toggleContent(postId, action) {
         }
     }
 }
+
+
+
+function loadMorePosts() {
+    let postList = document.getElementById('post-list');
+    let nextPageUrl = postList.dataset.nextPageUrl;
+    console.log('Next page URL:', nextPageUrl);
+    if (!nextPageUrl) return; 
+
+    fetch(nextPageUrl, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            const postsHtml = data.posts.join('');
+            postList.insertAdjacentHTML('beforeend', postsHtml);
+            postList.dataset.nextPageUrl = data.next_page_url;
+
+            if (!data.next_page_url) {
+                document.getElementById('load-more').style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading more posts:', error);
+        });
+}

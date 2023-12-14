@@ -2,7 +2,10 @@
     <div class="d-flex flex-column ms-3">
         <div class="d-flex justify-content-between">
             <div class="d-flex align-items-center">
-                <strong style="margin:0; font-size:1.1rem;" class="card-text">{{ $comment->user->username }}&nbsp</strong>
+                <div>
+                    <img src="{{ asset('images/profile_pics/' . $comment->user->avatar) }}" class="rounded-circle" style="width: 20px; height: 20px;">
+                    <strong style="margin:0; font-size:1.1rem;" class="card-text">{{ $comment->user->username }}&nbsp</strong>
+                </div>
                 <p class="card-text">{{ $comment->content }}</p>
             </div>
             <div class="buttons d-flex">
@@ -47,8 +50,7 @@
             <div style="gap:10px;" class="d-flex align-items-center ms-2">
                 <p class="m-0 comment-date">6d</p>
                 <p class="m-0 comment-likes">{{$comment->likeCounts()}} likes</p>
-                <button style="text-decoration: underline; width:4rem; padding:0;" class="btn"
-                    onclick="reply({{ $comment->comment_id }})">Reply</button>
+                <button  class="btn btn-primary btn-sm" onclick="reply({{ $comment->comment_id }})">Reply</button>
             </div>
         @endcan
     </div>
@@ -58,7 +60,10 @@
     <div style="margin: 0 0 0.5rem 3rem;" class="d-flex flex-column">
         <div class="d-flex justify-content-between">
             <div style="margin-left:10px; display:flex; align-items: center;">
-                <strong style="margin:0; font-size:1.1rem;" class="card-text">{{ $reply->user->username }}&nbsp</strong>
+                <div>
+                    <img src="{{ asset('images/profile_pics/' . $reply->user->avatar) }}" class="rounded-circle" style="width: 20px; height: 20px;">
+                    <strong style="margin:0; font-size:1.1rem;" class="card-text">{{ $reply->user->username }}&nbsp</strong>
+                </div>
                 <p class="card-text">{{ $reply->content }}</p>
             </div>
             <div class="buttons d-flex">

@@ -49,6 +49,7 @@ CREATE TABLE users (
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
+    avatar VARCHAR(255) DEFAULT 'default_avatar.png',
     bio TEXT,
     private BOOLEAN NOT NULL DEFAULT false,
     user_type user_types NOT NULL

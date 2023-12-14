@@ -26,8 +26,7 @@ class UserPolicy
      */
     public function viewAdminInterface(User $user, User $model): bool
     {
-        Log::info('viewAdminInterface in user policy');
-        return $user->user_type == 'admin';
+        return ($user->user_type == 'admin' && $model->user_type != 'admin') && $user->user_id != $model->user_id;
     }
 
     public function updateAsAdmin(User $user, User $userToUpdate)
@@ -38,6 +37,16 @@ class UserPolicy
     public function deleteAsAdmin(User $user, User $userToDelete)
     {
         return $user->user_type == 'admin' && $userToDelete->user_type != 'admin';
+    }
+
+    public function suspendAsAdmin(User $user, User $userToSuspend)
+    {
+        return $user->user_type == 'admin' && $userToSuspend->user_type != 'admin';
+    }
+
+    public function unrestrictAsAdmin(User $user, User $userToRestore)
+    {
+        return $user->user_type == 'admin' && $userToRestore->user_type != 'admin';
     }
 
     /**

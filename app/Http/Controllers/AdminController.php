@@ -97,4 +97,36 @@ class AdminController extends Controller
             return redirect()->route('home')->withErrors(['message' => 'You are not authorized to restore this user']);
         }
     }
+
+    public function suspendUser($id) {
+        try
+        {    
+            $user = User::findOrFail($id);
+
+            $this->authorize('suspendAsAdmin', $user);
+
+            $user->update(['user_type' => 'suspended']);
+
+            return redirect()->route('home')->with('success', 'User suspended successfully.');
+        }
+        catch(AuthorizationException $e){
+            return redirect()->route('home')->withErrors(['message' => 'You are not authorized to suspend this user']);
+        }
+    }
+
+    public function unsuspendUser($id) {
+        try
+        {    
+            $user = User::findOrFail($id);
+
+            $this->authorize('unrestrictAsAdmin', $user);
+
+            $user->update(['user_type' => 'normal_user']);
+
+            return redirect()->route('home')->with('success', 'User unsuspended successfully.');
+        }
+        catch(AuthorizationException $e){
+            return redirect()->route('home')->withErrors(['message' => 'You are not authorized to unsuspend this user']);
+        }
+    }
 }

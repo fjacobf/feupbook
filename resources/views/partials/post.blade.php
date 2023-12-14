@@ -1,7 +1,10 @@
 <div class="post mt-4" id="post-{{$post->post_id}}">
         <div class="card">
             <div class="card-header d-flex justify-content-between fs-5">
-                <small><a href="{{ route('user.profile', ['id' => $post->user->user_id]) }}" class="link-primary:hover text-decoration-none">{{$post->user->name}}</a></small>
+                <div>
+                    <img src="{{ asset('images/profile_pics/' . $post->user->avatar) }}" class="rounded-circle" style="width: 20px; height: 20px;">
+                    <small><a href="{{ route('user.profile', ['id' => $post->user->user_id]) }}" class="link-primary:hover">{{$post->user->name}}</a></small>
+                </div>
                 <small class="text-muted"><span class="text-muted">@</span>{{ $post->user->username }}</small>
                 <small class="text-black">{{ time_since($post->created_at) }}</small>
             </div>
@@ -56,16 +59,18 @@
                     <span id="bookmark-count-{{ $post->post_id }}">{{ $post->bookmarksCount() }}</span>
                 </div>
 
-                @canany(['update', 'delete'], $post)
-                    <div class="ms-auto">
-                            <a href="{{ route('post.edit', ['id' => $post->post_id]) }}" class="btn btn-primary bi-pencil-fill me-2"></a>
-                            <form action="{{ route('post.delete', ['id' => $post->post_id]) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger bi-trash-fill" onclick="return confirm('Are you sure you want to delete this post?')"></button>
-                            </form>
-                    </div>
-                @endcanany
+                <div class="ms-auto">
+                    @can('update', $post)
+                        <a href="{{ route('post.edit', ['id' => $post->post_id]) }}" class="btn btn-primary bi-pencil-fill me-2"></a>
+                    @endcan
+                    @can('delete', $post)
+                        <form action="{{ route('post.delete', ['id' => $post->post_id]) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger bi-trash-fill" onclick="return confirm('Are you sure you want to delete this post?')"></button>
+                        </form>
+                    @endcan
+                </div>
             </div>
         </div>
 </div>

@@ -20,3 +20,11 @@
 .card-footer .bi-bookmark-fill{
     color: rgba(0, 21, 255, 0.597);
 }
+
+.profile-pic-border {
+    border: 4px solid #000000;
+}
+
+.sidebar .profile-pic {
+    border: 1px solid #000000;
+}
