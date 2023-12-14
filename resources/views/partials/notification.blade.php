@@ -18,6 +18,8 @@
                         <a href="{{ route('showPost', ['id' => $notification->comment->post_id]) }}" class="text-decoration-none text-black">
                     @elseif ($notification->notification_type == 'started_following')
                         <a href="{{ route('user.profile', ['id' => $notification->user_id]) }}" class="text-decoration-none text-black">
+                    @else
+                    <a href="#" class="text-decoration-none text-black">
                     @endif
                             <div class="card-body">
                                 <h5 class="card-title">{{ $notification->message }}</h5>
