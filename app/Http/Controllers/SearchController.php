@@ -22,5 +22,13 @@ class SearchController extends Controller
 
         return view('partials.search-results', compact('users'));
     }
+
+    public function search_json(Request $request)
+    {
+        $query = $request->input('query');
+
+        $users = User::where('username', 'ILIKE', "%$query%")->get();
+        return response()->json($users);
+    }
 }
 

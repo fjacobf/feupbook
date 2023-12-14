@@ -13,6 +13,10 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
+// Chats
+use App\Http\Controllers\GroupChatController;
+use App\Http\Controllers\MessageController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -92,6 +96,7 @@ Route::controller(UserController::class)->group(function () {
 // Search
 Route::controller(SearchController::class)->group(function () {
     Route::get('/search','show')->name('search.show');
+    Route::get('/api/user_json', 'search_json')->name('search_json.api');
     Route::get('/api/user', 'search')->name('search.api');
 });
 
@@ -104,3 +109,18 @@ Route::controller(AdminController::class)->group(function () {
     Route::put('/admin/user/{id}/suspend', 'suspendUser')->name('admin.suspendUser');
     Route::put('/admin/user/{id}/unsuspend', 'unsuspendUser')->name('admin.unsuspendUser');
 });
+
+// Chats
+// Group Chat Routes
+Route::get('/group-chats', [GroupChatController::class, 'index']);
+Route::get('/group-chats/{groupChat}', [GroupChatController::class, 'show']);
+Route::get('/group-chats/{groupChat}/edit', [GroupChatController::class, 'edit'])->name('group-chats.edit');
+Route::post('/group-chats/{groupChat}/send-message', [GroupChatController::class, 'sendMessage'])->name('group-chats.sendMessage');
+Route::get('/group-chats/{groupChat}/messages', [GroupChatController::class, 'getMessages'])->name('group-chats.getMessages');
+Route::post('/api/group-chats/create', [GroupChatController::class, 'create'])->name('group-chats.create.api');
+Route::post('/api/group-chats/{groupChat}/add-member', [GroupChatController::class, 'addMember'])->name('group-chats.addMember.api');
+Route::post('/api/group-chats/{groupChat}/remove-member', [GroupChatController::class, 'removeMember'])->name('group-chats.removeMember.api');
+Route::post('/api/group-chats/{groupChat}/update', [GroupChatController::class, 'update'])->name('group-chats.update.api');
+Route::post('/api/group-chats/{groupChat}/accept-invite', [GroupChatController::class, 'acceptInvite'])->name('group-chats.acceptInvite.api');
+Route::post('/api/group-chats/{groupChat}/reject-invite', [GroupChatController::class, 'rejectInvite'])->name('group-chats.rejectInvite.api');
+Route::delete('/api/group-chats/{groupChat}/delete', [GroupChatController::class, 'delete'])->name('group-chats.delete.api');
