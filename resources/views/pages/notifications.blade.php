@@ -5,13 +5,11 @@
 @endsection
 
 @section('content')
-<div class="flex-grow-1 container" style="margin-left: 280px;">
-    <div class="d-flex justify-content-center flex-column">
-        <h3>Notifications</h3>
+<div class="d-flex flex-column align-items-center ms-auto me-auto w-100 overflow-auto">
+        <h3 class="bg-primary text-white rounded mt-3 p-2">Notifications</h3>
         <div id="notifications">
             @include('partials.notification')
         </div>
-    </div>
 </div>
 
 <script>

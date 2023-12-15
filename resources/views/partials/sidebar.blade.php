@@ -48,13 +48,13 @@
         <li>
           @auth
           <a href="{{ route('notifications.list', ['id' => auth()->user()->user_id]) }}" class="nav-link {{ request()->routeIs('notifications.list') && (request()->route()->parameter('id') == auth()->user()->user_id) ? 'active' : 'link-dark' }} py-2 px-2" style="font-size: 1.25rem;">
-            <i class="bi bi-bell me-2"></i>
+            <i class="bi bi-bell-fill me-2"></i>
             <p class="d-none d-sm-inline m-0">Notifications</p>
           </a>
           @endauth
           @guest
           <a href="{{ route('login') }}" class="nav-link link-dark py-2 px-2" style="font-size: 1.25rem;">
-            <i class="bi bi-bell me-2"></i>
+            <i class="bi bi-bell-fill me-2"></i>
             <p class="d-none d-sm-inline m-0">Notifications</p>
           </a>
           @endguest
