@@ -121,7 +121,7 @@ Route::controller(NotificationController::class)->group(function () {
 // Chats
 // Group Chat Routes
 Route::get('/group-chats', [GroupChatController::class, 'index']);
-Route::get('/group-chats/{groupChat}', [GroupChatController::class, 'show']);
+Route::get('/group-chats/{groupChat}', [GroupChatController::class, 'show'])->name('group-chats.show');
 Route::get('/group-chats/{groupChat}/edit', [GroupChatController::class, 'edit'])->name('group-chats.edit');
 Route::post('/group-chats/{groupChat}/send-message', [GroupChatController::class, 'sendMessage'])->name('group-chats.sendMessage');
 Route::get('/group-chats/{groupChat}/messages', [GroupChatController::class, 'getMessages'])->name('group-chats.getMessages');

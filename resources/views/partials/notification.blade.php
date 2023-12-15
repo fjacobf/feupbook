@@ -16,8 +16,10 @@
                         <a href="{{ route('post.show', ['id' => $notification->post_id]) }}" class="text-decoration-none text-black">
                     @elseif($notification->notification_type == 'liked_comment' or $notification->notification_type == 'reply_comment')
                         <a href="{{ route('post.show', ['id' => $notification->comment->post_id]) }}" class="text-decoration-none text-black">
-                    @elseif ($notification->notification_type == 'started_following')
+                    @elseif ($notification->notification_type == 'started_following' or $notification->notification_type == 'accepted_follow')
                         <a href="{{ route('user.profile', ['id' => $notification->user_id]) }}" class="text-decoration-none text-black">
+                    @elseif ($notification->notification_type == 'joined_group' or $notification->notification_type == 'group_invite')
+                        <a href="{{ route('group-chats.show', ['groupChat' => $notification->group_id]) }}" class="text-decoration-none text-black">
                     @else
                     <a href="#" class="text-decoration-none text-black">
                     @endif
