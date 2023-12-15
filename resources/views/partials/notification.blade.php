@@ -13,9 +13,9 @@
                     </div>
                 @else
                     @if ($notification->notification_type == 'liked_post' or $notification->notification_type == 'comment_post')
-                        <a href="{{ route('showPost', ['id' => $notification->post_id]) }}" class="text-decoration-none text-black">
+                        <a href="{{ route('post.show', ['id' => $notification->post_id]) }}" class="text-decoration-none text-black">
                     @elseif($notification->notification_type == 'liked_comment' or $notification->notification_type == 'reply_comment')
-                        <a href="{{ route('showPost', ['id' => $notification->comment->post_id]) }}" class="text-decoration-none text-black">
+                        <a href="{{ route('post.show', ['id' => $notification->comment->post_id]) }}" class="text-decoration-none text-black">
                     @elseif ($notification->notification_type == 'started_following')
                         <a href="{{ route('user.profile', ['id' => $notification->user_id]) }}" class="text-decoration-none text-black">
                     @else
