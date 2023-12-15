@@ -12,6 +12,7 @@ use App\Http\Controllers\CommentController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\NotificationController;
 
 // Chats
 use App\Http\Controllers\GroupChatController;
@@ -109,6 +110,13 @@ Route::controller(AdminController::class)->group(function () {
     Route::put('/admin/user/{id}/suspend', 'suspendUser')->name('admin.suspendUser');
     Route::put('/admin/user/{id}/unsuspend', 'unsuspendUser')->name('admin.unsuspendUser');
 });
+
+//notifications
+Route::controller(NotificationController::class)->group(function () {
+    Route::get('/notifications/{id}', 'list')->name('notifications.list');
+    Route::get('/api/notifications', 'reload')->name('notifications.api');
+});
+
 
 // Chats
 // Group Chat Routes

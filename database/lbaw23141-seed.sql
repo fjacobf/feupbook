@@ -163,6 +163,7 @@ CREATE TABLE notifications (
     comment_id INTEGER REFERENCES comments(comment_id) ON DELETE CASCADE,
     post_id INTEGER REFERENCES posts(post_id) ON DELETE CASCADE,
     group_id INTEGER REFERENCES group_chats(group_id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
     viewed BOOLEAN NOT NULL DEFAULT false
 );
 
@@ -340,8 +341,8 @@ BEGIN
             VALUES (NEW.rcv_id, 'You have a new follow request from ' || reciever_username, CURRENT_DATE, 'request_follow', TRUE);
         end if;
     ELSE
-        INSERT INTO notifications (notified_user, message, date, notification_type)
-            VALUES (NEW.rcv_id, reciever_username || ' started following you.', CURRENT_DATE, 'started_following');
+        INSERT INTO notifications (notified_user, message, date, notification_type, user_id)
+            VALUES (NEW.rcv_id, reciever_username || ' started following you.', CURRENT_DATE, 'started_following', NEW.req_id);
     end if;
     
     RETURN NEW;
