@@ -25,6 +25,17 @@ class Post extends Model
         'private',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($post) {
+            if ($post->image && file_exists(public_path($post->image))) {
+                unlink(public_path($post->image));
+            }
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id', 'user_id');
@@ -50,6 +61,10 @@ class Post extends Model
         return $this->likes()->count();
     }
 
+    public function isLiked(){
+        return $this->likes()->where('user_id', auth()->user()->user_id)->exists();
+    }
+
     public function bookmarks()
     {
         return $this->hasMany(Bookmark::class, 'bookmarked_post', 'post_id');
@@ -60,4 +75,12 @@ class Post extends Model
         return $this->bookmarks()->count();
     }
 
+    public function isBookmarked(){
+        return $this->bookmarks()->where('user_id', auth()->user()->user_id)->exists();
+    }
+
+    public function mentions(): HasMany
+    {
+        return $this->hasMany(Mention::class, 'post_id', 'post_id');
+    }
 }

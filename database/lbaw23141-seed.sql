@@ -37,7 +37,7 @@ DROP FUNCTION IF EXISTS reject_inappropriate_posts CASCADE;
 DROP FUNCTION IF EXISTS create_group_owner CASCADE;
 
 -- Create ENUM types
-CREATE TYPE user_types AS ENUM ('normal_user', 'admin', 'suspended');
+CREATE TYPE user_types AS ENUM ('normal_user', 'admin', 'suspended', 'deleted');
 CREATE TYPE notification_types AS ENUM ('liked_comment', 'reply_comment', 'request_follow', 'started_following', 'accepted_follow', 'joined_group', 'group_invite', 'liked_post', 'comment_post');
 CREATE TYPE report_types AS ENUM ('harassment', 'hate_speech', 'inappropriate_content', 'spam', 'self_harm');
 CREATE TYPE request_status AS ENUM ('accepted', 'rejected', 'waiting');
@@ -49,6 +49,7 @@ CREATE TABLE users (
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
+    avatar VARCHAR(255) DEFAULT 'default_avatar.png',
     bio TEXT,
     private BOOLEAN NOT NULL DEFAULT false,
     user_type user_types NOT NULL
@@ -761,19 +762,66 @@ $$ LANGUAGE plpgsql;
 ------------------------------
 
 -- Insert statements for the 'users' table
+INSERT INTO users (username, email, password, name, bio, private, user_type, avatar)
+VALUES
+    ('john_doe', 'john.doe@example.com', '$2a$12$GE0k/yA1x88VMc48xmgiEeLWnbDCxqDuyUMm3RT9QBEj.GdP0BzjW', 'John Doe', 'Computer Science student at University X', false, 'normal_user', '1702594210.jpg'),
+    ('alice_smith', 'alice.smith@example.com', '$2a$12$GE0k/yA1x88VMc48xmgiEeLWnbDCxqDuyUMm3RT9QBEj.GdP0BzjW', 'Alice Smith', 'Mathematics enthusiast', true, 'normal_user', '1702594395.jpg'),
+    ('prof_jones', 'prof.jones@example.com', '$2a$12$hCqEe5DSo019ZZsRY9xFfOpVHlZ642xSjZIxWKx3xmveCOYBMISj6', 'Professor Jones', 'Teaching Physics at University X', false, 'normal_user', '1702594478.jpg'),
+    ('gcostell0', 'gcostell0@simplemachines.org', '$2a$12$Pw1yagUYBgvoMqcGGv8McOkRXS4WMO/a6S7RH.HjmmlmQQyPHueMG', 'Glynis Costell', 'Administrator at University X', false, 'admin', '1702596523.jpg'),
+    ('wleftwich1', 'wleftwich1@howstuffworks.com', '$2a$12$XQefcocDGnOoS5Cl4Q9Vw.ChpEzIH2Ft4uxD8E9spoVX2ijO2JdZG', 'Wittie Leftwich', 'Second Administrator at University X', true, 'admin', '1702596680.jpg'),
+    ('fcassel2', 'fcassel2@thetimes.co.uk', '$2a$12$5FBTo8/npT5CBquqcxIBduolFG3JsT1l6iLLAUhfInmJ.gfBELiiu', 'Fernanda Cassel', 'Teaching Assistant for Physics course', false, 'normal_user', '1702596806.jpg'),
+    ('ssetterington3', 'ssetterington3@nymag.com', '$2a$12$Cqrwqn4G58jRZdGgOUFH7uM9dt5I5tFWyItYpMquC7If8TndQNIdO', 'Sue Setterington', 'Teaching Assistant for Mathematics course', false, 'normal_user', '1702596887.jpg'),
+    ('mloudyan4', 'mloudyan4@wikimedia.org', '$2a$12$ByMwcBrT3hICpLZTbop0XuBHRJ9BOS71olRdbXU92QTXk0jxGfLqi', 'Madelyn Loudyan', 'Account suspended due to violation of university policies', false, 'normal_user', '1702596982.jpg'),
+    ('dsesons5', 'dsesons5@webmd.com', '$2a$12$K2UnxG3ulT4HxlZKj/tFr.AJ3zimcjLPTQDHgKZdP/z6xJlW1ITH2', 'Dasie Sesons', 'Second account suspended', false, 'normal_user', '1702597147.jpg'),
+    ('jane_doe', 'jane.doe@example.com', '$2a$12$pL/fXwZkS4vihbITTltNV.fA5G4IQYVrts0Ds2wf9gtKm/VXeK8yO', 'Jane Doe', 'Studying Computer Engineering at University X', false, 'normal_user', '1702597217.jpg');
+
 INSERT INTO users (username, email, password, name, bio, private, user_type)
 VALUES
-    ('john_doe', 'john.doe@example.com', '$2a$12$goYowY.ccXyLR8so94t3y.jEXtVs7.IDFworUJqqxIGmMd4XhrITa', 'John Doe', 'Computer Science student at University X', false, 'normal_user'),
-    ('alice_smith', 'alice.smith@example.com', '$2a$12$GE0k/yA1x88VMc48xmgiEeLWnbDCxqDuyUMm3RT9QBEj.GdP0BzjW', 'Alice Smith', 'Mathematics enthusiast', true, 'normal_user'),
-    ('prof_jones', 'prof.jones@example.com', '$2a$12$hCqEe5DSo019ZZsRY9xFfOpVHlZ642xSjZIxWKx3xmveCOYBMISj6', 'Professor Jones', 'Teaching Physics at University X', false, 'normal_user'),
-    ('admin1', 'admin1@example.com', '$2a$12$Pw1yagUYBgvoMqcGGv8McOkRXS4WMO/a6S7RH.HjmmlmQQyPHueMG', 'Admin One', 'Administrator at University X', false, 'admin'),
-    ('admin2', 'admin2@example.com', '$2a$12$XQefcocDGnOoS5Cl4Q9Vw.ChpEzIH2Ft4uxD8E9spoVX2ijO2JdZG', 'Admin Two', 'Second Administrator at University X', true, 'admin'),
-    ('ta_physics', 'ta_physics@example.com', '$2a$12$5FBTo8/npT5CBquqcxIBduolFG3JsT1l6iLLAUhfInmJ.gfBELiiu', 'TA Physics', 'Teaching Assistant for Physics course', false, 'normal_user'),
-    ('ta_math', 'ta_math@example.com', '$2a$12$Cqrwqn4G58jRZdGgOUFH7uM9dt5I5tFWyItYpMquC7If8TndQNIdO', 'TA Math', 'Teaching Assistant for Mathematics course', false, 'normal_user'),
-    ('banned_user', 'banned_user@example.com', '$2a$12$ByMwcBrT3hICpLZTbop0XuBHRJ9BOS71olRdbXU92QTXk0jxGfLqi', 'Banned User', 'Account suspended due to violation of university policies', false, 'normal_user'),
-    ('banned_user2', 'banned_user2@example.com', '$2a$12$K2UnxG3ulT4HxlZKj/tFr.AJ3zimcjLPTQDHgKZdP/z6xJlW1ITH2', 'Banned User 2', 'Second account suspended', false, 'normal_user'),
-    ('jane_doe', 'jane.doe@example.com', '$2a$12$pL/fXwZkS4vihbITTltNV.fA5G4IQYVrts0Ds2wf9gtKm/VXeK8yO', 'Jane Doe', 'Studying Computer Engineering at University X', false, 'suspended');
-
+    ('jwoolhouse0', 'jwoolhouse0@amazon.co.uk', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Juliane Woolhouse', 'Fully-configurable scalable instruction set', true, 'normal_user'),
+    ('lsimonds1', 'lsimonds1@cdc.gov', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Lesley Simonds', 'Re-contextualized needs-based firmware', false, 'suspended'),
+    ('gfairney2', 'gfairney2@privacy.gov.au', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Georgiana Fairney', 'Multi-layered multi-state budgetary management', true, 'admin'),
+    ('lmallord3', 'lmallord3@toplist.cz', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Ludovika Mallord', 'Persistent optimizing local area network', true, 'normal_user'),
+    ('bscutts4', 'bscutts4@facebook.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Boy Scutts', 'Streamlined uniform strategy', true, 'suspended'),
+    ('abryns5', 'abryns5@go.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Ash Bryns', 'Re-engineered actuating customer loyalty', true, 'suspended'),
+    ('dhallam6', 'dhallam6@friendfeed.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Dmitri Hallam', 'Seamless needs-based productivity', false, 'admin'),
+    ('sazam7', 'sazam7@ihg.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Selma Azam', 'Organic bi-directional customer loyalty', true, 'admin'),
+    ('mwemes8', 'mwemes8@nhs.uk', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Mira Wemes', 'Expanded methodical support', true, 'normal_user'),
+    ('koldford9', 'koldford9@foxnews.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Korney Oldford', 'Diverse needs-based groupware', false, 'admin'),
+    ('kkaszpera', 'kkaszpera@reverbnation.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Kimberly Kaszper', 'Mandatory human-resource implementation', false, 'normal_user'),
+    ('amacconnechieb', 'amacconnechieb@prlog.org', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Alfons MacConnechie', 'Face to face solution-oriented encoding', true, 'suspended'),
+    ('smcturleyc', 'smcturleyc@pbs.org', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Sarena McTurley', 'Enhanced fresh-thinking forecast', false, 'suspended'),
+    ('maleevyd', 'maleevyd@nps.gov', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Milzie Aleevy', 'Secured 24/7 conglomeration', true, 'admin'),
+    ('cliversleye', 'cliversleye@examiner.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Cindelyn Liversley', 'Self-enabling intangible open system', true, 'normal_user'),
+    ('kfiremanf', 'kfiremanf@seesaa.net', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Katrine Fireman', 'Networked zero tolerance challenge', false, 'suspended'),
+    ('evillarg', 'evillarg@state.gov', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Ethel Villar', 'Distributed leading edge emulation', true, 'suspended'),
+    ('fennionh', 'fennionh@aol.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Filide Ennion', 'Fully-configurable grid-enabled capacity', true, 'normal_user'),('scheethami', 'scheethami@jiathis.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Sylas Cheetham', 'Organic global website', true, 'admin'),
+    ('dcocksedgej', 'dcocksedgej@utexas.edu', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Debera Cocksedge', 'Sharable 5th generation circuit', false, 'suspended'),
+    ('gtrendlek', 'gtrendlek@miibeian.gov.cn', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Gerry Trendle', 'Re-engineered fault-tolerant alliance', false, 'admin'),
+    ('jrosternl', 'jrosternl@exblog.jp', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Jennifer Rostern', 'Reduced dynamic ability', false, 'suspended'),
+    ('ikeechm', 'ikeechm@bigcartel.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Ilario Keech', 'Re-contextualized bifurcated knowledge base', false, 'normal_user'),
+    ('rdufouren', 'rdufouren@dedecms.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Roth Dufoure', 'Advanced dynamic access', true, 'admin'),
+    ('lmacterrellyo', 'lmacterrellyo@tamu.edu', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Leopold MacTerrelly', 'Fundamental regional attitude', true, 'admin'),
+    ('wtaylersonp', 'wtaylersonp@wikia.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Waldemar Taylerson', 'Re-engineered didactic utilisation', false, 'admin'),
+    ('gmanieq', 'gmanieq@360.cn', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Giorgi Manie', 'User-friendly exuding definition', false, 'suspended'),
+    ('cmackailer', 'cmackailer@wordpress.org', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Carole MacKaile', 'Progressive user-facing solution', true, 'admin'),
+    ('tcutridges', 'tcutridges@godaddy.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Terry Cutridge', 'Digitized coherent protocol', true, 'suspended'),
+    ('abrowert', 'abrowert@list-manage.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Anallese Brower', 'Enhanced optimal core', false, 'suspended'),
+    ('graitu', 'graitu@pcworld.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Golda Rait', 'Robust client-driven migration', false, 'suspended'),
+    ('bjestecov', 'bjestecov@storify.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Brandea Jesteco', 'Expanded local task-force', false, 'suspended'),
+    ('ajoplinw', 'ajoplinw@japanpost.jp', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Alisha Joplin', 'Business-focused demand-driven task-force', true, 'admin'),
+    ('ncroserx', 'ncroserx@oracle.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Nettie Croser', 'Networked attitude-oriented ability', false, 'suspended'),
+    ('wborrelly', 'wborrelly@deviantart.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Winifred Borrell', 'Integrated explicit hub', true, 'normal_user'),
+    ('ooshavlanz', 'ooshavlanz@slashdot.org', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Olympe O''Shavlan', 'Decentralized zero tolerance benchmark', true, 'suspended'),
+    ('rmaccague10', 'rmaccague10@dropbox.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Rosanne MacCague', 'User-friendly neutral service-desk', true, 'suspended'),('cgarlicke11', 'cgarlicke11@sourceforge.net', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Cordie Garlicke', 'Automated full-range archive', false, 'normal_user'),
+    ('vkershow12', 'vkershow12@wp.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Vinny Kershow', 'Phased even-keeled function', true, 'admin'),
+    ('mdysart13', 'mdysart13@indiatimes.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Miguelita Dysart', 'Exclusive modular middleware', true, 'normal_user'),
+    ('rhevner14', 'rhevner14@ebay.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Richardo Hevner', 'Phased client-driven circuit', false, 'admin'),
+    ('dtrevaskis15', 'dtrevaskis15@friendfeed.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Donnamarie Trevaskis', 'Persistent dynamic encoding', false, 'normal_user'),
+    ('dpolo16', 'dpolo16@ifeng.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Deni Polo', 'Versatile 24 hour website', false, 'normal_user'),
+    ('sdelieu17', 'sdelieu17@etsy.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Sayers Delieu', 'Upgradable even-keeled model', true, 'admin'),
+    ('dcalifornia18', 'dcalifornia18@flavors.me', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Dmitri California', 'Future-proofed background software', true, 'admin'),
+    ('cgartin19', 'cgartin19@histats.com', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Cathee Gartin', 'Re-contextualized context-sensitive frame', false, 'admin'),
+    ('nhatto1a', 'nhatto1a@desdev.cn', '$2a$12$OmNSttli8fD9ykDcaXZFA.cZOnxzLrMuU/jY5dTb14Fva9HC8UPFm', 'Norine Hatto', 'Distributed incremental capacity', true, 'suspended');
 -- Insert statements for the 'follow_requests' table
 INSERT INTO follow_requests (req_id, rcv_id, date, status)
 VALUES
@@ -792,16 +840,106 @@ VALUES
 -- Insert statements for the 'posts' table
 INSERT INTO posts (owner_id, image, content, created_at, updated_at)
 VALUES
-    (1, 'image1.jpg', 'Studying late at the library. #CodingAllNight', '2023-10-26 19:30:00', NULL),
-    (2, 'image2.jpg', 'Solving complex math problems today!', '2023-10-25 15:45:00', NULL),
-    (4, NULL, 'Important announcement for Physics students.', '2023-10-24 12:00:00', NULL),
-    (2, 'image4.jpg', 'Just aced my midterms! Feeling great!', '2023-10-23 10:15:00', NULL),
-    (7, NULL, 'Excited to join University X! #NewBeginnings', '2023-10-22 08:00:00', NULL),
-    (2, 'image6.jpg', 'Another day, another math challenge.', '2023-10-21 16:20:00', NULL),
-    (1, 'image7.jpg', 'Exploring campus and meeting new friends.', '2023-10-20 14:30:00', NULL),
-    (8, 'image8.jpg', 'Account suspended due to violation of university policies.', '2023-10-19 11:45:00', NULL),
-    (9, NULL, 'Second account suspended. Lesson learned.', '2023-10-18 09:00:00', NULL),
-    (10, NULL, 'Hello from Joe. #LifeAtUniversityX', '2023-10-17 07:15:00', NULL);
+(1, 'images/image1.jpg', 'Hey everyone! Just finished my final exams for the semester. Feeling a mix of relief and exhaustion. Time to catch up on some much-needed sleep and binge-watch my favorite shows. How did your exams go?', '2023-10-26 19:30:00', NULL),
+(1, NULL, 'Campus library = my second home. 📚 Wheres your go-to study spot?', '2023-10-26 19:30:00', NULL),
+(1, NULL, 'Research paper deadline looming. 😬 Any procrastination hacks?', '2023-10-26 19:30:00', NULL),
+(1, NULL, 'Attending a fascinating lecture on [topic] tomorrow. Whos in?', '2023-10-26 19:30:00', NULL),
+(1, NULL, 'Just joined a campus club. 🤝 Excited to meet new faces!', '2023-10-26 19:30:00', NULL),
+(1, NULL, 'Hump day feels. Whats getting you through the week?', '2023-10-26 19:30:00', NULL),
+(1, NULL, 'Finished a chapter of my novel. Any bookworms here? 📖', '2023-10-26 19:30:00', NULL),
+(1, NULL, 'Campus food review: hit or miss? Share your favorites!', '2023-10-26 19:30:00', NULL),
+(1, NULL, 'Who else is counting down to the weekend? 🎉', '2023-10-26 19:30:00', NULL),
+(1, NULL, 'Just aced that quiz! 🌟 Hows your day going, fellow students?0', '2023-10-26 19:30:00', NULL),
+(2, NULL, 'Exploring new study spots on campus! Found this cozy little corner in the library with the perfect amount of sunlight. What are your favorite study spots around campus? Drop some recommendations!', '2023-10-26 19:30:00', NULL),
+(2, 'images/image1.jpg', 'Campus library = my second home. 📚 Wheres your go-to study spot?', '2023-10-26 19:30:00', NULL),
+(2, NULL, 'Research paper deadline looming. 😬 Any procrastination hacks?', '2023-10-26 19:30:00', NULL),
+(2, NULL, 'Attending a fascinating lecture on [topic] tomorrow. Whos in?', '2023-10-26 19:30:00', NULL),
+(2, NULL, 'Just joined a campus club. 🤝 Excited to meet new faces!', '2023-10-26 19:30:00', NULL),
+(2, NULL, 'Hump day feels. Whats getting you through the week?', '2023-10-26 19:30:00', NULL),
+(2, NULL, 'Finished a chapter of my novel. Any bookworms here? 📖', '2023-10-26 19:30:00', NULL),
+(2, NULL, 'Campus food review: hit or miss? Share your favorites!', '2023-10-26 19:30:00', NULL),
+(2, NULL, 'Who else is counting down to the weekend? 🎉', '2023-10-26 19:30:00', NULL),
+(2, NULL, 'Just aced that quiz! 🌟 Hows your day going, fellow students?0', '2023-10-26 19:30:00', NULL),
+(3, 'images/image1.jpg', 'Just aced my physics project presentation! 🚀 Who else is into science? Lets connect and share our favorite mind-boggling theories or cool experiments. #ScienceLovers', '2023-10-26 19:30:00', NULL),
+(3, NULL, 'Campus library = my second home. 📚 Wheres your go-to study spot?', '2023-10-26 19:30:00', NULL),
+(3, NULL, 'Research paper deadline looming. 😬 Any procrastination hacks?', '2023-10-26 19:30:00', NULL),
+(3, NULL, 'Attending a fascinating lecture on [topic] tomorrow. Whos in?', '2023-10-26 19:30:00', NULL),
+(3, NULL, 'Just joined a campus club. 🤝 Excited to meet new faces!', '2023-10-26 19:30:00', NULL),
+(3, NULL, 'Hump day feels. Whats getting you through the week?', '2023-10-26 19:30:00', NULL),
+(3, NULL, 'Finished a chapter of my novel. Any bookworms here? 📖', '2023-10-26 19:30:00', NULL),
+(3, NULL, 'Campus food review: hit or miss? Share your favorites!', '2023-10-26 19:30:00', NULL),
+(3, NULL, 'Who else is counting down to the weekend? 🎉', '2023-10-26 19:30:00', NULL),
+(3, NULL, 'Just aced that quiz! 🌟 Hows your day going, fellow students?0', '2023-10-26 19:30:00', NULL),
+(4, 'images/image1.jpg', 'Finished my latest art piece inspired by campus life. 🎨 Check it out and let me know what you think! Also, looking for art buddies. Anyone up for a creative collaboration?', '2023-10-26 19:30:00', NULL),
+(4, NULL, 'Campus library = my second home. 📚 Wheres your go-to study spot?', '2023-10-26 19:30:00', NULL),
+(4, NULL, 'Research paper deadline looming. 😬 Any procrastination hacks?', '2023-10-26 19:30:00', NULL),
+(4, NULL, 'Attending a fascinating lecture on [topic] tomorrow. Whos in?', '2023-10-26 19:30:00', NULL),
+(4, NULL, 'Just joined a campus club. 🤝 Excited to meet new faces!', '2023-10-26 19:30:00', NULL),
+(4, NULL, 'Hump day feels. Whats getting you through the week?', '2023-10-26 19:30:00', NULL),
+(4, NULL, 'Finished a chapter of my novel. Any bookworms here? 📖', '2023-10-26 19:30:00', NULL),
+(4, NULL, 'Campus food review: hit or miss? Share your favorites!', '2023-10-26 19:30:00', NULL),
+(4, NULL, 'Who else is counting down to the weekend? 🎉', '2023-10-26 19:30:00', NULL),
+(4, NULL, 'Just aced that quiz! 🌟 Hows your day going, fellow students?0', '2023-10-26 19:30:00', NULL),
+(5, 'images/image1.jpg', 'Exciting news! Just secured an internship with a local startup. Thrilled to apply what Ive learned in class to the real world. Any tips for a budding entrepreneur in the making?', '2023-10-26 19:30:00', NULL),
+(5, NULL, 'Campus library = my second home. 📚 Wheres your go-to study spot?', '2023-10-26 19:30:00', NULL),
+(5, NULL, 'Research paper deadline looming. 😬 Any procrastination hacks?', '2023-10-26 19:30:00', NULL),
+(5, NULL, 'Attending a fascinating lecture on [topic] tomorrow. Whos in?', '2023-10-26 19:30:00', NULL),
+(5, NULL, 'Just joined a campus club. 🤝 Excited to meet new faces!', '2023-10-26 19:30:00', NULL),
+(5, NULL, 'Hump day feels. Whats getting you through the week?', '2023-10-26 19:30:00', NULL),
+(5, NULL, 'Finished a chapter of my novel. Any bookworms here? 📖', '2023-10-26 19:30:00', NULL),
+(5, NULL, 'Campus food review: hit or miss? Share your favorites!', '2023-10-26 19:30:00', NULL),
+(5, NULL, 'Who else is counting down to the weekend? 🎉', '2023-10-26 19:30:00', NULL),
+(5, NULL, 'Just aced that quiz! 🌟 Hows your day going, fellow students?0', '2023-10-26 19:30:00', NULL),
+(6, 'images/image1.jpg', 'Tough game today, but we gave it our all on the field. Shoutout to my teammates! How do you balance academics and sports? Share your experiences and advice. #StudentAthleteLife', '2023-10-26 19:30:00', NULL),
+(6, NULL, 'Campus library = my second home. 📚 Wheres your go-to study spot?', '2023-10-26 19:30:00', NULL),
+(6, NULL, 'Research paper deadline looming. 😬 Any procrastination hacks?', '2023-10-26 19:30:00', NULL),
+(6, NULL, 'Attending a fascinating lecture on [topic] tomorrow. Whos in?', '2023-10-26 19:30:00', NULL),
+(6, NULL, 'Just joined a campus club. 🤝 Excited to meet new faces!', '2023-10-26 19:30:00', NULL),
+(6, NULL, 'Hump day feels. Whats getting you through the week?', '2023-10-26 19:30:00', NULL),
+(6, NULL, 'Finished a chapter of my novel. Any bookworms here? 📖', '2023-10-26 19:30:00', NULL),
+(6, NULL, 'Campus food review: hit or miss? Share your favorites!', '2023-10-26 19:30:00', NULL),
+(6, NULL, 'Who else is counting down to the weekend? 🎉', '2023-10-26 19:30:00', NULL),
+(6, NULL, 'Just aced that quiz! 🌟 Hows your day going, fellow students?0', '2023-10-26 19:30:00', NULL),
+(7, 'images/image1.jpg', 'Currently immersed in this captivating novel I picked up from the campus library. 📚 Any book recommendations? Lets start a virtual book club and discuss our favorite reads!', '2023-10-26 19:30:00', NULL),
+(7, NULL, 'Campus library = my second home. 📚 Wheres your go-to study spot?', '2023-10-26 19:30:00', NULL),
+(7, NULL, 'Research paper deadline looming. 😬 Any procrastination hacks?', '2023-10-26 19:30:00', NULL),
+(7, NULL, 'Attending a fascinating lecture on [topic] tomorrow. Whos in?', '2023-10-26 19:30:00', NULL),
+(7, NULL, 'Just joined a campus club. 🤝 Excited to meet new faces!', '2023-10-26 19:30:00', NULL),
+(7, NULL, 'Hump day feels. Whats getting you through the week?', '2023-10-26 19:30:00', NULL),
+(7, NULL, 'Finished a chapter of my novel. Any bookworms here? 📖', '2023-10-26 19:30:00', NULL),
+(7, NULL, 'Campus food review: hit or miss? Share your favorites!', '2023-10-26 19:30:00', NULL),
+(7, NULL, 'Who else is counting down to the weekend? 🎉', '2023-10-26 19:30:00', NULL),
+(7, NULL, 'Just aced that quiz! 🌟 Hows your day going, fellow students?0', '2023-10-26 19:30:00', NULL),
+(8, 'images/image1.jpg', 'Passionate about sustainability? Join me in organizing a campus cleanup event! Lets make a positive impact on our environment. Comment if youre interested! 🌱 #SustainableLiving', '2023-10-26 19:30:00', NULL),
+(8, NULL, 'Campus library = my second home. 📚 Wheres your go-to study spot?', '2023-10-26 19:30:00', NULL),
+(8, NULL, 'Research paper deadline looming. 😬 Any procrastination hacks?', '2023-10-26 19:30:00', NULL),
+(8, NULL, 'Attending a fascinating lecture on [topic] tomorrow. Whos in?', '2023-10-26 19:30:00', NULL),
+(8, NULL, 'Just joined a campus club. 🤝 Excited to meet new faces!', '2023-10-26 19:30:00', NULL),
+(8, NULL, 'Hump day feels. Whats getting you through the week?', '2023-10-26 19:30:00', NULL),
+(8, NULL, 'Finished a chapter of my novel. Any bookworms here? 📖', '2023-10-26 19:30:00', NULL),
+(8, NULL, 'Campus food review: hit or miss? Share your favorites!', '2023-10-26 19:30:00', NULL),
+(8, NULL, 'Who else is counting down to the weekend? 🎉', '2023-10-26 19:30:00', NULL),
+(8, NULL, 'Just aced that quiz! 🌟 Hows your day going, fellow students?0', '2023-10-26 19:30:00', NULL),
+(9, 'images/image1.jpg', 'Just discovered a hidden gem of a concert venue near campus. Whos up for a night of live music? Drop your favorite genres, and lets plan a musical outing together! 🎶', '2023-10-26 19:30:00', NULL),
+(9, NULL, 'Campus library = my second home. 📚 Wheres your go-to study spot?', '2023-10-26 19:30:00', NULL),
+(9, NULL, 'Research paper deadline looming. 😬 Any procrastination hacks?', '2023-10-26 19:30:00', NULL),
+(9, NULL, 'Attending a fascinating lecture on [topic] tomorrow. Whos in?', '2023-10-26 19:30:00', NULL),
+(9, NULL, 'Just joined a campus club. 🤝 Excited to meet new faces!', '2023-10-26 19:30:00', NULL),
+(9, NULL, 'Hump day feels. Whats getting you through the week?', '2023-10-26 19:30:00', NULL),
+(9, NULL, 'Finished a chapter of my novel. Any bookworms here? 📖', '2023-10-26 19:30:00', NULL),
+(9, NULL, 'Campus food review: hit or miss? Share your favorites!', '2023-10-26 19:30:00', NULL),
+(9, NULL, 'Who else is counting down to the weekend? 🎉', '2023-10-26 19:30:00', NULL),
+(9, NULL, 'Just aced that quiz! 🌟 Hows your day going, fellow students?0', '2023-10-26 19:30:00', NULL),
+(10, 'image1.jpg', 'Dreaming about my next adventure during the break. Wheres your dream travel destination? Share your travel bucket list, and lets exchange stories and recommendations! 🌍✈️ #TravelGoals', '2023-10-26 19:30:00', NULL),
+(10, NULL, 'Campus library = my second home. 📚 Wheres your go-to study spot?', '2023-10-26 19:30:00', NULL),
+(10, NULL, 'Research paper deadline looming. 😬 Any procrastination hacks?', '2023-10-26 19:30:00', NULL),
+(10, NULL, 'Attending a fascinating lecture on [topic] tomorrow. Whos in?', '2023-10-26 19:30:00', NULL),
+(10, NULL, 'Just joined a campus club. 🤝 Excited to meet new faces!', '2023-10-26 19:30:00', NULL),
+(10, NULL, 'Hump day feels. Whats getting you through the week?', '2023-10-26 19:30:00', NULL),
+(10, NULL, 'Finished a chapter of my novel. Any bookworms here? 📖', '2023-10-26 19:30:00', NULL),
+(10, NULL, 'Campus food review: hit or miss? Share your favorites!', '2023-10-26 19:30:00', NULL),
+(10, NULL, 'Who else is counting down to the weekend? 🎉', '2023-10-26 19:30:00', NULL),
+(10, NULL, 'Just aced that quiz! 🌟 Hows your day going, fellow students?0', '2023-10-26 19:30:00', NULL);
 
 -- Insert statements for the 'comment' table
 INSERT INTO comments (author_id, post_id, content, created_at, previous)
@@ -832,7 +970,7 @@ VALUES
 -- Insert statements for the 'group_members' table
 INSERT INTO group_members (user_id, group_id, status)
 VALUES
-    (2, 1, 'rejected'),
+    (2, 1, 'accepted'),
     (3, 2, 'accepted'),
     (4, 2, 'accepted'),
     (5, 3, 'accepted'),
@@ -878,19 +1016,19 @@ VALUES
     (5, 5),
     (7, 7);
 
--- Insert statements for the 'mentions' table
-INSERT INTO mentions (post_id, user_mentioned)
-VALUES
-    (1, 2),
-    (2, 1),
-    (3, 10),
-    (4, 3),
-    (5, 4),
-    (6, 1),
-    (7, 2),
-    (8, 9),
-    (9, 10),
-    (10, 1);
+-- -- Insert statements for the 'mentions' table
+-- INSERT INTO mentions (post_id, user_mentioned)
+-- VALUES
+--     (1, 2),
+--     (2, 1),
+--     (3, 10),
+--     (4, 3),
+--     (5, 4),
+--     (6, 1),
+--     (7, 2),
+--     (8, 9),
+--     (9, 10),
+--     (10, 1);
 
 -- Insert statements for the 'bookmarks' table
 INSERT INTO bookmarks (bookmarked_post, user_id)

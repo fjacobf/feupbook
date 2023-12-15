@@ -3,10 +3,16 @@
 namespace App\Policies;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Auth\Access\Response;
 
 class UserPolicy
 {
+
+    public function __construct(){
+        //
+    }
+
     /**
      * Determine whether the user can view any models.
      */
@@ -20,7 +26,27 @@ class UserPolicy
      */
     public function viewAdminInterface(User $user, User $model): bool
     {
-        return $user->user_type == 'admin';
+        return ($user->user_type == 'admin' && $model->user_type != 'admin') && $user->user_id != $model->user_id;
+    }
+
+    public function updateAsAdmin(User $user, User $userToUpdate)
+    {
+        return $user->user_type == 'admin' && $userToUpdate->user_type != 'admin';
+    }
+
+    public function deleteAsAdmin(User $user, User $userToDelete)
+    {
+        return $user->user_type == 'admin' && $userToDelete->user_type != 'admin';
+    }
+
+    public function suspendAsAdmin(User $user, User $userToSuspend)
+    {
+        return $user->user_type == 'admin' && $userToSuspend->user_type != 'admin';
+    }
+
+    public function unrestrictAsAdmin(User $user, User $userToRestore)
+    {
+        return $user->user_type == 'admin' && $userToRestore->user_type != 'admin';
     }
 
     /**
@@ -40,6 +66,21 @@ class UserPolicy
     }
 
     public function updateAdmin(User $user, User $model): bool
+    {
+        return $user->user_type == 'admin';
+    }
+
+    public function viewFollowPages(User $user, User $model): bool
+    {
+        return ($user->user_id === $model->user_id || $user->user_type == 'admin') || $model->private == false;
+    }
+
+    public function deleteSelf(User $user, User $model): bool
+    {
+        return $user->user_id === $model->user_id;
+    }
+
+    public function restoreAccount(User $user, User $model): bool
     {
         return $user->user_type == 'admin';
     }

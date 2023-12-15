@@ -28,6 +28,7 @@ class User extends Authenticatable // lower case plural
         'email',
         'password',
         'bio',
+        'avatar',
         'private',
         'user_type',
     ];
@@ -110,6 +111,21 @@ class User extends Authenticatable // lower case plural
         return $this->belongsToMany(User::class, 'follow_requests', 'req_id', 'rcv_id')
                     ->wherePivot('status', 'accepted'); 
     }
+
+    public function likedComments()
+    {
+        return $this->hasMany(Comment::class, 'user_id', 'user_id');
+    }
+
+    public function groups()
+    {
+        return $this->belongsToMany(GroupChat::class, 'group_members', 'user_id', 'group_id')
+            ->withPivot('status'); // If you need to access the 'status' column in the pivot table
+    }
     
+    public function followers() {
+        return $this->belongsToMany(User::class, 'follow_requests', 'rcv_id', 'req_id')
+                    ->wherePivot('status', 'accepted');
+    }
 }
 

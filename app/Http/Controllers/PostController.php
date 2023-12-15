@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Log;
 use App\Models\Post;
+use App\Models\User;
+use App\Models\Mention;
 
 class PostController extends Controller
 {
@@ -50,6 +53,18 @@ class PostController extends Controller
                 ->orderBy('created_at', 'desc')->paginate(10);
           }
 
+          if (request()->ajax()) {
+            Log::info('Request is ajax');
+            $renderedPosts = $posts->map(function ($post) {
+              return view('partials.post', ['post' => $post])->render();
+            });
+
+            return response()->json([
+              'posts' => $renderedPosts,
+              'next_page_url' => $posts->nextPageUrl()
+            ]);
+          }
+
           return view('pages.posts', ['posts' => $posts]);
       } catch (AuthorizationException $e) {
           return redirect('/');
@@ -69,6 +84,18 @@ class PostController extends Controller
                     ->whereIn('owner_id', $followingIds)
                     ->orderBy('created_at', 'desc')
                     ->paginate(10);
+
+        if (request()->ajax()) {
+          Log::info('Request is ajax');
+          $renderedPosts = $posts->map(function ($post) {
+            return view('partials.post', ['post' => $post])->render();
+          });
+
+          return response()->json([
+            'posts' => $renderedPosts,
+            'next_page_url' => $posts->nextPageUrl()
+          ]);
+        }
 
         return view('pages.posts', ['posts' => $posts]);
       } 
@@ -95,15 +122,36 @@ class PostController extends Controller
       try
       {  
         $validatedData = $request->validate([
-            'content' => 'required|max:1000',
+            'content' => 'required|max:2000',
+            'image' => 'file|mimes:jpeg,png,jpg,jpe,gif,svg|max:5048',
         ]);
 
         $this->authorize('create', Post::class);
 
         $post = new Post;
         $post->content = $validatedData['content'];
-        $post->owner_id = Auth::id(); // Set the owner_id to the current user's ID
+        $post->owner_id = Auth::id();
+
+        if ($request->hasFile('image')) {
+          $imageName = time() . '.' . $request->image->extension();
+          $request->image->move(public_path('images'), $imageName);
+          $post->image = 'images/' . $imageName;
+        }
+
         $post->save();
+
+        preg_match_all('/@(\w+)/', $post->content, $matches);
+        $usernames = $matches[1];
+
+        foreach ($usernames as $username) {
+            $mentionedUser = User::where('username', $username)->first();
+            if ($mentionedUser) {
+                Mention::create([
+                    'post_id' => $post->post_id,
+                    'user_mentioned' => $mentionedUser->user_id
+                ]);
+            }
+        }
 
         return redirect()->route('user.profile', ['id' => Auth::id()])->with('success', 'Post created successfully!');
       }
@@ -132,7 +180,7 @@ class PostController extends Controller
       try
       {
         $validatedData = $request->validate([
-            'content' => 'required|max:1000', 
+            'content' => 'required|max:2000', 
         ]);
 
         $post = Post::findOrFail($id);
@@ -140,7 +188,37 @@ class PostController extends Controller
         $this->authorize('update', $post);
 
         $post->content = $validatedData['content'];
+
+        if ($request->has('remove_image') && $post->image) {
+          if (file_exists(public_path($post->image))) {
+              unlink(public_path($post->image));
+          }
+          $post->image = null;
+        }
+  
+        if ($request->hasFile('image')) {
+          $imageName = time().'.'.$request->image->extension();  
+          $request->image->move(public_path('images'), $imageName);
+          $post->image = 'images/'.$imageName;
+        }
+
         $post->save();
+
+        preg_match_all('/@(\w+)/', $post->content, $matches);
+        $usernames = $matches[1];
+
+        $post->mentions()->delete();
+
+        foreach ($usernames as $username) {
+            $mentionedUser = User::where('username', $username)->first();
+            if ($mentionedUser) {
+                // Create or update the Mention
+                Mention::updateOrCreate(
+                    ['post_id' => $post->post_id, 'user_mentioned' => $mentionedUser->user_id],
+                    ['post_id' => $post->post_id, 'user_mentioned' => $mentionedUser->user_id]
+                );
+            }
+        }
 
         return redirect()->route('user.profile', ['id' => Auth::id()])->with('success', 'Post updated successfully!');
       }
@@ -166,4 +244,87 @@ class PostController extends Controller
       }
     }
 
+    public function like($id){
+      try{
+        $post = Post::findOrFail($id);
+
+        $this->authorize('like', $post);
+
+        $post->likes()->create([
+          'user_id' => Auth::id(),
+          'post_id' => $post->post_id,
+        ]);
+
+        return response()->json(['status' => 200]);
+      }
+      catch(AuthorizationException $e){
+        return response()->json(['error' => 'You are not authorized to like this post'], 403);
+      }
+    }
+
+    public function dislike($id){
+      try{
+        $post = Post::findOrFail($id);
+
+        $this->authorize('like', $post);
+
+        $post->likes()->where('user_id', Auth::id())->where('post_id', $post->post_id)->delete();
+        
+        return response()->json(['status' => 200]);
+      }
+      catch(AuthorizationException $e){
+        return response()->json(['error' => 'You are not authorized to dislike this post'], 403);
+      }
+    }
+
+    public function listBookmarks()
+    {
+      try {
+        $this->authorize('viewAny', Post::class);
+
+        $user = auth()->user();
+
+        $posts = Post::whereHas('bookmarks', function($query) use ($user) {
+          $query->where('user_id', $user->user_id);
+        })->with('comments')
+          ->orderBy('created_at', 'desc')->paginate(10);
+
+        return view('pages.bookmarks', ['posts' => $posts]);
+      } catch (AuthorizationException $e) {
+        return redirect('/');
+      }
+    }
+
+    public function bookmark($id){
+      try{
+        $post = Post::findOrFail($id);
+
+        $this->authorize('bookmark', $post);
+
+        $post->bookmarks()->create([
+          'user_id' => Auth::id(),
+          'bookmarked_post' => $post->post_id,
+        ]);
+
+        return response()->json(['status' => 200, 'message' => 'Post bookmarked successfully!']);
+      }
+      catch(AuthorizationException $e){
+        return response()->json(['error' => 'You are not authorized to bookmark this post'], 403);
+      }
+    }
+
+    public function unbookmark($id){
+      try{
+        $post = Post::findOrFail($id);
+
+        $this->authorize('bookmark', $post);
+
+        $post->bookmarks()->where('user_id', Auth::id())->where('bookmarked_post', $post->post_id)->delete();
+
+        return response()->json(['status' => 200, 'message' => 'Post unbookmarked successfully!']);
+      }
+      catch(AuthorizationException $e){
+        return response()->json(['error' => 'You are not authorized to unbookmark this post'], 403);
+      }
+    }
 }

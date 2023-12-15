@@ -37,6 +37,13 @@ class LoginController extends Controller
  
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
+
+            if (Auth::user()->user_type == 'deleted') {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Cannot access account. Please contact support.',
+                ])->onlyInput('email');
+            }
             
             // go to welcome page
             return redirect()->route('home')

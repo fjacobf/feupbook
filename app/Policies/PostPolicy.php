@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class PostPolicy
 {
+
+    public function __construct(){
+        //
+    }
+    
     /**
      * Determine whether the user can view any models.
      */
@@ -25,7 +30,7 @@ class PostPolicy
         $owner = $post->user;
 
         if ($owner->private) {
-            return $user->user_id === $post->owner_id;
+            return ($user->user_id === $post->owner_id) || $user->user_type === 'admin';
         }
 
         return true;
@@ -53,22 +58,16 @@ class PostPolicy
      */
     public function delete(User $user, Post $post): bool
     {
-        return $user->user_id === $post->owner_id;
+        return $user->user_id === $post->owner_id || $user->user_type == 'admin';
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Post $post): bool
+    public function like(User $user, Post $post): bool
     {
-        //
+        return $user->can('view', $post);
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Post $post): bool
+    public function bookmark(User $user, Post $post): bool
     {
-        //
+        return $user->can('view', $post);
     }
 }
