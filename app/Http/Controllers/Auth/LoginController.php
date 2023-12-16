@@ -7,8 +7,12 @@ use Illuminate\Http\Request;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\View\View;
+
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -22,6 +26,39 @@ class LoginController extends Controller
             return redirect('/home');
         } else {
             return view('auth.login');
+        }
+    }
+
+    public function showResetPasswordForm()
+    {
+        return view('auth.resetPassword');
+    }
+
+    public function recoverPassword($token) {
+        return view('auth.recoverPassword', ['token' => $token]);
+    }
+
+    public function newPasswordFromEmail(Request $request, $token) {
+        // Validate token and change password
+        $request->validate([
+            'new_password' => ['required', 'confirmed'],
+        ]);
+
+        $password = $request->new_password;
+
+        $email = DB::table('password_resets')->where('token', $token)->value('email');
+        $user = User::where('email', $email)->first();
+
+        if ($user) {
+            $user->password = Hash::make($password);
+            $user->save();
+
+            return redirect()->route('login')
+                ->withSuccess('You have successfully changed your password!');
+        } else {
+            return back()->withErrors([
+                'email' => 'The provided credentials do not match our records.',
+            ])->onlyInput('email');
         }
     }
 

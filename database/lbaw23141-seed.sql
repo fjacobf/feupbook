@@ -167,6 +167,13 @@ CREATE TABLE notifications (
     viewed BOOLEAN NOT NULL DEFAULT false
 );
 
+CREATE TABLE password_resets (
+    email VARCHAR(255) NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    PRIMARY KEY (email, token)
+);
+
 ------------------------------
 -- INDEXES
 ------------------------------

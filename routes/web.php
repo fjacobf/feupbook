@@ -1,22 +1,23 @@
 <?php
 
-use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\SearchController;
 use App\Http\Controllers\CardController;
-use App\Http\Controllers\ItemController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\CommentController;
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\MailController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\SearchController;
+
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\GroupChatController;
 
 // Chats
-use App\Http\Controllers\GroupChatController;
-use App\Http\Controllers\MessageController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +72,14 @@ Route::controller(LoginController::class)->group(function () {
     Route::get('/login', 'showLoginForm')->name('login');
     Route::post('/login', 'authenticate');
     Route::get('/logout', 'logout')->name('logout');
+    Route::get('/resetPassword', 'showResetPasswordForm')->name('recoverPassword');
+    Route::get('/reset-password/{token}', 'recoverPassword')->name('password.reset');
+    Route::post('/reset-password/{token}/update', 'newPasswordFromEmail')->name('auth.resetPassword');
+});
+
+// Mailing
+Route::controller(MailController::class)->group(function () {
+    Route::post('/password/reset', 'sendRecoveryEmail')->name('sendRecoveryEmail');
 });
 
 Route::controller(RegisterController::class)->group(function () {

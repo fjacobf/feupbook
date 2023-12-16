@@ -41,6 +41,10 @@
         </form>
 
     <div class="login-link mt-3 text-center">
+        <a href="{{ route('recoverPassword') }}" class="sign-in-link">Forgot your password?</a>
+    </div>
+
+    <div class="login-link mt-3 text-center">
         Don't have an account? <a href="{{ route('register') }}" class="sign-in-link">Sign up</a>
     </div>
 </div>
