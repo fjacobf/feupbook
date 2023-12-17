@@ -29,13 +29,15 @@ class NewMessage implements ShouldBroadcast
      */
     public function broadcastOn(): Channel
     {
-        return new Channel('group-chat.' . $this->message->group_id);
+        return new PrivateChannel('group-chat.' . $this->message->group_id);
     }
 
     public function broadcastWith() {
         return [
-            'message' => $this->message->content,
-            'user_id' => $this->message->emitter_id,
+            'content' => $this->message->content,
+            'emitter_id' => $this->message->emitter_id,
+            'date' => $this->message->date,
+            'viewed' => $this->message->viewed,
         ];
     }
 

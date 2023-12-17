@@ -21,9 +21,5 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('group-chat.{group_id}', function (User $user, int $group_id) {
-    $groupChat = GroupChat::find($group_id);
-    if ($groupChat) {
-        return $groupChat->members->contains($user);
-    }
-    return false;
+    return true;
 });

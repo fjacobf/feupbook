@@ -116,18 +116,24 @@
 </script> --}}
 
 <script type="module">
-    Echo.private('group-chat.{{ $groupChat->group_id }}')
-        .listen('MessageSent', (e) => {
-            let chatBox = document.querySelector('#chat');
+
+    var chatBox = document.querySelector('#chat');
+
+    function scrollToBottom() {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    Echo.private('group-chat.' + {{ $groupChat->group_id }})
+        .listen('NewMessage', (e) => {
+            console.log(e);
             let html = '';
-            html += '<div class="message ' + (e.message.emitter.user_id === {{ auth()->user()->user_id }} ? 'text-right bg-primary text-white' : 'text-left bg-light') + '">';
-            html += '<p class="font-weight-bold mb-0">' + e.message.emitter.name + '</p>';
-            html += '<p class="mb-0">' + e.message.content + '</p>';
-            html += '<p class="small">' + e.message.date + '</p>';
+            html += '<div class="message ' + (e.emitter_id === {{ auth()->user()->user_id }} ? 'text-right bg-primary text-white' : 'text-left bg-light') + '">';
+            html += '<p class="font-weight-bold mb-0">' + 'a' + '</p>';
+            html += '<p class="mb-0">' + e.content + '</p>';
+            html += '<p class="small">' + e.date + '</p>';
             html += '</div>';
             chatBox.innerHTML += html;
             scrollToBottom();
-            console.log(e.message);
         });
 </script>
 <style>

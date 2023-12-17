@@ -179,9 +179,8 @@ class GroupChatController extends Controller
         $message->viewed = false;
         $message->save();
 
+        // Broadcast the message
         broadcast(new NewMessage($message))->toOthers();
-
-        // TODO: IMPLEMENT AJAX IN MESSAGE SENT
 
         return response()->json('Message sent');
     }
