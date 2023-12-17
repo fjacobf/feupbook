@@ -16,10 +16,12 @@ class NewMessage implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     private Message $message;
+    private string $emitter_name;
 
-    public function __construct(Message $_message)
+    public function __construct(Message $_message, string $_emitter_name)
     {
         $this->message = $_message;
+        $this->emitter_name = $_emitter_name;
     }
 
     /**
@@ -36,6 +38,7 @@ class NewMessage implements ShouldBroadcast
         return [
             'content' => $this->message->content,
             'emitter_id' => $this->message->emitter_id,
+            'emitter_name' => $this->emitter_name,
             'date' => $this->message->date,
             'viewed' => $this->message->viewed,
         ];

@@ -128,7 +128,7 @@
             console.log(e);
             let html = '';
             html += '<div class="message ' + (e.emitter_id === {{ auth()->user()->user_id }} ? 'text-right bg-primary text-white' : 'text-left bg-light') + '">';
-            html += '<p class="font-weight-bold mb-0">' + 'a' + '</p>';
+            html += '<p class="font-weight-bold mb-0">' + e.emitter_name + '</p>';
             html += '<p class="mb-0">' + e.content + '</p>';
             html += '<p class="small">' + e.date + '</p>';
             html += '</div>';

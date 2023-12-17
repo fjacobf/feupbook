@@ -180,7 +180,7 @@ class GroupChatController extends Controller
         $message->save();
 
         // Broadcast the message
-        broadcast(new NewMessage($message))->toOthers();
+        broadcast(new NewMessage($message, auth()->user()->name))->toOthers();
 
         return response()->json('Message sent');
     }
