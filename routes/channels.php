@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Broadcast;
+use App\Models\GroupChat;
+use App\Models\Message;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +18,12 @@ use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
+});
+
+Broadcast::channel('group-chat.{group_id}', function (User $user, int $group_id) {
+    $groupChat = GroupChat::find($group_id);
+    if ($groupChat) {
+        return $groupChat->members->contains($user);
+    }
+    return false;
 });

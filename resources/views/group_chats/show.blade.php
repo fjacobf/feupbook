@@ -36,7 +36,7 @@
     </div>
 </div>
 
-<script>            
+{{-- <script>            
     document.addEventListener('DOMContentLoaded', function() {
         var chatBox = document.querySelector('#chat');
 
@@ -113,6 +113,22 @@
             request.send(formData);
         });
     });
+</script> --}}
+
+<script type="module">
+    Echo.private('group-chat.{{ $groupChat->group_id }}')
+        .listen('MessageSent', (e) => {
+            let chatBox = document.querySelector('#chat');
+            let html = '';
+            html += '<div class="message ' + (e.message.emitter.user_id === {{ auth()->user()->user_id }} ? 'text-right bg-primary text-white' : 'text-left bg-light') + '">';
+            html += '<p class="font-weight-bold mb-0">' + e.message.emitter.name + '</p>';
+            html += '<p class="mb-0">' + e.message.content + '</p>';
+            html += '<p class="small">' + e.message.date + '</p>';
+            html += '</div>';
+            chatBox.innerHTML += html;
+            scrollToBottom();
+            console.log(e.message);
+        });
 </script>
 <style>
     .chat-box {

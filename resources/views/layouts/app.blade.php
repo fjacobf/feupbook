@@ -14,7 +14,10 @@
         <link href="{{ url('css/bootstrap.min_flatly.css') }}" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-        <script src="{{ asset('js/app.js') }}" defer></script>
+        {{-- use mix to load app.js --}}
+
+        <script src="{{asset('js/app.js')}}"></script>
+        @vite(['resources/js/app.js'])
         <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
