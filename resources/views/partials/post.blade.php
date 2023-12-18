@@ -28,7 +28,7 @@
                 <button class="btn btn-link text-info p-0" onclick="toggleContent({{ $post->post_id }}, 'less')">See Less</button>
             </div>
             @if ($post->image)
-                <img src="{{ asset($post->image) }}" class="rounded mx-auto d-block w-50" alt="">
+                <img src="{{ asset($post->image) }}" class="rounded mx-auto d-block w-50 mt-2" alt="">
             @endif
         </div>
         <div class="d-flex justify-content-end">
