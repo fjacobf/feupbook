@@ -9,10 +9,10 @@
     <div class="d-flex justify-content-center">
         <h3 class="bg-primary text-white rounded mt-3 p-2">Edit Post</h3>
     </div>
-    <form class="container-lg d-flex flex-column align-items-center w-100" enctype="multipart/form-data" action="{{ route('post.update', ['id' => $post->post_id]) }}" method="POST">
+    <form class="container-lg d-flex flex-column align-items-center w-75" enctype="multipart/form-data" action="{{ route('post.update', ['id' => $post->post_id]) }}" method="POST">
         @csrf
         @method('PUT')
-        <div class="d-flex flex-column justify-content-start w-50">
+        <div class="d-flex flex-column justify-content-start w-100">
             <label for="content" class="form-label mb-3 h5">Post Content</label>
             <textarea class="form-control w-100 mb-3" id="content" name="content" rows="3">{{ $post->content }}</textarea>
             @if ($post->image)

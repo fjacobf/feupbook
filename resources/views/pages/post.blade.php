@@ -16,7 +16,7 @@
                             <img src="{{ asset('images/profile_pics/' . $post->user->avatar) }}" class="rounded-circle" style="width: 25px; height: 25px;">
                             <small><a href="{{ route('user.profile', ['id' => $post->user->user_id]) }}" class="link-primary:hover">{{$post->user->name}}</a></small>
                         </div>
-                        <small class="text-muted"><span class="text-muted">@</span>{{ $post->user->username }}</small>
+                        <small class="text-muted d-none d-sm-block"><span class="text-muted">@</span>{{ $post->user->username }}</small>
                         <small class="text-black">{{ time_since($post->created_at) }}</small>
                     </div>
 
@@ -33,40 +33,34 @@
                         @endif
                     </div>
 
-                    <div class="card-footer d-flex justify-content-around">
-                        <div class="d-flex align-items-center custom-btn-container">
-                            @if ($post->isLiked() == true)
-                                <button id="btn-{{ $post->post_id }}" class="btn bi bi-heart-fill custom-btn-like" onclick="handleLikeDislike({{$post->post_id}},'dislike')"></button>
-                            @else
-                                <button id="btn-{{ $post->post_id }}" class="btn bi bi-heart custom-btn-like" onclick="handleLikeDislike({{$post->post_id}},'like')"></button>
-                            @endif
+                    <div class="card-footer d-flex flex-column justify-content-around">
+                        <div class="d-flex align-items-center justify-content-around custom-btn-container">
+                            <div class="likes">
+                                @if ($post->isLiked() == true)
+                                    <button id="btn-{{ $post->post_id }}" class="btn bi bi-heart-fill custom-btn-like" onclick="handleLikeDislike({{$post->post_id}},'dislike')"></button>
+                                @else
+                                    <button id="btn-{{ $post->post_id }}" class="btn bi bi-heart custom-btn-like" onclick="handleLikeDislike({{$post->post_id}},'like')"></button>
+                                @endif
 
-                            <span id="like-count-{{ $post->post_id }}">{{ $post->likesCount() }}</span>
+                                <span id="like-count-{{ $post->post_id }}">{{ $post->likesCount() }}</span>
+                            </div>
+
+                            <div class="comments">
+                                <a href="{{ route('post.show', ['id' => $post->post_id]) }}" class="btn bi bi-chat custom-btn-comment"></a>
+                                <span>{{ $post->commentsCount() }}</span>
+                            </div>
+
+                            <div class="bookmarks">
+                                @if ($post->isBookmarked() == true)
+                                    <button id="btn-bookmark-{{ $post->post_id }}" class="btn bi bi-bookmark-fill custom-btn-bookmark" onclick="handleBookmark({{$post->post_id}},'unbookmark')"></button>
+                                @else
+                                    <button id="btn-bookmark-{{ $post->post_id }}" class="btn bi bi-bookmark custom-btn-bookmark" onclick="handleBookmark({{$post->post_id}},'bookmark')"></button>
+                                @endif
+                                <span id="bookmark-count-{{ $post->post_id }}">{{ $post->bookmarksCount() }}</span>
+                            </div>
                         </div>
-
-                        <div class="d-flex align-items-center custom-btn-container">
-                            <a href="{{ route('post.show', ['id' => $post->post_id]) }}" class="btn bi bi-chat custom-btn-comment"></a>
-                            <span>{{ $post->commentsCount() }}</span>
-                        </div>
-
-                        <div class="d-flex align-items-center custom-btn-container">
-                            @if ($post->isBookmarked() == true)
-                                <form action="{{ route('post.unbookmark', ['id' => $post->post_id]) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button style="color: blue;" class="btn bi bi-bookmark-fill custom-btn-bookmark"></button>
-                                </form>
-                            @else
-                                <form action="{{ route('post.bookmark', ['id' => $post->post_id]) }}" method="POST">
-                                    @csrf
-                                    <button class="btn bi bi-bookmark custom-btn-bookmark"></button>
-                                </form>
-                            @endif
-                            <span>{{ $post->bookmarksCount() }}</span>
-                        </div>
-
                         @can('delete', $post)
-                            <div class="ms-auto">
+                            <div class="d-flex justify-content-end mt-2">
                                 @can('update', $post)
                                     <a href="{{ route('post.edit', ['id' => $post->post_id]) }}" class="btn btn-primary bi-pencil-fill me-2"></a>
                                 @endcan
