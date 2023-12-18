@@ -3,10 +3,10 @@
 @section('sidebar')
 <div class="d-flex flex-column align-sm-start min-vh-100 p-4 bg-light sidebar" id="side_nav">
     <div class="header-box d-flex justify-content-between">
-      <a href="/home" class="text-dark text-decoration-none">
+      <a href="/home" class="text-dark text-decoration-none d-flex align-items-center">
         <span class="fs-3 fw-bold">Feupbook</span>
       </a>
-      <button class="btn-lg d-md-none d-block close-btn"> <i class="bi bi-list"></i> </button>
+      <button class="btn btn-lg d-md-none d-block close-btn"> <i class="bi bi-list"></i> </button>
     </div>
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
