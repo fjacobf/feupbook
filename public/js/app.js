@@ -95,20 +95,28 @@ function toggleContent(postId, action) {
 
 function loadMorePosts() {
     let postList = document.getElementById('post-list');
-    let nextPageUrl = postList.dataset.nextPageUrl;
-    console.log('Next page URL:', nextPageUrl);
-    if (!nextPageUrl) return; 
+    let pageContext = postList.dataset.pageContext;
+    let currentPage = parseInt(postList.dataset.currentPage) + 1;
 
-    fetch(nextPageUrl, {
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
+    let nextPageUrl;
+    if (pageContext === 'home') {
+        nextPageUrl = '/api/loadFeed?page=' + currentPage;
+    } else if (pageContext === 'forYou') {
+        nextPageUrl = '/api/loadForYou?page=' + currentPage;
+    } else {
+        console.error('Unknown page context');
+        return;
+    }
+
+    console.log('Next page URL:', nextPageUrl);
+    if (!nextPageUrl) return;
+
+    fetch(nextPageUrl)
         .then(response => response.json())
         .then(data => {
             const postsHtml = data.posts.join('');
             postList.insertAdjacentHTML('beforeend', postsHtml);
-            postList.dataset.nextPageUrl = data.next_page_url;
+            postList.dataset.currentPage = currentPage;
 
             if (!data.next_page_url) {
                 document.getElementById('load-more').style.display = 'none';
