@@ -18,7 +18,11 @@
                         @can('viewAdminInterface', $user)
                         <a href="{{ route('admin.manageUser', ['id' => $user->user_id]) }}" class="btn btn-danger">Manage User's Account</a>
                         @endcan
-                </div>
+
+                    </div>
+                @can('report', $user)
+                <a href="{{ route('user.showReportForm', ['id' => $user->user_id]) }}" class="btn btn-warning mb-2">Flag User</a>
+                @endcan
                 @if ($user->private)
                 <div class="d-flex justify-content-center alert alert-warning" role="alert">
                     <strong>Private Profile</strong>

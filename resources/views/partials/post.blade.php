@@ -63,6 +63,9 @@
                     @can('update', $post)
                         <a href="{{ route('post.edit', ['id' => $post->post_id]) }}" class="btn btn-primary bi-pencil-fill me-2"></a>
                     @endcan
+
+                    {{-- Report post --}}
+                    <a href="{{ route('post.showReportForm', ['id' => $post->post_id]) }}" class="btn btn-warning bi-flag-fill"></a>
             
                     <form action="{{ route('post.delete', ['id' => $post->post_id]) }}" method="POST" class="d-inline">
                         @csrf

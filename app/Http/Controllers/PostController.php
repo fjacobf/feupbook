@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Mention;
+use App\Models\Report;
 
 class PostController extends Controller
 {
@@ -325,6 +326,40 @@ class PostController extends Controller
       }
       catch(AuthorizationException $e){
         return response()->json(['error' => 'You are not authorized to unbookmark this post'], 403);
+      }
+    }
+
+    public function showReportForm($post_id) {
+      try {
+        $post = Post::findOrFail($post_id);
+
+        $this->authorize('report', $post);
+
+        return view('pages.report', ['post' => $post]);
+      } catch (AuthorizationException $e) {
+        return redirect()->back()->withErrors(['message' => 'You are not authorized to report this post']);
+      }
+    }
+
+    public function submitReport(Request $request, $post_id) {
+      try {
+        $post = Post::findOrFail($post_id);
+
+        $this->authorize('report', $post);
+
+        $validatedData = $request->validate([
+          'report_type' => 'required',
+        ]);
+
+        Report::create([
+          'post_id' => $post->post_id,
+          'date' => now(),
+          'report_type' => $validatedData['report_type'],
+        ]);
+
+        return redirect()->route('post.show', ['id' => $post->post_id])->with('success', 'Post reported successfully!');
+      } catch (AuthorizationException $e) {
+        return redirect()->back()->withErrors(['message' => 'You are not authorized to report this post']);
       }
     }
 }

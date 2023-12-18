@@ -56,6 +56,8 @@ Route::controller(PostController::class)->group(function () {
     Route::delete('/post/{id}/dislike', 'dislike')->name('post.dislike');
     Route::post('/post/{id}/bookmark', 'bookmark')->name('post.bookmark');
     Route::delete('/post/{id}/unbookmark', 'unbookmark')->name('post.unbookmark');
+    Route::get('/post/{id}/report', 'showReportForm')->name('post.showReportForm');
+    Route::post('/post/{id}/submitReport', 'submitReport')->name('post.submitReport');
 });
 
 // Comments
@@ -101,6 +103,8 @@ Route::controller(UserController::class)->group(function () {
     Route::put('/user/{id}/password', 'updatePassword')->name('user.updatePassword');
     Route::get('/user/{id}/bookmarks', 'showBookmarks')->name('user.bookmarks');
     Route::put('/user/{id}/updatePicture', 'updateProfilePicture')->name('user.updateProfilePicture');
+    Route::get('/user/{id}/report', 'showReportForm')->name('user.showReportForm');
+    Route::post('/user/{id}/submitReport', 'submitReport')->name('user.submitReport');
 });
 
 // Search
