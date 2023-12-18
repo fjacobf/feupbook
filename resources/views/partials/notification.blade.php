@@ -1,9 +1,9 @@
 @if($notifications->isEmpty())
     <p>No notifications found.</p>
 @else
-    <div class="card-columns">
+    <div class="d-flex flex-column align-items-center w-100">
         @foreach($notifications as $notification)
-            <div class="card mb-4" style="max-width: 600px;">
+            <div class="card mb-4 w-100" style="max-width: 800px;">
                 @if ($notification->notification_type == 'request_follow')
                     <div class="card-body">
                         <h5 class="card-title">{{ $notification->message }}</h5>
