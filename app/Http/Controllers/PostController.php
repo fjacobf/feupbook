@@ -49,6 +49,7 @@ class PostController extends Controller
           } else {
               $posts = Post::whereHas('user', function($query) use ($user) {
                   $query->where('private', false)
+                        ->where('user_type', '!=', 'suspended')
                         ->where('owner_id', '!=', Auth::id());
               })->with('comments')
                 ->orderBy('created_at', 'desc')->paginate(10);

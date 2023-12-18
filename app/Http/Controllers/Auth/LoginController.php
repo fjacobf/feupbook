@@ -75,7 +75,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
 
-            if (Auth::user()->user_type == 'deleted') {
+            if (Auth::user()->user_type == 'deleted' || Auth::user()->user_type == 'suspended') {
                 Auth::logout();
                 return back()->withErrors([
                     'email' => 'Cannot access account. Please contact support.',
