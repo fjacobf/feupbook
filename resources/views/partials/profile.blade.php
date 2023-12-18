@@ -13,11 +13,15 @@
                 <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 10px;">
                     @can('updateSelf', $user)
                         <a href="{{ route('user.showEditPage', ['id' => $user->user_id])}}" class="btn btn-primary" style="margin-right: 5px;">Edit Profile</a>
-                        @endcan
+                    @endcan
                         
-                        @can('viewAdminInterface', $user)
+                    @can('viewAdminInterface', $user)
                         <a href="{{ route('admin.manageUser', ['id' => $user->user_id]) }}" class="btn btn-danger">Manage User's Account</a>
-                        @endcan
+                    @endcan
+
+                    @can('seeAdminPanel', $user)
+                        <a href="{{ route('admin.index') }}" class="btn btn-info">Admin Zone</a>
+                    @endcan
 
                     </div>
                 @can('report', $user)

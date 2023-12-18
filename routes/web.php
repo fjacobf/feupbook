@@ -116,12 +116,14 @@ Route::controller(SearchController::class)->group(function () {
 
 // Admin Management
 Route::controller(AdminController::class)->group(function () {
+    Route::get('/admin/manage', 'seeAdminPanel')->name('admin.index');
     Route::get('/admin/user/{id}/edit', 'showUserManagement')->name('admin.manageUser');
     Route::post('/admin/user/{id}/edit', 'updateUser')->name('admin.updateUser');
     Route::post('/admin/user/{id}/delete', 'deleteUser')->name('admin.deleteUser');
     Route::put('/admin/user/{id}/restore', 'restoreUser')->name('admin.restoreUser');
     Route::put('/admin/user/{id}/suspend', 'suspendUser')->name('admin.suspendUser');
     Route::put('/admin/user/{id}/unsuspend', 'unsuspendUser')->name('admin.unsuspendUser');
+    Route::delete('/admin/manage/{id}/delete', 'deleteReport')->name('admin.deleteReport');
 });
 
 //notifications
