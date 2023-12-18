@@ -47,6 +47,8 @@ Route::controller(PostController::class)->group(function () {
     Route::get('/post/create', 'create')->name('post.create');
     Route::post('/post/create', 'store')->name('post.store');
     Route::get('/post/bookmarks', 'listBookmarks')->name('post.bookmarks');
+    Route::get('/api/loadFeed', 'loadFeedPosts')->name('post.loadFeed');
+    Route::get('/api/loadForYou', 'loadForYouPosts')->name('post.loadForYou');
     Route::get('/post/{id}', 'show')->name('post.show');
     Route::get('/post/{id}/edit', 'edit')->name('post.edit');
     Route::put('/post/{id}/edit', 'update')->name('post.update');   
