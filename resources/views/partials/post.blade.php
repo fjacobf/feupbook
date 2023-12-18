@@ -34,48 +34,7 @@
         <div class="d-flex justify-content-end">
             <a href="{{ route('post.show', ['id' => $post->post_id]) }}" class="text-info me-2 mb-1">Go to post</a> 
         </div>
-        <div class="card-footer d-flex justify-content-around d-none d-sm-block d-md-block">
-        <div class="d-flex align-items-center justify-content-around custom-btn-container">
-                <div class="likes">
-                    @if ($post->isLiked() == true)
-                        <button id="btn-{{ $post->post_id }}" class="btn bi bi-heart-fill custom-btn-like" onclick="handleLikeDislike({{$post->post_id}},'dislike')"></button>
-                    @else
-                        <button id="btn-{{ $post->post_id }}" class="btn bi bi-heart custom-btn-like" onclick="handleLikeDislike({{$post->post_id}},'like')"></button>
-                    @endif
-
-                    <span id="like-count-{{ $post->post_id }}">{{ $post->likesCount() }}</span>
-                </div>
-
-                <div class="comments">
-                    <a href="{{ route('post.show', ['id' => $post->post_id]) }}" class="btn bi bi-chat custom-btn-comment"></a>
-                    <span>{{ $post->commentsCount() }}</span>
-                </div>
-
-                <div class="bookmarks">
-                    @if ($post->isBookmarked() == true)
-                        <button id="btn-bookmark-{{ $post->post_id }}" class="btn bi bi-bookmark-fill custom-btn-bookmark" onclick="handleBookmark({{$post->post_id}},'unbookmark')"></button>
-                    @else
-                        <button id="btn-bookmark-{{ $post->post_id }}" class="btn bi bi-bookmark custom-btn-bookmark" onclick="handleBookmark({{$post->post_id}},'bookmark')"></button>
-                    @endif
-                    <span id="bookmark-count-{{ $post->post_id }}">{{ $post->bookmarksCount() }}</span>
-                </div>
-            @can('delete', $post)
-                <div class="ms-auto">
-                    @can('update', $post)
-                        <a href="{{ route('post.edit', ['id' => $post->post_id]) }}" class="btn btn-primary bi-pencil-fill me-2"></a>
-                    @endcan
-            
-                    <form action="{{ route('post.delete', ['id' => $post->post_id]) }}" method="POST" class="d-inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger bi-trash-fill" onclick="return confirm('Are you sure you want to delete this post?')"></button>
-                    </form>
-                </div>
-            @endcan
-            </div>
-        </div>
-
-        <div class="card-footer d-flex flex-column justify-content-around d-block d-sm-none">
+        <div class="card-footer d-flex flex-column justify-content-around">
             <div class="d-flex align-items-center justify-content-around custom-btn-container">
                 <div class="likes">
                     @if ($post->isLiked() == true)
@@ -101,9 +60,8 @@
                     <span id="bookmark-count-{{ $post->post_id }}">{{ $post->bookmarksCount() }}</span>
                 </div>
             </div>
-
             @can('delete', $post)
-                <div class="d-flex justify-content-center mt-2">
+                <div class="d-flex justify-content-end mt-2">
                     @can('update', $post)
                         <a href="{{ route('post.edit', ['id' => $post->post_id]) }}" class="btn btn-primary bi-pencil-fill me-2"></a>
                     @endcan
@@ -116,7 +74,6 @@
                 </div>
             @endcan
         </div>
-
     </div>
 </div>
 
