@@ -7,6 +7,8 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use App\Models\Message;
 use App\Models\User;
+use App\Events\MessageSent;
+use App\Events\NewMessage;
 
 class GroupChatController extends Controller
 {
@@ -177,7 +179,8 @@ class GroupChatController extends Controller
         $message->viewed = false;
         $message->save();
 
-        // TODO: IMPLEMENT AJAX IN MESSAGE SENT
+        // Broadcast the message
+        broadcast(new NewMessage($message, auth()->user()->name))->toOthers();
 
         return response()->json('Message sent');
     }
