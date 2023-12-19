@@ -11,6 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 use App\Models\FollowRequest;
 use App\Models\Post;
+use Illuminate\Support\Str;
 
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -31,6 +32,9 @@ class User extends Authenticatable // lower case plural
         'avatar',
         'private',
         'user_type',
+        'provider',
+        'provider_id',
+        'provider_token',
     ];
 
     protected $hidden = [
@@ -43,6 +47,19 @@ class User extends Authenticatable // lower case plural
     ];
 
     protected $primaryKey = 'user_id';
+
+    public static function generateUserName($username){
+        if($username === null){
+            $username = Str::lower(Str::random(8));
+        }
+
+        if(User::where('username', $username)->exists()){
+            $newUsername = $username . Str::lower(Str::random(3));
+            $username = User::generateUserName($newUsername);
+        }
+
+        return $username;
+    }
 
     public function getRouteKeyName() {
         return 'user_id';
