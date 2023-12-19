@@ -39,12 +39,19 @@
                     <a href="{{ route('user.profile', ['id' => $member->user_id]) }}">
                         {{ $member->name }}
                     </a>
+                    @if ($member->user_id !== $groupChat->owner_id)
+                        <form method="POST" action="{{ route('group-chats.removeMember.api', ['groupChat' => $groupChat->group_id]) }}" style="display: inline;">
+                            @csrf
+                            <input type="hidden" name="username" value="{{ $member->username }}">
+                            <button type="submit" class="btn btn-danger">Remove</button>
+                        </form>
+                    @endif
                 </li>
             @endforeach
         </ul>
 
         <h3>Waiting for these users to accept the invite:</h3>
-        <ul>
+        <ul id="waitingList">
             @foreach ($waitingMembers as $pendingMember)
                 <li>
                     <a href="{{ route('user.profile', ['id' => $pendingMember->user_id]) }}">
@@ -54,6 +61,106 @@
             @endforeach
         </ul>
 
+        <h3>Search and add a user to the group chat</h3>
+        <input type="text" id="searchUserInput" placeholder="Search for users">
+        <ul id="searchResults"></ul>
+
     </div>
 </div>
+
+<script>
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const listItem = this.closest('li');
+
+            fetch(this.action, {
+                method: 'POST',
+                body: new FormData(this),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': this.querySelector('input[name="_token"]').value
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Handle the response data here
+                console.log(data);
+                // Remove the list item from the DOM
+                listItem.remove();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+
+    document.querySelector('#searchUserInput').addEventListener('input', function(event) {
+        const query = this.value;
+        fetch(`{{ route('search_json.api') }}?query=${query}&groupChat={{ $groupChat->group_id }}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const searchResults = document.querySelector('#searchResults');
+            searchResults.innerHTML = '';
+            data.forEach(user => {
+                // Check if the user is already in the group chat or waiting to accept the invite
+                const isUserInGroupChat = document.querySelector(`#groupChatList a[href="/profile/${user.username}"]`);
+                const isUserInWaitingList = document.querySelector(`#waitingList a[href="/profile/${user.username}"]`);
+                if (!isUserInGroupChat && !isUserInWaitingList) {
+                    const listItem = document.createElement('li');
+                    const userLink = document.createElement('a');
+                    userLink.href = `/profile/${user.username}`;
+                    userLink.textContent = user.username;
+                    listItem.appendChild(userLink);
+                    const addButton = document.createElement('button');
+                    addButton.textContent = 'Add';
+                    addButton.addEventListener('click', function() {
+                        fetch(`{{ route('group-chats.addMember.api', ['groupChat' => $groupChat->group_id]) }}`, {
+                            method: 'POST',
+                            body: JSON.stringify({ username: user.username }),
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Handle the response data here
+                            console.log(data);
+                            // Remove the list item from the search results
+                            listItem.remove();
+                            // Add the user to the waiting list
+                            const waitingList = document.querySelector('#waitingList');
+                            const waitingListItem = document.createElement('li');
+                            const waitingUserLink = document.createElement('a');
+                            waitingUserLink.href = `/profile/${user.username}`;
+                            waitingUserLink.textContent = user.username;
+                            waitingListItem.appendChild(waitingUserLink);
+                            waitingList.appendChild(waitingListItem);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                    });
+                    listItem.appendChild(addButton);
+                    searchResults.appendChild(listItem);
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+</script>
 @endsection

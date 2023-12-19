@@ -138,3 +138,4 @@ Route::post('/api/group-chats/{groupChat}/update', [GroupChatController::class, 
 Route::post('/api/group-chats/{groupChat}/accept-invite', [GroupChatController::class, 'acceptInvite'])->name('group-chats.acceptInvite.api');
 Route::post('/api/group-chats/{groupChat}/reject-invite', [GroupChatController::class, 'rejectInvite'])->name('group-chats.rejectInvite.api');
 Route::delete('/api/group-chats/{groupChat}/delete', [GroupChatController::class, 'delete'])->name('group-chats.delete.api');
+Route::get('/api/group-chats/{groupChat}/members', [GroupChatController::class, 'getMembers'])->name('group-chats.getMembers.api');
