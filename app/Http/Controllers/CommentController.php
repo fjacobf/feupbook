@@ -45,8 +45,6 @@ class CommentController extends Controller
       try
       {  
         $comment = Comment::findOrFail($id);
-        
-        Log::info($comment->comment_id);
 
         $this->authorize('delete', $comment);
 
@@ -65,24 +63,39 @@ class CommentController extends Controller
     }
 
     public function like($id) {
-      $authUser = Auth::user();
-      $comment = Comment::find($id);
+      try{
+        $comment = Comment::findorFail($id);
 
-      $commentLike = new CommentLike([
-              'user_id' => $authUser->user_id,
-              'comment_id' => $comment->comment_id
-          ]);
+        $this->authorize('update', $comment);
+        
+        $authUser = Auth::user();
+
+        $commentLike = new CommentLike([
+                'user_id' => $authUser->user_id,
+                'comment_id' => $comment->comment_id
+            ]);
 
           $commentLike->save();
-      
-      return redirect()->back();
+
+          return response()->json(['status' => 200]);
+        
+      }
+      catch(AuthorizationException $e){
+        return response()->json(['error' => 'You are not authorized to like this comment'], 403);
+      }
   }
 
     public function dislike($id) {
-      $authUser = Auth::user();
-      $comment = Comment::find($id);
-      $commentlike = CommentLike::where('user_id', $authUser->user_id)->where('comment_id', $comment->comment_id)->delete();
+      try{
+        $comment = Comment::findorFail($id);
 
-      return redirect()->back();
+        $this->authorize('update', $comment);
+        $authUser = Auth::user();
+        $commentlike = CommentLike::where('user_id', $authUser->user_id)->where('comment_id', $comment->comment_id)->delete();
+        return response()->json(['status' => 200]);
+      }
+      catch(AuthorizationException $e){
+        return response()->json(['error' => 'You are not authorized to dislike this comment'], 403);
+      }
   }
 }

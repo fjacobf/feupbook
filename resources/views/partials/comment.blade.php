@@ -17,23 +17,13 @@
                             onclick="return confirm('Are you sure you want to delete this comment?')"><i style="color: red"
                                 class="bi bi-trash-fill"></i>
                         </button>
-                        <input type="hidden" name="comment_id" id="comment_id_{{ $comment->comment_id }}" value="{{ $comment->comment_id }}">
+                        <input type="hidden" name="comment_id" id="comment_id_{{ $comment->comment_id }}" value="{{ $comment->commxent_id }}">
                     </form>
                 @endcan
                 @if ($comment->isLiked() == true)
-                <form action="{{ route('comment.dislike', ['id' => $comment->comment_id]) }}" method="POST">
-                    @csrf
-                    <button class="btn">
-                        <i style="color: red" class="bi bi-heart-fill"></i>
-                    </button>
-                </form>
+                <button id="btn-comment{{ $comment->comment_id }}" class="btn bi bi-heart-fill custom-btn-like" onclick="handleLikeDislikeComment({{$comment->comment_id}},'dislike')"></button>
                 @else
-                    <form action="{{ route('comment.like', ['id' => $comment->comment_id]) }}" method="POST">
-                        @csrf
-                        <button class="btn">
-                            <i style="color: red" class="bi bi-heart"></i>
-                        </button>
-                    </form>
+                    <button id="btn-comment{{ $comment->comment_id }}" class="btn bi bi-heart custom-btn-like" onclick="handleLikeDislikeComment({{$comment->comment_id}},'like')"></button>
                 @endif
             </div>
         </div>
@@ -78,19 +68,9 @@
                     </form>
                 @endcan
                 @if ($reply->isLiked() == true)
-                    <form action="{{ route('comment.dislike', ['id' => $reply->comment_id]) }}" method="POST">
-                        @csrf
-                        <button class="btn">
-                            <i style="color: red" class="bi bi-heart-fill"></i>
-                        </button>
-                    </form>
+                <button id="btn-comment{{ $reply->comment_id }}" class="btn bi bi-heart-fill custom-btn-like" onclick="handleLikeDislikeComment({{$reply->comment_id}},'dislike')"></button>
                 @else
-                    <form action="{{ route('comment.like', ['id' => $reply->comment_id]) }}" method="POST">
-                        @csrf
-                        <button class="btn">
-                            <i style="color: red" class="bi bi-heart"></i>
-                        </button>
-                    </form>
+                    <button id="btn-comment{{ $reply->comment_id }}" class="btn bi bi-heart custom-btn-like" onclick="handleLikeDislikeComment({{$reply->comment_id}},'like')"></button>
                 @endif
             </div>
         </div>
@@ -112,4 +92,5 @@
             rep.style.display = "none";
         }
     }
+
 </script>

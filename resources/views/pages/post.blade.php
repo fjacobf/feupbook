@@ -83,14 +83,15 @@
                             <input type="hidden" name="comment_id" id="comment_id" value="{{ NULL }}">
                             <button type="submit" class="btn btn-primary ms-2">Comment</button>
                         </form>
-
-                        @forelse($post->comments()->orderBy('created_at', 'desc')->get() as $comment)
-                        @include('partials.comment', ['comment' => $comment])
-                        @empty
-                            <div class="d-flex justify-content-center">
-                                <p class="text-secondary mt-3 mb-0">There are no comments on this post.</p>
-                            </div>
-                        @endforelse
+                        <div id="comments">
+                            @forelse($post->comments()->orderBy('created_at', 'desc')->get() as $comment)
+                            @include('partials.comment', ['comment' => $comment])
+                            @empty
+                                <div class="d-flex justify-content-center">
+                                    <p class="text-secondary mt-3 mb-0">There are no comments on this post.</p>
+                                </div>
+                            @endforelse
+                        </div>
                     </div>
                 </div>
             </div>
