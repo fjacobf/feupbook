@@ -27,7 +27,7 @@
                     @csrf
                     <div class="form-group">
                         <label for="content">Message:</label>
-                        <textarea class="form-control" id="content" name="content" required></textarea>
+                        <input class="form-control" id="content" name="content" required></input>
                     </div>
                     <button type="submit" class="btn btn-primary">Send</button>
                 </form>
@@ -36,7 +36,7 @@
     </div>
 </div>
 
-<script>            
+{{-- <script>            
     document.addEventListener('DOMContentLoaded', function() {
         var chatBox = document.querySelector('#chat');
 
@@ -51,33 +51,17 @@
         let message_length = 0;
 
         setInterval(function() {
-            var xhr = new XMLHttpRequest();
             
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        let messages = JSON.parse(xhr.responseText);
-                        let html = '';
-                        if(messages.length > message_length) {
-                            messages.forEach(function(message) {
-                                html += '<div class="message ' + (message.emitter.user_id === {{ auth()->user()->user_id }} ? 'text-right bg-primary text-white' : 'text-left bg-light') + '">';
-                                html += '<p class="font-weight-bold mb-0">' + message.emitter.name + '</p>';
-                                html += '<p class="mb-0">' + message.content + '</p>';
-                                html += '<p class="small">' + message.date + '</p>';
-                                html += '</div>';
-                            });
-                            chatBox.innerHTML = html;
-                            message_length = messages.length;
-                            scrollToBottom();
-                        }
-                    }
-                }
-            };
-            
-            xhr.open('GET', '/group-chats/{{ $groupChat->group_id }}/messages', true);
-            xhr.send();
         }, 200);
     });
+</script> --}}
+
+<script type="module">
+    var chatBox = document.querySelector('#chat');
+
+    function scrollToBottom() {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         var form = document.querySelector('#messageForm');
@@ -112,7 +96,41 @@
     
             request.send(formData);
         });
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/group-chats/{{ $groupChat->group_id }}/messages', true);
+        xhr.send();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    let messages = JSON.parse(xhr.responseText);
+                    let html = '';
+                    messages.forEach(function(message) {
+                        html += '<div class="message ' + (message.emitter.user_id === {{ auth()->user()->user_id }} ? 'text-right bg-primary text-white' : 'text-left bg-light') + '">';
+                        html += '<p class="font-weight-bold mb-0">' + message.emitter.name + '</p>';
+                        html += '<p class="mb-0">' + message.content + '</p>';
+                        html += '<p class="small">' + message.date + '</p>';
+                        html += '</div>';
+                    });
+                    chatBox.innerHTML = html;
+                    scrollToBottom();
+                }
+            }
+        };
     });
+
+    Echo.private('group-chat.' + {{ $groupChat->group_id }})
+        .listen('NewMessage', (e) => {
+            console.log(e);
+            let html = '';
+            html += '<div class="message ' + (e.emitter_id === {{ auth()->user()->user_id }} ? 'text-right bg-primary text-white' : 'text-left bg-light') + '">';
+            html += '<p class="font-weight-bold mb-0">' + e.emitter_name + '</p>';
+            html += '<p class="mb-0">' + e.content + '</p>';
+            html += '<p class="small">' + e.date + '</p>';
+            html += '</div>';
+            chatBox.innerHTML += html;
+            scrollToBottom();
+        });
 </script>
 <style>
     .chat-box {
