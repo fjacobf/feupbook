@@ -26,19 +26,6 @@
     </head>
     <body>
         <div class="d-flex vh-100 overflow-hidden">
-            @if ($errors->any())
-                <div class="d-flex justify-content-center mt-2">
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="max-width: 400px;">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                </div>
-            @endif
-
             @yield('sidebar')
             
             <div class="container-fluid d-flex flex-column w-100 p-0">
@@ -49,7 +36,29 @@
                         </div>
                     </nav>
                 </div>
-            
+
+                @if ($errors->any())
+                    <div class="d-flex justify-content-center mt-2">
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="max-width: 400px;">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                @endif
+
+                @if(session('success'))
+                    <div class="d-flex justify-content-center mt-2">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" style="max-width: 400px;">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
+                @endif
+
                 @yield('content')
             </div>
         </div>
