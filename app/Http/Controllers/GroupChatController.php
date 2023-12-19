@@ -107,8 +107,8 @@ class GroupChatController extends Controller
         // Save the group chat
         $groupChat->save();
 
-        // Redirect to the group chat page
-        return redirect('/group-chats/' . $groupChat->group_id);
+        // return json response that removed member
+        return response()->json('Member added');  
     }
 
     public function removeMember(Request $request, GroupChat $groupChat)
@@ -127,8 +127,7 @@ class GroupChatController extends Controller
         // Save the group chat
         $groupChat->save();
 
-        // Redirect to the group chat page
-        return redirect('/group-chats/' . $groupChat->group_id);
+        return response()->json('Removed member');
     }
 
     public function update(Request $request, GroupChat $groupChat)
