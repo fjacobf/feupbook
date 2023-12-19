@@ -43,4 +43,9 @@ class Notification extends Model
         return $this->belongsTo(Comment::class, 'comment_id', 'comment_id');
     }
 
+    public function group(): BelongsTo
+    {
+        return $this->belongsTo(GroupChat::class, 'group_id', 'group_id');
+    }
+
 }
