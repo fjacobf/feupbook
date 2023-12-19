@@ -227,4 +227,9 @@ class GroupChatController extends Controller
             return redirect()->back()->withErrors(['message' => 'You are not a member of this group chat.']);
         }
     }
+
+    public function getMembers(GroupChat $groupChat)
+    {
+        return response()->json($groupChat->acceptedMembers()->get());
+    }
 }
