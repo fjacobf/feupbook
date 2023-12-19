@@ -109,7 +109,6 @@
       </a>
       @if (Auth::check())
         <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-          <li><a class="dropdown-item" href="#">Add another account</a></li>
           <li><a class="dropdown-item" href="{{url('/logout')}}">Sign out</a></li>
         </ul>
       @else
