@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\ProviderController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\PostController;
@@ -79,6 +80,9 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
+
+Route::get('/auth/{provider}/redirect', [ProviderController::class, 'redirect']);
+Route::get('/auth/{provider}/callback', [ProviderController::class, 'callback']);
 
 // User
 Route::controller(UserController::class)->group(function () {

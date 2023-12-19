@@ -30,15 +30,23 @@
                 <label class="form-check-label" for="remember">Remember Me</label>
             </div>
 
-            <button type="submit" class="btn btn-primary">Login</button>
-            <a class="btn btn-outline-secondary text-decoration-none" href="{{ route('register') }}">Register</a>
+            <div class="d-flex flex-column w-100">
+                <div class="d-flex justify-content-start">
+                    <button type="submit" class="btn btn-primary me-2 fs-6">Login</button>
+                    <a class="btn btn-outline-secondary text-decoration-none fs-6" href="{{ route('register') }}">Register</a>
+                </div>
+                <a href="/auth/google/redirect" class="btn w-100 text-white mt-2" style="max-width: 181px; background-color: #dd4b39;">
+                    <i class="fa-brands fa-google"></i> 
+                    <span class="ms-2 fs-6">Google</span>
+                </a>
+            </div>
 
             @if (session('success'))
                 <p class="success mt-3">
                     {{ session('success') }}
                 </p>
             @endif
-        </form>
+        </form> 
 
     <div class="login-link mt-3 text-center">
         Don't have an account? <a href="{{ route('register') }}" class="sign-in-link">Sign up</a>
