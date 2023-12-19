@@ -12,11 +12,13 @@ use App\Http\Controllers\CommentController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\FollowRequestController;
 use App\Http\Controllers\NotificationController;
 
 // Chats
 use App\Http\Controllers\GroupChatController;
 use App\Http\Controllers\MessageController;
+use App\Models\FollowRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -132,3 +134,10 @@ Route::post('/api/group-chats/{groupChat}/update', [GroupChatController::class, 
 Route::post('/api/group-chats/{groupChat}/accept-invite', [GroupChatController::class, 'acceptInvite'])->name('group-chats.acceptInvite.api');
 Route::post('/api/group-chats/{groupChat}/reject-invite', [GroupChatController::class, 'rejectInvite'])->name('group-chats.rejectInvite.api');
 Route::delete('/api/group-chats/{groupChat}/delete', [GroupChatController::class, 'delete'])->name('group-chats.delete.api');
+
+
+//notifications
+Route::controller(FollowRequestController::class)->group(function () {
+    Route::post('/api/follow-request/{user_id}/accept', 'accept')->name('follow-request.Accept.api');
+    Route::post('/api/follow-request/{user_id}/reject', 'reject')->name('follow-request.Reject.api');
+});

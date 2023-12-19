@@ -101,7 +101,7 @@ function loadMorePosts() {
 
     fetch(nextPageUrl, {
         headers: {
-            'X-Requested-With': 'XMLHttpRequest'
+            'X-Requested-With': 'XMLHttpsRequest'
         }
     })
         .then(response => response.json())

@@ -334,11 +334,11 @@ BEGIN
 
     if rcv_privacy = true THEN
         if NEW.status = 'waiting' THEN
-            INSERT INTO notifications (notified_user, message, date, notification_type)
-            VALUES (NEW.rcv_id, 'You have a new follow request from ' || reciever_username, CURRENT_DATE, 'request_follow');
+            INSERT INTO notifications (notified_user, message, date, notification_type, user_id)
+            VALUES (NEW.rcv_id, 'You have a new follow request from ' || reciever_username, CURRENT_DATE, 'request_follow', NEW.req_id);
         else
-            INSERT INTO notifications (notified_user, message, date, notification_type, viewed)
-            VALUES (NEW.rcv_id, 'You have a new follow request from ' || reciever_username, CURRENT_DATE, 'request_follow', TRUE);
+            INSERT INTO notifications (notified_user, message, date, notification_type, viewed, user_id)
+            VALUES (NEW.rcv_id, 'You have a new follow request from ' || reciever_username, CURRENT_DATE, 'request_follow', TRUE, NEW.req_id);
         end if;
     ELSE
         INSERT INTO notifications (notified_user, message, date, notification_type, user_id)
