@@ -34,6 +34,22 @@
         </form>
         {{-- div to say if group-chat was updated or not --}}
         <div id="updateMessage"></div>
+
+        <form method="POST" class="delete-form" action="{{ route('group-chats.delete', $groupChat->group_id) }}">
+            @csrf
+            @method('DELETE')
+            <input type="hidden" name="group_id" value="{{ $groupChat->group_id }}">
+            <button type="submit" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+        </form>
+        
+        <script>
+        function confirmDelete() {
+            if (!confirm("Are you sure you want to delete this group chat?")) {
+                event.preventDefault();
+            }
+        }
+        </script>
+
         <h3 class="mt-2">Users accepted in this group chat:</h3>
         <ul>
             @foreach ($acceptedMembers as $member)
@@ -71,7 +87,7 @@
 </div>
 
 <script>
-    document.querySelectorAll('form').forEach(form => {
+    document.querySelectorAll('form:not(.delete-form)').forEach(form => {
         form.addEventListener('submit', function(event) {
             event.preventDefault();
 
