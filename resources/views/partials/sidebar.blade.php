@@ -105,7 +105,7 @@
         @else
           <img src="{{ asset('images/profile_pics/default_avatar.png') }}" alt="" width="48" height="48" class="rounded-circle profile-pic me-3">
         @endif
-        <strong>{{ $currentUser ? $currentUser->username : 'Guest' }}</strong>
+        <strong>{{ $currentUser ? (strlen($currentUser->username) > 11 ? substr($currentUser->username, 0, 11) . '...' : $currentUser->username) : 'Guest' }}</strong>
       </a>
       @if (Auth::check())
         <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
