@@ -53,11 +53,11 @@
                                     <h5 class="card-text">{{ $notification->message }} <span class="card-text text-secondary">{{ time_since($notification->date)}}</span></h5>
                                 </a>
                             <div class="d-flex align-items-center buttons">
-                                <form action="{{ route('group-chats.acceptInvite.api', $group->group_id) }}" method="POST">
+                                <form action="{{ route('group-chats.acceptInvite', $group->group_id) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="btn btn-success">Accept</button>
                                 </form>
-                                <form action="{{ route('group-chats.rejectInvite.api', $group->group_id) }}" method="POST">
+                                <form action="{{ route('group-chats.rejectInvite', $group->group_id) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="btn btn-danger">Reject</button>
                                 </form>

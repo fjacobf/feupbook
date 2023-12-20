@@ -14,6 +14,8 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\GroupChatController;
+use App\Http\Controllers\FollowRequestController;
+
 
 // Chats
 use App\Http\Controllers\Auth\LoginController;
@@ -155,3 +157,9 @@ Route::post('/group-chats/{groupChat}/accept-invite', [GroupChatController::clas
 Route::post('/group-chats/{groupChat}/reject-invite', [GroupChatController::class, 'rejectInvite'])->name('group-chats.rejectInvite');
 Route::delete('/group-chats/{groupChat}/delete', [GroupChatController::class, 'delete'])->name('group-chats.delete');
 Route::get('/group-chats/{groupChat}/members', [GroupChatController::class, 'getMembers'])->name('group-chats.getMembers');
+
+//notifications
+Route::controller(FollowRequestController::class)->group(function () {
+    Route::post('/api/follow-request/{user_id}/accept', 'accept')->name('follow-request.Accept.api');
+    Route::post('/api/follow-request/{user_id}/reject', 'reject')->name('follow-request.Reject.api');
+});
