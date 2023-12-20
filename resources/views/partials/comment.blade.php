@@ -38,8 +38,8 @@
                 </form>
             </div>
             <div style="gap:10px;" class="d-flex align-items-center ms-2">
-                <p class="m-0 comment-date">6d</p>
-                <p class="m-0 comment-likes">{{$comment->likeCounts()}} likes</p>
+                <p class="m-0 comment-date">{{time_since($comment->created_at)}}</p>
+                <p id="comment-like-count-{{$comment->comment_id}}" class="m-0 comment-likes">{{$comment->likeCounts()}} likes</p>
                 <button  class="btn btn-primary btn-sm" onclick="reply({{ $comment->comment_id }})">Reply</button>
             </div>
         @endcan
@@ -75,8 +75,8 @@
             </div>
         </div>
         <div style="gap:10px;" class="d-flex align-items-center ms-2">
-            <p class="m-0 comment-date">6d</p>
-            <p class="m-0 comment-likes"> {{$reply->likeCounts()}} likes</p>
+            <p class="m-0 comment-date">{{time_since($reply->created_at)}}</p>
+            <p id="comment-like-count-{{$reply->comment_id}}" class="m-0 comment-likes"> {{$reply->likeCounts()}} likes</p>
         </div>
     </div>
 @endforeach

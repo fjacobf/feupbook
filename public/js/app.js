@@ -49,10 +49,16 @@ function handleLikeDislikeComment(commentId, action) {
             button.setAttribute('onclick', 'handleLikeDislikeComment(' + commentId + ', \'dislike\')');
             button.classList.remove('bi-heart');
             button.classList.add('bi-heart-fill');
+            let likeCount = parseInt(document.getElementById('comment-like-count-' + commentId).textContent);
+            likeCount++;
+            document.getElementById('comment-like-count-' + commentId).textContent = likeCount + " likes";
         } else {
             button.setAttribute('onclick', 'handleLikeDislikeComment(' + commentId + ', \'like\')');
             button.classList.remove('bi-heart-fill');
             button.classList.add('bi-heart');
+            let likeCount = parseInt(document.getElementById('comment-like-count-' + commentId).textContent);
+            likeCount--;
+            document.getElementById('comment-like-count-' + commentId).textContent = likeCount + " likes";
         }
     })
 }

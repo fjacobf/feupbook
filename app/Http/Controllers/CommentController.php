@@ -90,8 +90,11 @@ class CommentController extends Controller
         $comment = Comment::findorFail($id);
 
         $this->authorize('update', $comment);
+
         $authUser = Auth::user();
-        $commentlike = CommentLike::where('user_id', $authUser->user_id)->where('comment_id', $comment->comment_id)->delete();
+
+        CommentLike::where('user_id', $authUser->user_id)->where('comment_id', $comment->comment_id)->delete();
+        
         return response()->json(['status' => 200]);
       }
       catch(AuthorizationException $e){
