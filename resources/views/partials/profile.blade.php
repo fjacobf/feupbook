@@ -14,7 +14,7 @@
                         <h3 class="text-secondary"><span>@</span>{{ $user->username }}</h3>
                     </div>
                     <div class="profile-picture mt-4">
-                        <img src="{{ asset('images/profile_pics/' . $user->avatar) }}" class="rounded-circle profile-pic-border" style="width: 150px; height: 150px;">
+                        <img src="{{ asset('images/profile_pics/' . $user->avatar) }}" class="rounded-circle profile-pic-border" alt="Profile Picture" style="width: 150px; height: 150px;">
                     </div>
                 </div>
                 <div class="d-flex" style="margin-bottom: 10px;">
