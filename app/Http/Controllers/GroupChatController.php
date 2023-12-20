@@ -225,7 +225,9 @@ class GroupChatController extends Controller
         // Check if the user is a member of the group chat
         if ($groupChat->members->contains($user)) {
             // Update the status in the pivot table
-            $groupChat->members()->updateExistingPivot($user->user_id, ['status' => 'rejected']);
+            // $groupChat->members()->updateExistingPivot($user->user_id, ['status' => 'rejected']);
+            // remove the user from the group chat
+            $groupChat->removeMember($user);
             
             return redirect()->back()->with('message', 'You have rejected the invite.');
         } else {
