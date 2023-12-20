@@ -5,13 +5,13 @@
 <div class="container d-flex flex-column justify-content-center m-auto w-75" style="max-width: 900px">
     <h1 class="mt-4">Help Center</h1>
     <p>
-        Welcome to the FEUPBook Help Center. If you have any questions or issues, you're in the right place.
+        Welcome to the FEUPbook Help Center. If you have any questions or issues, you're in the right place.
         Check out the information below or contact us for further assistance.
     </p>
 
     <h2>Frequently Asked Questions</h2>
     <p>
-        Explore our FAQ section to find answers to common questions about using FEUPBook.
+        Explore our FAQ section to find answers to common questions about using FEUPbook.
         If you can't find what you're looking for, feel free to reach out to us.
     </p>
 
