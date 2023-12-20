@@ -7,6 +7,8 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use App\Models\Message;
 use App\Models\User;
+use App\Events\MessageSent;
+use App\Events\NewMessage;
 
 class GroupChatController extends Controller
 {
@@ -99,14 +101,18 @@ class GroupChatController extends Controller
         // Find the User model for the username
         $user = User::where('username', $validatedData['username'])->first();
 
+        if($groupChat->members->contains($user)) {
+            return response()->json('Member already added');
+        }
+
         // Add the user to the group chat
         $groupChat->addMember($user);
 
         // Save the group chat
         $groupChat->save();
 
-        // Redirect to the group chat page
-        return redirect('/group-chats/' . $groupChat->group_id);
+        // return json response that removed member
+        return response()->json('Member added');  
     }
 
     public function removeMember(Request $request, GroupChat $groupChat)
@@ -125,8 +131,7 @@ class GroupChatController extends Controller
         // Save the group chat
         $groupChat->save();
 
-        // Redirect to the group chat page
-        return redirect('/group-chats/' . $groupChat->group_id);
+        return response()->json('Removed member');
     }
 
     public function update(Request $request, GroupChat $groupChat)
@@ -143,7 +148,8 @@ class GroupChatController extends Controller
         $groupChat->save();
 
         // Redirect to the group chat page
-        return redirect('/group-chats/' . $groupChat->group_id);
+        // return redirect('/group-chats/' . $groupChat->group_id);
+        return response()->json('Group chat updated');
     }
 
     public function delete(Request $request, GroupChat $groupChat)
@@ -177,7 +183,8 @@ class GroupChatController extends Controller
         $message->viewed = false;
         $message->save();
 
-        // TODO: IMPLEMENT AJAX IN MESSAGE SENT
+        // Broadcast the message
+        broadcast(new NewMessage($message, auth()->user()->name))->toOthers();
 
         return response()->json('Message sent');
     }
@@ -224,5 +231,10 @@ class GroupChatController extends Controller
         } else {
             return redirect()->back()->withErrors(['message' => 'You are not a member of this group chat.']);
         }
+    }
+
+    public function getMembers(GroupChat $groupChat)
+    {
+        return response()->json($groupChat->acceptedMembers()->get());
     }
 }

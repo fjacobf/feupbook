@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\ProviderController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CardController;
 
@@ -48,6 +50,8 @@ Route::controller(PostController::class)->group(function () {
     Route::get('/post/create', 'create')->name('post.create');
     Route::post('/post/create', 'store')->name('post.store');
     Route::get('/post/bookmarks', 'listBookmarks')->name('post.bookmarks');
+    Route::get('/api/loadFeed', 'loadFeedPosts')->name('post.loadFeed');
+    Route::get('/api/loadForYou', 'loadForYouPosts')->name('post.loadForYou');
     Route::get('/post/{id}', 'show')->name('post.show');
     Route::get('/post/{id}/edit', 'edit')->name('post.edit');
     Route::put('/post/{id}/edit', 'update')->name('post.update');   
@@ -89,6 +93,9 @@ Route::controller(RegisterController::class)->group(function () {
     Route::post('/register', 'register');
 });
 
+Route::get('/auth/{provider}/redirect', [ProviderController::class, 'redirect']);
+Route::get('/auth/{provider}/callback', [ProviderController::class, 'callback']);
+
 // User
 Route::controller(UserController::class)->group(function () {
     Route::get('/user/{id}', 'show')->name('user.profile');
@@ -110,7 +117,7 @@ Route::controller(UserController::class)->group(function () {
 // Search
 Route::controller(SearchController::class)->group(function () {
     Route::get('/search','show')->name('search.show');
-    Route::get('/api/user_json', 'search_json')->name('search_json.api');
+    Route::get('/user_json', 'search_json')->name('search_json');
     Route::get('/api/user', 'search')->name('search.api');
 });
 
@@ -141,10 +148,11 @@ Route::get('/group-chats/{groupChat}', [GroupChatController::class, 'show'])->na
 Route::get('/group-chats/{groupChat}/edit', [GroupChatController::class, 'edit'])->name('group-chats.edit');
 Route::post('/group-chats/{groupChat}/send-message', [GroupChatController::class, 'sendMessage'])->name('group-chats.sendMessage');
 Route::get('/group-chats/{groupChat}/messages', [GroupChatController::class, 'getMessages'])->name('group-chats.getMessages');
-Route::post('/api/group-chats/create', [GroupChatController::class, 'create'])->name('group-chats.create.api');
-Route::post('/api/group-chats/{groupChat}/add-member', [GroupChatController::class, 'addMember'])->name('group-chats.addMember.api');
-Route::post('/api/group-chats/{groupChat}/remove-member', [GroupChatController::class, 'removeMember'])->name('group-chats.removeMember.api');
-Route::post('/api/group-chats/{groupChat}/update', [GroupChatController::class, 'update'])->name('group-chats.update.api');
-Route::post('/api/group-chats/{groupChat}/accept-invite', [GroupChatController::class, 'acceptInvite'])->name('group-chats.acceptInvite.api');
-Route::post('/api/group-chats/{groupChat}/reject-invite', [GroupChatController::class, 'rejectInvite'])->name('group-chats.rejectInvite.api');
-Route::delete('/api/group-chats/{groupChat}/delete', [GroupChatController::class, 'delete'])->name('group-chats.delete.api');
+Route::post('/group-chats/create', [GroupChatController::class, 'create'])->name('group-chats.create');
+Route::post('/group-chats/{groupChat}/add-member', [GroupChatController::class, 'addMember'])->name('group-chats.addMember');
+Route::post('/group-chats/{groupChat}/remove-member', [GroupChatController::class, 'removeMember'])->name('group-chats.removeMember');
+Route::post('/group-chats/{groupChat}/update', [GroupChatController::class, 'update'])->name('group-chats.update');
+Route::post('/group-chats/{groupChat}/accept-invite', [GroupChatController::class, 'acceptInvite'])->name('group-chats.acceptInvite');
+Route::post('/group-chats/{groupChat}/reject-invite', [GroupChatController::class, 'rejectInvite'])->name('group-chats.rejectInvite');
+Route::delete('/group-chats/{groupChat}/delete', [GroupChatController::class, 'delete'])->name('group-chats.delete');
+Route::get('/group-chats/{groupChat}/members', [GroupChatController::class, 'getMembers'])->name('group-chats.getMembers');

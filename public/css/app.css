@@ -28,3 +28,22 @@
 .sidebar .profile-pic {
     border: 1px solid #000000;
 }
+
+#side_nav{
+    min-width: 250px;
+    max-width: 250px;
+    transition: all 0.3s;
+}
+
+@media(max-width: 767px){
+#side_nav{
+    margin-left: -250px;
+    position: absolute;
+    min-height: 100vh;
+    z-index: 1;
+
+}
+#side_nav.active{
+    margin-left: 0;
+    }
+}

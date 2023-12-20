@@ -14,7 +14,10 @@
         <link href="{{ url('css/bootstrap.min_flatly.css') }}" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-        <script src="{{ asset('js/app.js') }}" defer></script>
+        {{-- use mix to load app.js --}}
+
+        <script src="{{asset('js/app.js')}}"></script>
+        @vite(['resources/js/app.js'])
         <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
         <script type="text/javascript">
             // Fix for Firefox autofocus CSS bug
@@ -38,7 +41,17 @@
 
             @yield('sidebar')
             
-            @yield('content')
+            <div class="container-fluid d-flex flex-column w-100 p-0">
+                <div class="d-flex justify-content-start w-100">
+                    <nav class="navbar navbar-expand-md navbar-light bg-light d-md-none w-100">
+                        <div class="d-flex justify-content-between d-md-none d-block">
+                            <button class="btn btn-lg p-1 ms-2 open-btn"><i class="bi bi-list"></i></button>
+                        </div>
+                    </nav>
+                </div>
+            
+                @yield('content')
+            </div>
         </div>
     </body>
 </html>
