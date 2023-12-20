@@ -20,6 +20,6 @@ class NotificationPolicy
      */
     public function viewAny(User $user): bool
     {
-        return Auth::check();
+        return $user->user_id == Auth::user()->user_id;
     }
 }
