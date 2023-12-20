@@ -2,7 +2,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between fs-5">
             <div>
-                <img src="{{ asset('images/profile_pics/' . $post->user->avatar) }}" class="rounded-circle" style="width: 20px; height: 20px;">
+                <img src="{{ asset('images/profile_pics/' . $post->user->avatar) }}" class="rounded-circle" alt="User Avatar" style="width: 20px; height: 20px;">
                 <small><a href="{{ route('user.profile', ['id' => $post->user->user_id]) }}" class="link-primary:hover">{{$post->user->name}}</a></small>
             </div>
             <small class="text-muted d-none d-sm-block"><span class="text-muted">@</span>{{ $post->user->username }}</small>
