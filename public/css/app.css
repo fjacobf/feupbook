@@ -1,3 +1,7 @@
+body{
+    line-height: 1.4;
+}
+
 .custom-btn-like:hover {
     color: #f92525;
     background-color: rgb(244, 185, 185);

@@ -143,7 +143,7 @@
     });
 
     document.querySelector('[data-target="#groupChatUsersModal"]').addEventListener('click', function () {
-        fetch('{{ route('group-chats.getMembers.api', $groupChat->group_id) }}', {
+        fetch('{{ route('group-chats.getMembers', $groupChat->group_id) }}', {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
             }

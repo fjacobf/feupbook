@@ -70,4 +70,9 @@ class PostPolicy
     {
         return $user->can('view', $post);
     }
+
+    public function report(User $user, Post $post): bool
+    {
+        return $user->can('view', $post) && $user->user_id != $post->owner_id;
+    }
 }

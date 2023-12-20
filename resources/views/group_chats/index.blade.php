@@ -7,6 +7,15 @@
 @endsection
 
 @section('content')
+@if (session('message'))
+    <div class="alert alert-success">
+        {{ session('message') }}
+    </div>
+@endif
+
+@error('message')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
 <div class="d-flex flex-column align-items-center mx-auto w-100 overflow-auto">
     <div class="mt-4">
         <h1>Your Group Chats</h1>
@@ -24,11 +33,11 @@
                         <small>Owner: {{ $groupChat->owner->name }}</small>
                         {{-- check if user has status waiting in group-chats table --}}
                         @if ($groupChat->memberStatus(auth()->user()) == 'waiting')
-                            <form action="{{ route('group-chats.acceptInvite.api', $groupChat->group_id) }}" method="POST">
+                            <form action="{{ route('group-chats.acceptInvite', $groupChat->group_id) }}" method="POST">
                                 @csrf
                                 <button type="submit" class="btn btn-success">Accept Invite</button>
                             </form>
-                            <form action="{{ route('group-chats.rejectInvite.api', $groupChat->group_id) }}" method="POST">
+                            <form action="{{ route('group-chats.rejectInvite', $groupChat->group_id) }}" method="POST">
                                 @csrf
                                 <button type="submit" class="btn btn-danger">Reject Invite</button>
                             </form>
@@ -51,7 +60,7 @@
                 <button type="button" class="btn btn-primary" id="search_button">Search</button>
             </div>
         </div>
-        <form action="{{ route('group-chats.create.api') }}" method="POST">
+        <form action="{{ route('group-chats.create') }}" method="POST">
             @csrf
         
             <div class="mb-3">
@@ -79,7 +88,7 @@
         document.getElementById('search_button').addEventListener('click', function (event) {
             event.preventDefault();
             var query = document.getElementById('query').value;
-            fetch('{{ route('search_json.api') }}?query=' + query)
+            fetch('{{ route('search_json') }}?query=' + query)
                 .then(response => response.json()) // Parse the response as JSON
                 .then(data => {
                     // Assuming data is an array of users, you can map it to create options for the dropdown

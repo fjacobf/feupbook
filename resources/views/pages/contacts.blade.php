@@ -20,11 +20,6 @@
         123 Main Street, Cityville, Country
     </p>
 
-    <h2>Submit a Form</h2>
-    <p>
-        Use our online contact form to submit your questions or feedback. We'll get back to you as soon as possible.
-    </p>
-
     @if(!Auth::check())
         <div class="d-flex justify-content-center">
             <a href="{{ route('login') }}" class="btn btn-primary w-25 me-3">Login</a>
