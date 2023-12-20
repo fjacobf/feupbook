@@ -105,6 +105,9 @@ class GroupChatController extends Controller
             return response()->json('Member already added');
         }
 
+        // Add the user to the group chat
+        $groupChat->addMember($user);
+
         // Save the group chat
         $groupChat->save();
 

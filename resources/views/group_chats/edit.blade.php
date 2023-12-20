@@ -97,8 +97,9 @@
                 // Update the message div
                 const updateMessage = document.querySelector('#updateMessage');
                 updateMessage.textContent = data;
-                // Remove the list item from the DOM
-                // listItem.remove();
+                // Remove the list item from the DOM if it was a user removal
+                if(data === 'Removed member'){
+                listItem.remove();}
             })
             .catch(error => {
                 console.error('Error:', error);
