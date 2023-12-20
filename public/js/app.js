@@ -162,10 +162,20 @@ function loadMorePosts() {
         });
 }
 
-document.querySelector('.open-btn').addEventListener('click', function() {
-    document.querySelector('.sidebar').classList.add('active');
-});
+document.addEventListener('DOMContentLoaded', function() {
+    var openBtn = document.querySelector('.open-btn');
+    var closeBtn = document.querySelector('.close-btn');
+    var sidebar = document.querySelector('.sidebar');
 
-document.querySelector('.close-btn').addEventListener('click', function() {
-    document.querySelector('.sidebar').classList.remove('active');
+    if (openBtn && sidebar) {
+        openBtn.addEventListener('click', function() {
+            sidebar.classList.add('active');
+        });
+    }
+
+    if (closeBtn && sidebar) {
+        closeBtn.addEventListener('click', function() {
+            sidebar.classList.remove('active');
+        });
+    }
 });

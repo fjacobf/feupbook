@@ -3,7 +3,7 @@
         <div class="d-flex justify-content-between">
             <div class="d-flex align-items-center">
                 <div>
-                    <img src="{{ asset('images/profile_pics/' . $comment->user->avatar) }}" class="rounded-circle" style="width: 20px; height: 20px;">
+                    <img src="{{ asset('images/profile_pics/' . $comment->user->avatar) }}" class="rounded-circle" alt="User avatar" style="width: 20px; height: 20px;">
                     <strong style="margin:0; font-size:1.1rem;" class="card-text">{{ $comment->user->username }}&nbsp</strong>
                 </div>
                 <p class="card-text">{{ $comment->content }}</p>
@@ -51,7 +51,7 @@
         <div class="d-flex justify-content-between">
             <div style="margin-left:10px; display:flex; align-items: center;">
                 <div>
-                    <img src="{{ asset('images/profile_pics/' . $reply->user->avatar) }}" class="rounded-circle" style="width: 20px; height: 20px;">
+                    <img src="{{ asset('images/profile_pics/' . $reply->user->avatar) }}" class="rounded-circle" alt="User avatar" style="width: 20px; height: 20px;">
                     <strong style="margin:0; font-size:1.1rem;" class="card-text">{{ $reply->user->username }}&nbsp</strong>
                 </div>
                 <p class="card-text">{{ $reply->content }}</p>

@@ -29,7 +29,7 @@
         </li>
         <li>
             <strong>Q: How do I update my profile information?</strong><br>
-            A: You can update your profile information in the settings section after logging in.
+            A: You can update your profile information from your profile page, using the "Edit Profile" button.
         </li>
     </ul>
 

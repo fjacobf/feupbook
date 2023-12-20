@@ -3,21 +3,22 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\ProviderController;
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\SearchController;
 use App\Http\Controllers\CardController;
-use App\Http\Controllers\ItemController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\CommentController;
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\MailController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\SearchController;
+
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\GroupChatController;
 
 // Chats
-use App\Http\Controllers\GroupChatController;
-use App\Http\Controllers\MessageController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +59,8 @@ Route::controller(PostController::class)->group(function () {
     Route::delete('/post/{id}/dislike', 'dislike')->name('post.dislike');
     Route::post('/post/{id}/bookmark', 'bookmark')->name('post.bookmark');
     Route::delete('/post/{id}/unbookmark', 'unbookmark')->name('post.unbookmark');
+    Route::get('/post/{id}/report', 'showReportForm')->name('post.showReportForm');
+    Route::post('/post/{id}/submitReport', 'submitReport')->name('post.submitReport');
 });
 
 // Comments
@@ -74,6 +77,14 @@ Route::controller(LoginController::class)->group(function () {
     Route::get('/login', 'showLoginForm')->name('login');
     Route::post('/login', 'authenticate');
     Route::get('/logout', 'logout')->name('logout');
+    Route::get('/resetPassword', 'showResetPasswordForm')->name('recoverPassword');
+    Route::get('/reset-password/{token}', 'recoverPassword')->name('password.reset');
+    Route::post('/reset-password/{token}/update', 'newPasswordFromEmail')->name('auth.resetPassword');
+});
+
+// Mailing
+Route::controller(MailController::class)->group(function () {
+    Route::post('/password/reset', 'sendRecoveryEmail')->name('sendRecoveryEmail');
 });
 
 Route::controller(RegisterController::class)->group(function () {
@@ -98,23 +109,28 @@ Route::controller(UserController::class)->group(function () {
     Route::put('/user/{id}/password', 'updatePassword')->name('user.updatePassword');
     Route::get('/user/{id}/bookmarks', 'showBookmarks')->name('user.bookmarks');
     Route::put('/user/{id}/updatePicture', 'updateProfilePicture')->name('user.updateProfilePicture');
+    Route::get('/user/{id}/report', 'showReportForm')->name('user.showReportForm');
+    Route::post('/user/{id}/submitReport', 'submitReport')->name('user.submitReport');
 });
 
 // Search
 Route::controller(SearchController::class)->group(function () {
     Route::get('/search','show')->name('search.show');
-    Route::get('/api/user_json', 'search_json')->name('search_json.api');
+    Route::get('/user_json', 'search_json')->name('search_json');
     Route::get('/api/user', 'search')->name('search.api');
 });
 
 // Admin Management
 Route::controller(AdminController::class)->group(function () {
+    Route::get('/admin/manage', 'seeAdminPanel')->name('admin.index');
     Route::get('/admin/user/{id}/edit', 'showUserManagement')->name('admin.manageUser');
     Route::post('/admin/user/{id}/edit', 'updateUser')->name('admin.updateUser');
     Route::post('/admin/user/{id}/delete', 'deleteUser')->name('admin.deleteUser');
     Route::put('/admin/user/{id}/restore', 'restoreUser')->name('admin.restoreUser');
     Route::put('/admin/user/{id}/suspend', 'suspendUser')->name('admin.suspendUser');
     Route::put('/admin/user/{id}/unsuspend', 'unsuspendUser')->name('admin.unsuspendUser');
+    Route::delete('/admin/manage/{id}/delete', 'deleteReport')->name('admin.deleteReport');
+    Route::get('/admin/manage/reports', 'getFilteredReports')->name('admin.reports');
 });
 
 //notifications
@@ -126,16 +142,16 @@ Route::controller(NotificationController::class)->group(function () {
 
 // Chats
 // Group Chat Routes
-Route::get('/group-chats', [GroupChatController::class, 'index']);
+Route::get('/group-chats', [GroupChatController::class, 'index'])->name('group-chats.index');
 Route::get('/group-chats/{groupChat}', [GroupChatController::class, 'show'])->name('group-chats.show');
 Route::get('/group-chats/{groupChat}/edit', [GroupChatController::class, 'edit'])->name('group-chats.edit');
 Route::post('/group-chats/{groupChat}/send-message', [GroupChatController::class, 'sendMessage'])->name('group-chats.sendMessage');
 Route::get('/group-chats/{groupChat}/messages', [GroupChatController::class, 'getMessages'])->name('group-chats.getMessages');
-Route::post('/api/group-chats/create', [GroupChatController::class, 'create'])->name('group-chats.create.api');
-Route::post('/api/group-chats/{groupChat}/add-member', [GroupChatController::class, 'addMember'])->name('group-chats.addMember.api');
-Route::post('/api/group-chats/{groupChat}/remove-member', [GroupChatController::class, 'removeMember'])->name('group-chats.removeMember.api');
-Route::post('/api/group-chats/{groupChat}/update', [GroupChatController::class, 'update'])->name('group-chats.update.api');
-Route::post('/api/group-chats/{groupChat}/accept-invite', [GroupChatController::class, 'acceptInvite'])->name('group-chats.acceptInvite.api');
-Route::post('/api/group-chats/{groupChat}/reject-invite', [GroupChatController::class, 'rejectInvite'])->name('group-chats.rejectInvite.api');
-Route::delete('/api/group-chats/{groupChat}/delete', [GroupChatController::class, 'delete'])->name('group-chats.delete.api');
-Route::get('/api/group-chats/{groupChat}/members', [GroupChatController::class, 'getMembers'])->name('group-chats.getMembers.api');
+Route::post('/group-chats/create', [GroupChatController::class, 'create'])->name('group-chats.create');
+Route::post('/group-chats/{groupChat}/add-member', [GroupChatController::class, 'addMember'])->name('group-chats.addMember');
+Route::post('/group-chats/{groupChat}/remove-member', [GroupChatController::class, 'removeMember'])->name('group-chats.removeMember');
+Route::post('/group-chats/{groupChat}/update', [GroupChatController::class, 'update'])->name('group-chats.update');
+Route::post('/group-chats/{groupChat}/accept-invite', [GroupChatController::class, 'acceptInvite'])->name('group-chats.acceptInvite');
+Route::post('/group-chats/{groupChat}/reject-invite', [GroupChatController::class, 'rejectInvite'])->name('group-chats.rejectInvite');
+Route::delete('/group-chats/{groupChat}/delete', [GroupChatController::class, 'delete'])->name('group-chats.delete');
+Route::get('/group-chats/{groupChat}/members', [GroupChatController::class, 'getMembers'])->name('group-chats.getMembers');

@@ -9,7 +9,7 @@
     <div class="d-flex justify-content-center">
         <h3 class="bg-primary text-white rounded mt-3 p-2">Edit Post</h3>
     </div>
-    <form class="container-lg d-flex flex-column align-items-center w-75" enctype="multipart/form-data" action="{{ route('post.update', ['id' => $post->post_id]) }}" method="POST">
+    <form class="container-lg d-flex flex-column align-items-center w-75" enctype="multipart/form-data" action="{{ route('post.update', ['id' => $post->post_id]) }}" method="POST" style="max-width: 800px;">
         @csrf
         @method('PUT')
         <div class="d-flex flex-column justify-content-start w-100">

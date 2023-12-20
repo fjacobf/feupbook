@@ -170,6 +170,13 @@ CREATE TABLE notifications (
     viewed BOOLEAN NOT NULL DEFAULT false
 );
 
+CREATE TABLE password_resets (
+    email VARCHAR(255) NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    PRIMARY KEY (email, token)
+);
+
 ------------------------------
 -- INDEXES
 ------------------------------
@@ -337,11 +344,11 @@ BEGIN
 
     if rcv_privacy = true THEN
         if NEW.status = 'waiting' THEN
-            INSERT INTO notifications (notified_user, message, date, notification_type)
-            VALUES (NEW.rcv_id, 'You have a new follow request from ' || reciever_username, CURRENT_DATE, 'request_follow');
+            INSERT INTO notifications (notified_user, message, date, notification_type, user_id)
+            VALUES (NEW.rcv_id, 'You have a new follow request from ' || reciever_username, CURRENT_DATE, 'request_follow', NEW.req_id);
         else
-            INSERT INTO notifications (notified_user, message, date, notification_type, viewed)
-            VALUES (NEW.rcv_id, 'You have a new follow request from ' || reciever_username, CURRENT_DATE, 'request_follow', TRUE);
+            INSERT INTO notifications (notified_user, message, date, notification_type, viewed, user_id)
+            VALUES (NEW.rcv_id, 'You have a new follow request from ' || reciever_username, CURRENT_DATE, 'request_follow', TRUE, NEW.req_id);
         end if;
     ELSE
         INSERT INTO notifications (notified_user, message, date, notification_type, user_id)
@@ -370,8 +377,8 @@ BEGIN
     SELECT username INTO user_who_liked FROM users WHERE user_id = NEW.user_id;
     SELECT content, author_id INTO comment_content, notified_user FROM comments WHERE comment_id = NEW.comment_id; 
     IF NEW.user_id <> notified_user THEN
-    INSERT INTO notifications (notified_user, message, date, notification_type, comment_id)
-    VALUES (notified_user, user_who_liked || ' liked your comment: ' || comment_content, CURRENT_DATE, 'liked_comment', NEW.comment_id);
+    INSERT INTO notifications (notified_user, message, date, notification_type, comment_id, user_id)
+    VALUES (notified_user, user_who_liked || ' liked your comment: ' || comment_content, CURRENT_DATE, 'liked_comment', NEW.comment_id, NEW.user_id);
     END IF;
     RETURN NEW;
 END
@@ -400,8 +407,8 @@ BEGIN
     IF NEW.previous IS NOT NULL AND NEW.author_id <> author_previous_comment THEN
 
 
-    INSERT INTO notifications (notified_user, message, date, notification_type, comment_id)
-    VALUES (author_previous_comment, user_who_commented || ' replied your comment with: ' || NEW.content, CURRENT_DATE, 'reply_comment', NEW.comment_id);
+    INSERT INTO notifications (notified_user, message, date, notification_type, comment_id, user_id)
+    VALUES (author_previous_comment, user_who_commented || ' replied your comment with: ' || NEW.content, CURRENT_DATE, 'reply_comment', NEW.comment_id, NEW.author_id);
 
     END IF;
 
@@ -426,8 +433,8 @@ BEGIN
     SELECT private INTO rcv_privacy FROM users WHERE user_id = NEW.rcv_id;
 
     if rcv_privacy = true AND NEW.status = 'accepted' THEN
-            INSERT INTO notifications (notified_user, message, date, notification_type)
-            VALUES (NEW.req_id, reciever_username || ' accepted your follow request.', CURRENT_DATE, 'accepted_follow');
+            INSERT INTO notifications (notified_user, message, date, notification_type, user_id)
+            VALUES (NEW.req_id, reciever_username || ' accepted your follow request.', CURRENT_DATE, 'accepted_follow', NEW.rcv_id);
     end if;
     
     RETURN NEW;
@@ -452,8 +459,8 @@ BEGIN
     SELECT username INTO member_username FROM users WHERE user_id = NEW.user_id;
 
     IF NEW.status = 'accepted' AND group_owner <> NEW.user_id THEN
-        INSERT INTO notifications (notified_user, message, date, notification_type, group_id)
-            VALUES (group_owner, member_username || ' joined group ' || group_name, CURRENT_DATE, 'joined_group', NEW.group_id);
+        INSERT INTO notifications (notified_user, message, date, notification_type, group_id, user_id)
+            VALUES (group_owner, member_username || ' joined group ' || group_name, CURRENT_DATE, 'joined_group', NEW.group_id, NEW.user_id);
     END IF;
     RETURN NEW;
 END
@@ -505,8 +512,8 @@ BEGIN
     SELECT username INTO user_who_liked FROM users WHERE user_id = NEW.user_id;
     SELECT owner_id INTO notified_user FROM posts WHERE post_id = NEW.post_id; 
     IF NEW.user_id <> notified_user THEN
-    INSERT INTO notifications (notified_user, message, date, notification_type, post_id)
-    VALUES (notified_user, user_who_liked || ' liked your post.', CURRENT_DATE, 'liked_post', NEW.post_id);
+    INSERT INTO notifications (notified_user, message, date, notification_type, post_id, user_id)
+    VALUES (notified_user, user_who_liked || ' liked your post.', CURRENT_DATE, 'liked_post', NEW.post_id, NEW.user_id);
     END IF;
     RETURN NEW;
 END
@@ -531,8 +538,8 @@ BEGIN
     SELECT owner_id INTO notified_user FROM posts WHERE post_id = NEW.post_id;
 
     IF NEW.author_id <> notified_user THEN
-    INSERT INTO notifications (notified_user, message, date, notification_type, post_id)
-    VALUES (notified_user, user_who_commented || ' commented in your post.', CURRENT_DATE, 'comment_post', NEW.post_id);
+    INSERT INTO notifications (notified_user, message, date, notification_type, post_id, user_id)
+    VALUES (notified_user, user_who_commented || ' commented in your post.', CURRENT_DATE, 'comment_post', NEW.post_id, NEW.author_id);
     END IF;
     RETURN NEW;
 END
@@ -1050,15 +1057,15 @@ VALUES
 -- Insert statements for the 'reports' table
 INSERT INTO reports (user_id, post_id, date, report_type)
 VALUES
-    (1, 1, '2023-10-26', 'spam'),
-    (2, 1, '2023-10-25', 'inappropriate_content'),
-    (8, 8, '2023-10-24', 'inappropriate_content'),
-    (8, 8, '2023-10-23', 'spam'),
-    (8, 8, '2023-10-22', 'inappropriate_content'),
-    (9, 9, '2023-10-21', 'spam'),
-    (9, 9, '2023-10-20', 'inappropriate_content'),
-    (9, 9, '2023-10-19', 'spam'),
-    (1, 1, '2023-10-18', 'inappropriate_content'),
-    (10, 10, '2023-10-17', 'spam');
+    (1, NULL, '2023-10-26', 'spam'),
+    (2, NULL, '2023-10-25', 'inappropriate_content'),
+    (NULL, 8, '2023-10-24', 'inappropriate_content'),
+    (8, NULL, '2023-10-23', 'spam'),
+    (8, NULL, '2023-10-22', 'inappropriate_content'),
+    (NULL, 9, '2023-10-21', 'spam'),
+    (9, NULL, '2023-10-20', 'inappropriate_content'),
+    (9, NULL, '2023-10-19', 'spam'),
+    (NULL, 1, '2023-10-18', 'inappropriate_content'),
+    (NULL, 10, '2023-10-17', 'spam');
 
 

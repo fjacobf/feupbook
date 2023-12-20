@@ -2,7 +2,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between fs-5">
             <div>
-                <img src="{{ asset('images/profile_pics/' . $post->user->avatar) }}" class="rounded-circle" style="width: 20px; height: 20px;">
+                <img src="{{ asset('images/profile_pics/' . $post->user->avatar) }}" class="rounded-circle" alt="User Avatar" style="width: 20px; height: 20px;">
                 <small><a href="{{ route('user.profile', ['id' => $post->user->user_id]) }}" class="link-primary:hover">{{$post->user->name}}</a></small>
             </div>
             <small class="text-muted d-none d-sm-block"><span class="text-muted">@</span>{{ $post->user->username }}</small>
@@ -60,19 +60,23 @@
                     <span id="bookmark-count-{{ $post->post_id }}">{{ $post->bookmarksCount() }}</span>
                 </div>
             </div>
-            @can('delete', $post)
-                <div class="d-flex justify-content-end mt-2">
-                    @can('update', $post)
-                        <a href="{{ route('post.edit', ['id' => $post->post_id]) }}" class="btn btn-primary bi-pencil-fill me-2"></a>
-                    @endcan
-            
+            <div class="ms-auto">
+                @can('report', $post)
+                    <a href="{{ route('post.showReportForm', ['id' => $post->post_id]) }}" class="btn btn-warning bi-flag-fill"></a>
+                @endcan
+
+                @can('update', $post)
+                    <a href="{{ route('post.edit', ['id' => $post->post_id]) }}" class="btn btn-primary bi-pencil-fill me-2"></a>
+                @endcan
+
+                @can('delete', $post)
                     <form action="{{ route('post.delete', ['id' => $post->post_id]) }}" method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger bi-trash-fill" onclick="return confirm('Are you sure you want to delete this post?')"></button>
                     </form>
-                </div>
-            @endcan
+                @endcan
+            </div>
         </div>
     </div>
 </div>

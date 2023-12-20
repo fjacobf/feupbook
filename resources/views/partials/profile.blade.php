@@ -14,18 +14,26 @@
                         <h3 class="text-secondary"><span>@</span>{{ $user->username }}</h3>
                     </div>
                     <div class="profile-picture mt-4">
-                        <img src="{{ asset('images/profile_pics/' . $user->avatar) }}" class="rounded-circle profile-pic-border" style="width: 150px; height: 150px;">
+                        <img src="{{ asset('images/profile_pics/' . $user->avatar) }}" class="rounded-circle profile-pic-border" alt="Profile Picture" style="width: 150px; height: 150px;">
                     </div>
                 </div>
                 <div class="d-flex" style="margin-bottom: 10px;">
                         @can('updateSelf', $user)
                         <a href="{{ route('user.showEditPage', ['id' => $user->user_id])}}" class="btn btn-primary" style="margin-right: 5px;">Edit Profile</a>
-                        @endcan
+                    @endcan
                         
-                        @can('viewAdminInterface', $user)
+                    @can('viewAdminInterface', $user)
                         <a href="{{ route('admin.manageUser', ['id' => $user->user_id]) }}" class="btn btn-danger">Manage User's Account</a>
-                        @endcan
-                </div>
+                    @endcan
+
+                    @can('seeAdminPanel', $user)
+                        <a href="{{ route('admin.index') }}" class="btn btn-info">Admin Zone</a>
+                    @endcan
+
+                    </div>
+                @can('report', $user)
+                <a href="{{ route('user.showReportForm', ['id' => $user->user_id]) }}" class="btn btn-warning mb-2">Flag User</a>
+                @endcan
                 @if ($user->private)
                 <div class="d-flex justify-content-center alert alert-warning" role="alert">
                     <strong>Private Profile</strong>

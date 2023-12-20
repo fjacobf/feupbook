@@ -51,4 +51,5 @@ class NotificationController extends Controller
         return redirect('/')->withErrors(['message' => 'Log in in order to notifications']);
       }
     }
+
 }

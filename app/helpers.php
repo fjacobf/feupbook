@@ -5,6 +5,7 @@ use Carbon\Carbon;
 if (! function_exists('time_since')) {
    function time_since($timestamp)
    {
+      if(is_string($timestamp)){ $timestamp = Carbon::parse($timestamp);}
       $now = Carbon::now();
       $difference = $timestamp->diffInDays($now);
 
