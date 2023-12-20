@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\FollowRequest;
+use App\Models\Report;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -201,5 +202,39 @@ class UserController extends Controller
         } catch (AuthorizationException $e) {
             return redirect()->route('home')->withErrors(['message' => 'You are not authorized to do this.']);
         }
-    }    
+    }
+    
+    public function showReportForm($user_id) {
+        $user = User::find($user_id);
+
+        $this->authorize('report', $user);
+
+        if (!$user) {
+            abort(404, 'User not found'); 
+        }
+
+        return view('pages.report', ['user' => $user]);
+    }
+
+    public function submitReport(Request $request, $user_id) {
+        $user = User::find($user_id);
+
+        $this->authorize('report', $user);
+
+        if (!$user) {
+            abort(404, 'User not found'); 
+        }
+
+        $validatedData = $request->validate([
+            'report_type' => 'required',
+        ]);
+
+        Report::create([
+            'user_id' => $user->user_id,
+            'report_type' => $validatedData['report_type'],
+            'date' => now(),
+        ]);
+
+        return redirect()->route('user.profile', ['id' => $user->user_id]);
+    }
 }

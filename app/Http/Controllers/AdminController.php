@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Access\AuthorizationException;
 
+use App\Models\Report;
+
 class AdminController extends Controller
 {
     public function showUserManagement($id) {
@@ -107,7 +109,7 @@ class AdminController extends Controller
 
             $user->update(['user_type' => 'suspended']);
 
-            return redirect()->route('home')->with('success', 'User suspended successfully.');
+            return redirect()->back()->with('success', 'User suspended successfully.');
         }
         catch(AuthorizationException $e){
             return redirect()->route('home')->withErrors(['message' => 'You are not authorized to suspend this user']);
@@ -123,10 +125,75 @@ class AdminController extends Controller
 
             $user->update(['user_type' => 'normal_user']);
 
-            return redirect()->route('home')->with('success', 'User unsuspended successfully.');
+            return redirect()->back()->with('success', 'User unsuspended successfully.');
         }
         catch(AuthorizationException $e){
             return redirect()->route('home')->withErrors(['message' => 'You are not authorized to unsuspend this user']);
         }
     }
+
+    public function seeAdminPanel() {
+        try
+        {    
+            $user = Auth::user();
+
+            $this->authorize('seeAdminPanel', $user);
+
+            $reports = Report::all();
+
+            return view('pages.admin_panel', compact('reports'));
+        }
+        catch(AuthorizationException $e){
+            return redirect()->route('home')->withErrors(['message' => 'You are not authorized to view this page']);
+        }
+    }
+
+    public function deleteReport($report_id) {
+        try
+        {    
+            $user = Auth::user();
+
+            $this->authorize('seeAdminPanel', $user);
+
+            $report = Report::findOrFail($report_id);
+
+            $report->delete();
+
+            return redirect()->route('admin.index')->with('success', 'Report deleted successfully.');
+        }
+        catch(AuthorizationException $e){
+            return redirect()->route('home')->withErrors(['message' => 'You are not authorized to delete this report']);
+        }
+    }
+
+    public function getFilteredReports(Request $request)
+    {
+    // get type and reason from the URL
+    $filterType = $request->input('type');
+    $filterReason = $request->input('reason');
+
+    log::info($filterType);
+    log::info($filterReason);
+
+    $query = Report::query();
+
+    $query->where(function ($query) use ($filterType, $filterReason) {
+        if ($filterType !== 'all') {
+            if ($filterType === 'user') {
+                $query->whereNotNull('user_id');
+            } elseif ($filterType === 'post') {
+                $query->whereNotNull('post_id');
+            }
+        }
+
+        if ($filterReason !== 'all') {
+            $query->where('report_type', $filterReason);
+        }
+    });
+
+    $reports = $query->get();
+
+    return view('partials.reports_table', compact('reports'))->render();
+    }
+
 }

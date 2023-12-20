@@ -20,12 +20,20 @@
                 <div class="d-flex" style="margin-bottom: 10px;">
                         @can('updateSelf', $user)
                         <a href="{{ route('user.showEditPage', ['id' => $user->user_id])}}" class="btn btn-primary" style="margin-right: 5px;">Edit Profile</a>
-                        @endcan
+                    @endcan
                         
-                        @can('viewAdminInterface', $user)
+                    @can('viewAdminInterface', $user)
                         <a href="{{ route('admin.manageUser', ['id' => $user->user_id]) }}" class="btn btn-danger">Manage User's Account</a>
-                        @endcan
-                </div>
+                    @endcan
+
+                    @can('seeAdminPanel', $user)
+                        <a href="{{ route('admin.index') }}" class="btn btn-info">Admin Zone</a>
+                    @endcan
+
+                    </div>
+                @can('report', $user)
+                <a href="{{ route('user.showReportForm', ['id' => $user->user_id]) }}" class="btn btn-warning mb-2">Flag User</a>
+                @endcan
                 @if ($user->private)
                 <div class="d-flex justify-content-center alert alert-warning" role="alert">
                     <strong>Private Profile</strong>
