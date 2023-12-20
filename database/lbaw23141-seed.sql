@@ -1054,15 +1054,15 @@ VALUES
 -- Insert statements for the 'reports' table
 INSERT INTO reports (user_id, post_id, date, report_type)
 VALUES
-    (1, 1, '2023-10-26', 'spam'),
-    (2, 1, '2023-10-25', 'inappropriate_content'),
-    (8, 8, '2023-10-24', 'inappropriate_content'),
-    (8, 8, '2023-10-23', 'spam'),
-    (8, 8, '2023-10-22', 'inappropriate_content'),
-    (9, 9, '2023-10-21', 'spam'),
-    (9, 9, '2023-10-20', 'inappropriate_content'),
-    (9, 9, '2023-10-19', 'spam'),
-    (1, 1, '2023-10-18', 'inappropriate_content'),
-    (10, 10, '2023-10-17', 'spam');
+    (1, NULL, '2023-10-26', 'spam'),
+    (2, NULL, '2023-10-25', 'inappropriate_content'),
+    (NULL, 8, '2023-10-24', 'inappropriate_content'),
+    (8, NULL, '2023-10-23', 'spam'),
+    (8, NULL, '2023-10-22', 'inappropriate_content'),
+    (NULL, 9, '2023-10-21', 'spam'),
+    (9, NULL, '2023-10-20', 'inappropriate_content'),
+    (9, NULL, '2023-10-19', 'spam'),
+    (NULL, 1, '2023-10-18', 'inappropriate_content'),
+    (NULL, 10, '2023-10-17', 'spam');
 
 

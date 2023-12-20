@@ -165,4 +165,35 @@ class AdminController extends Controller
             return redirect()->route('home')->withErrors(['message' => 'You are not authorized to delete this report']);
         }
     }
+
+    public function getFilteredReports(Request $request)
+    {
+    // get type and reason from the URL
+    $filterType = $request->input('type');
+    $filterReason = $request->input('reason');
+
+    log::info($filterType);
+    log::info($filterReason);
+
+    $query = Report::query();
+
+    $query->where(function ($query) use ($filterType, $filterReason) {
+        if ($filterType !== 'all') {
+            if ($filterType === 'user') {
+                $query->whereNotNull('user_id');
+            } elseif ($filterType === 'post') {
+                $query->whereNotNull('post_id');
+            }
+        }
+
+        if ($filterReason !== 'all') {
+            $query->where('report_type', $filterReason);
+        }
+    });
+
+    $reports = $query->get();
+
+    return view('partials.reports_table', compact('reports'))->render();
+    }
+
 }

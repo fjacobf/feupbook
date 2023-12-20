@@ -124,6 +124,7 @@ Route::controller(AdminController::class)->group(function () {
     Route::put('/admin/user/{id}/suspend', 'suspendUser')->name('admin.suspendUser');
     Route::put('/admin/user/{id}/unsuspend', 'unsuspendUser')->name('admin.unsuspendUser');
     Route::delete('/admin/manage/{id}/delete', 'deleteReport')->name('admin.deleteReport');
+    Route::get('/admin/manage/reports', 'getFilteredReports')->name('admin.reports');
 });
 
 //notifications
