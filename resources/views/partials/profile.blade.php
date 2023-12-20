@@ -99,37 +99,37 @@
         <section id="profile-feed" class="mt-4">
             <hr/>
             <h2 class="mb-2 text-center">Posts from this user</h2>
-            @if ((Auth::check() && Auth::user()->user_id == $user->user_id) || !$user->private || (Auth::Check() && Auth::user()->user_type == 'admin') || (Auth::check() && $user->isFollowing()))
-            @if ($user->user_type === 'deleted')
-                <div class="alert alert-danger mt-4 mb-4">
-                    <h4 class="alert-danger">This account was deleted!</h4>
-                    <p>Can't show posts from deleted accounts.</p>
-                </div>
-            @elseif ($user->user_type === 'suspended')
-                <div class="alert alert-danger mt-4 mb-4">
-                    <h4 class="alert-danger">This account is suspended!</h4>
-                    <p>This user's posts will be available once they are unrestricted.</p>
-                </div>
-            @elseif ($user->posts()->count() > 0)
             <div class="container-lg d-flex justify-content-center align-items-center w-75" style="max-width: 800px">
-                <ul class="list-unstyled mb-4 w-100">
-                        @foreach ($user->posts()->orderBy('created_at', 'desc')->get() as $post)
-                            @include('partials.post', ['post' => $post])
-                        @endforeach
+                @if ((Auth::check() && Auth::user()->user_id == $user->user_id) || !$user->private || (Auth::Check() && Auth::user()->user_type == 'admin') || (Auth::check() && $user->isFollowing()))
+                @if ($user->user_type === 'deleted')
+                    <div class="alert alert-danger mt-4 mb-4 w-75" style="max-width: 800px">
+                        <h4 class="alert-danger">This account was deleted!</h4>
+                        <p>Can't show posts from deleted accounts.</p>
+                    </div>
+                @elseif ($user->user_type === 'suspended')
+                    <div class="alert alert-danger mt-4 mb-4 w-75" style="max-width: 800px">
+                        <h4 class="alert-danger">This account is suspended!</h4>
+                        <p>This user's posts will be available once they are unrestricted.</p>
+                    </div>
+                @elseif ($user->posts()->count() > 0)
+                    <ul class="list-unstyled mb-4 w-100">
+                            @foreach ($user->posts()->orderBy('created_at', 'desc')->get() as $post)
+                                @include('partials.post', ['post' => $post])
+                            @endforeach
                     </ul>
-                </div>
-            @else
-                <div class="alert alert-info mt-4 mb-4" role="alert">
-                    <h4 class="alert-heading">No posts yet!</h4>
-                    <p>When this user posts something, it will appear here.</p>
-                </div>
-            @endif
-        @else
-            <div class="alert alert-info mt-4 mb-4" role="alert">
-                <h4 class="alert-heading">This user's profile is set to private!</h4>
-                <p>Follow this user to see their posts.</p>
+                @else
+                    <div class="alert alert-info mt-4 mb-4 w-75" role="alert" style="max-width: 800px">
+                        <h4 class="alert-heading">No posts yet!</h4>
+                        <p>When this user posts something, it will appear here.</p>
+                    </div>
+                @endif
+                @else
+                    <div class="alert alert-info mt-4 mb-4 w-75" role="alert" style="max-width: 800px">
+                        <h4 class="alert-heading">This user's profile is set to private!</h4>
+                        <p>Follow this user to see their posts.</p>
+                    </div>
+                @endif
             </div>
-        @endif
         </div>
     </section>
 </section>

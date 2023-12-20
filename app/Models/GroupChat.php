@@ -32,6 +32,12 @@ class GroupChat extends Model
             ->withPivot('status'); // If you need to access the 'status' column in the pivot table
     }
 
+    public function acceptedMembers()
+    {
+        return $this->belongsToMany(User::class, 'group_members', 'group_id', 'user_id')
+            ->wherePivot('status', 'accepted');
+    }
+
     public function memberStatus(User $user)
     {
         return $this->members()->where('group_members.user_id', $user->user_id)->first()->pivot->status;

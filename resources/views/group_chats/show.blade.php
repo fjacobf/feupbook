@@ -16,6 +16,29 @@
                     <a href="{{ route('group-chats.edit', $groupChat->group_id) }}" class="btn btn-primary">Edit</a>
                 @endif
 
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#groupChatUsersModal">
+                Show Group Chat Users
+                </button>
+                
+                <div class="modal fade" id="groupChatUsersModal" tabindex="-1" role="dialog" aria-labelledby="groupChatUsersModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="groupChatUsersModalLabel">Group Chat Users</h5>
+                            </div>
+                            <div class="modal-body">
+                                <ul id="groupChatUsers" class="list-group">
+                                    <!-- Users will be dynamically added here -->
+                                </ul>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="closeModalButton" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+
                 <h2>Messages</h2>
 
                 <div id="chat" class="mt-3 mb-3 chat-box p-3 rounded">
@@ -118,6 +141,44 @@
             }
         };
     });
+
+    document.querySelector('[data-target="#groupChatUsersModal"]').addEventListener('click', function () {
+        fetch('{{ route('group-chats.getMembers.api', $groupChat->group_id) }}', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            const groupChatUsersList = document.querySelector('#groupChatUsers');
+            if (!groupChatUsersList) {
+                console.error('Element with id "groupChatUsersList" not found');
+                return;
+            }
+            groupChatUsersList.innerHTML = '';
+            data.forEach(user => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+                listItem.textContent = user.name;
+                groupChatUsersList.appendChild(listItem);
+            });
+            
+            // Show the modal
+            const modal = new bootstrap.Modal(document.getElementById('groupChatUsersModal'));
+            modal.show();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+
+    // Close the modal when the "Close" button is clicked
+    document.querySelector('#closeModalButton').addEventListener('click', function () {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('groupChatUsersModal'));
+        modal.hide();
+    });
+
 
     Echo.private('group-chat.' + {{ $groupChat->group_id }})
         .listen('NewMessage', (e) => {
