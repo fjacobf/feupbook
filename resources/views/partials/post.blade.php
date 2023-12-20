@@ -60,7 +60,6 @@
                     <span id="bookmark-count-{{ $post->post_id }}">{{ $post->bookmarksCount() }}</span>
                 </div>
             </div>
-<<<<<<< resources/views/partials/post.blade.php
             <div class="ms-auto">
                 @can('report', $post)
                     <a href="{{ route('post.showReportForm', ['id' => $post->post_id]) }}" class="btn btn-warning bi-flag-fill"></a>

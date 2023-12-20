@@ -9,7 +9,6 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SearchController;
 
 use App\Http\Controllers\CommentController;

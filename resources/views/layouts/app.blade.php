@@ -19,10 +19,6 @@
         <script src="{{asset('js/app.js')}}"></script>
         @vite(['resources/js/app.js'])
         <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
-        <script type="text/javascript">
-            // Fix for Firefox autofocus CSS bug
-            // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
-        </script>
     </head>
     <body>
         <div class="d-flex vh-100 overflow-hidden">
@@ -41,7 +37,7 @@
 
             @yield('sidebar')
             
-            <div class="container-fluid d-flex flex-column w-100 p-0">
+            <div class="container-fluid d-flex flex-column w-100 p-0 overflow-auto">
                 <div class="d-flex justify-content-start w-100">
                     <nav class="navbar navbar-expand-md navbar-light bg-light d-md-none w-100">
                         <div class="d-flex justify-content-between d-md-none d-block">

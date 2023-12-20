@@ -36,23 +36,23 @@
             </div>
             <button type="submit" id="applyFiltersBtn" class="btn btn-primary">Apply Filters</button>
         </form>
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>User/Post</th>
-                            <th>Source</th>
-                            <th>Date</th>
-                            <th>Reason</th>
-                            <th>Actions</th>
-                            <th>Handle Report</th>
-                        </tr>
-                    </thead>
-                    <tbody id="reportsTable">
-                        @include('partials.reports_table', ['reports' => $reports])
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>User/Post</th>
+                        <th>Source</th>
+                        <th>Date</th>
+                        <th>Reason</th>
+                        <th>Actions</th>
+                        <th>Handle Report</th>
+                    </tr>
+                </thead>
+                <tbody id="reportsTable">
+                    @include('partials.reports_table', ['reports' => $reports])
+                </tbody>
+            </table>
+        </div>
         @else
             <p>No reports available.</p>
         @endif
