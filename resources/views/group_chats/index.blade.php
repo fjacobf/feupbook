@@ -7,6 +7,15 @@
 @endsection
 
 @section('content')
+@if (session('message'))
+    <div class="alert alert-success">
+        {{ session('message') }}
+    </div>
+@endif
+
+@error('message')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
 <div class="d-flex flex-column align-items-center mx-auto w-100 overflow-auto">
     <div class="mt-4">
         <h1>Your Group Chats</h1>
