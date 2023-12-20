@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\ProviderController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\PostController;
@@ -49,6 +50,8 @@ Route::controller(PostController::class)->group(function () {
     Route::get('/post/create', 'create')->name('post.create');
     Route::post('/post/create', 'store')->name('post.store');
     Route::get('/post/bookmarks', 'listBookmarks')->name('post.bookmarks');
+    Route::get('/api/loadFeed', 'loadFeedPosts')->name('post.loadFeed');
+    Route::get('/api/loadForYou', 'loadForYouPosts')->name('post.loadForYou');
     Route::get('/post/{id}', 'show')->name('post.show');
     Route::get('/post/{id}/edit', 'edit')->name('post.edit');
     Route::put('/post/{id}/edit', 'update')->name('post.update');   
@@ -79,6 +82,9 @@ Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
+
+Route::get('/auth/{provider}/redirect', [ProviderController::class, 'redirect']);
+Route::get('/auth/{provider}/callback', [ProviderController::class, 'callback']);
 
 // User
 Route::controller(UserController::class)->group(function () {
@@ -134,7 +140,7 @@ Route::post('/api/group-chats/{groupChat}/update', [GroupChatController::class, 
 Route::post('/api/group-chats/{groupChat}/accept-invite', [GroupChatController::class, 'acceptInvite'])->name('group-chats.acceptInvite.api');
 Route::post('/api/group-chats/{groupChat}/reject-invite', [GroupChatController::class, 'rejectInvite'])->name('group-chats.rejectInvite.api');
 Route::delete('/api/group-chats/{groupChat}/delete', [GroupChatController::class, 'delete'])->name('group-chats.delete.api');
-
+Route::get('/api/group-chats/{groupChat}/members', [GroupChatController::class, 'getMembers'])->name('group-chats.getMembers.api');
 
 //notifications
 Route::controller(FollowRequestController::class)->group(function () {

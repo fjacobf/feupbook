@@ -12,7 +12,7 @@
 
     <form class="d-flex flex-column align-items-center w-75" enctype="multipart/form-data" action="{{ route('post.store') }}" method="POST">
         @csrf
-        <div class="d-flex flex-column justify-content-start w-50">
+        <div class="d-flex flex-column justify-content-start w-100">
             <label for="content" class="form-label mb-3 h5">Post Content</label>
             <textarea class="form-control w-100" id="content" name="content" rows="3"></textarea>
             <input type="file" class="form-control w-100 mt-3" id="image" name="image">

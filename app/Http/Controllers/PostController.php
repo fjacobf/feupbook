@@ -53,24 +53,39 @@ class PostController extends Controller
                 ->orderBy('created_at', 'desc')->paginate(10);
           }
 
-          if (request()->ajax()) {
-            Log::info('Request is ajax');
-            $renderedPosts = $posts->map(function ($post) {
-              return view('partials.post', ['post' => $post])->render();
-            });
-
-            return response()->json([
-              'posts' => $renderedPosts,
-              'next_page_url' => $posts->nextPageUrl()
-            ]);
-          }
-
-          return view('pages.posts', ['posts' => $posts]);
+          return view('pages.posts', ['posts' => $posts,'pageContext' => 'home']);
       } catch (AuthorizationException $e) {
           return redirect('/');
       }
     }
     
+    public function loadFeedPosts()
+    {
+      $user = auth()->user();
+
+      if ($user->user_type == 'admin') {
+        $posts = Post::whereHas('user', function($query) {
+          $query->where('owner_id', '!=', Auth::id());
+        })->with('comments')
+          ->orderBy('created_at', 'desc')->paginate(10);
+      } else {
+        $posts = Post::whereHas('user', function($query) use ($user) {
+          $query->where('private', false)
+              ->where('owner_id', '!=', Auth::id());
+        })->with('comments')
+          ->orderBy('created_at', 'desc')->paginate(10);
+      }
+
+      $renderedPosts = $posts->map(function ($post) {
+        return view('partials.post', ['post' => $post])->render();
+      });
+
+      return response()->json([
+        'posts' => $renderedPosts,
+        'next_page_url' => $posts->nextPageUrl()
+      ]);
+    }
+
     public function forYou()
     {
       try{
@@ -85,23 +100,32 @@ class PostController extends Controller
                     ->orderBy('created_at', 'desc')
                     ->paginate(10);
 
-        if (request()->ajax()) {
-          Log::info('Request is ajax');
-          $renderedPosts = $posts->map(function ($post) {
-            return view('partials.post', ['post' => $post])->render();
-          });
-
-          return response()->json([
-            'posts' => $renderedPosts,
-            'next_page_url' => $posts->nextPageUrl()
-          ]);
-        }
-
-        return view('pages.posts', ['posts' => $posts]);
+        return view('pages.posts', ['posts' => $posts,'pageContext' => 'forYou']);
       } 
       catch(AuthorizationException $e){
         return redirect('/')->withErrors(['message' => 'Log in in order to see posts']);
       }
+    }
+
+    public function loadForYouPosts()
+    {
+      $user = Auth::user();
+
+      $followingIds = $user->following()->pluck('users.user_id')->toArray();
+
+      $posts = Post::with('user')
+            ->whereIn('owner_id', $followingIds)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+      $renderedPosts = $posts->map(function ($post) {
+        return view('partials.post', ['post' => $post])->render();
+      });
+
+      return response()->json([
+        'posts' => $renderedPosts,
+        'next_page_url' => $posts->nextPageUrl()
+      ]);
     }
 
     public function create()

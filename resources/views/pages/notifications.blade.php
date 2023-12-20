@@ -7,7 +7,7 @@
 @section('content')
 <div class="d-flex flex-column align-items-center ms-auto me-auto w-100 overflow-auto">
         <h3 class="bg-primary text-white rounded mt-3 p-2">Notifications</h3>
-        <div id="notifications">
+        <div id="notifications" class="w-75">
             @include('partials.notification')
         </div>
 </div>

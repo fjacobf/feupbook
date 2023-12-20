@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="container-lg d-flex flex-column justify-content-center align-items-center w-75">
-        <ul id="post-list" data-next-page-url="{{ $posts->nextPageUrl() }}" class="list-unstyled mb-4 w-100" style="max-width: 800px">
+        <ul id="post-list" data-page-context="{{ $pageContext }}" data-current-page="{{ $posts->currentPage() }}" data-next-page-url="{{ $posts->nextPageUrl() }}" class="list-unstyled mb-4 w-100" style="max-width: 800px">
             @forelse($posts as $post)
                 @include('partials.post', ['post' => $post])
             @empty

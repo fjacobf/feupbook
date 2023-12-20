@@ -1,9 +1,9 @@
 @if($users->isEmpty())
     <p>No users found.</p>
 @else
-    <div class="card-columns">
+    <div class="d-flex flex-column align-items-center">
         @foreach($users as $user)
-            <div class="card mb-4" style="max-width: 600px;">
+            <div class="card mb-4 w-100" style="max-width: 800px;">
                 <div class="card-body">
                     <div>
                         <img src="{{ asset('images/profile_pics/' . $user->avatar)}}" alt="{{ $user->name }}" class="rounded-circle" width="50" style="border: 1px solid #000000">

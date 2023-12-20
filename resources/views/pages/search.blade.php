@@ -20,9 +20,9 @@
             </div>
         </div>
     </form>
-    <hr style="max-width: 700px;"/>
+    <hr style="max-width: 800px;"/>
 
-    <div id="searchResults">
+    <div id="searchResults" class="w-75">
         @if($users->isEmpty())
             <p>No results found.</p>
         @else
