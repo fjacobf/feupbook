@@ -101,8 +101,9 @@ class GroupChatController extends Controller
         // Find the User model for the username
         $user = User::where('username', $validatedData['username'])->first();
 
-        // Add the user to the group chat
-        $groupChat->addMember($user);
+        if($groupChat->members->contains($user)) {
+            return response()->json('Member already added');
+        }
 
         // Save the group chat
         $groupChat->save();
@@ -144,7 +145,8 @@ class GroupChatController extends Controller
         $groupChat->save();
 
         // Redirect to the group chat page
-        return redirect('/group-chats/' . $groupChat->group_id);
+        // return redirect('/group-chats/' . $groupChat->group_id);
+        return response()->json('Group chat updated');
     }
 
     public function delete(Request $request, GroupChat $groupChat)

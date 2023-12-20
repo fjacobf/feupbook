@@ -9,7 +9,7 @@
     <div class="mt-4">
         <h1>Edit Group Chat</h1>
 
-        <form method="POST" action="{{ route('group-chats.update.api', $groupChat->group_id) }}">
+        <form method="POST" action="{{ route('group-chats.update', $groupChat->group_id) }}">
             @csrf
             <div class="form-group">
                 <label for="name">Name:</label>
@@ -32,6 +32,8 @@
 
             <button type="submit" class="btn btn-primary">Update</button>
         </form>
+        {{-- div to say if group-chat was updated or not --}}
+        <div id="updateMessage"></div>
         <h3 class="mt-2">Users accepted in this group chat:</h3>
         <ul>
             @foreach ($acceptedMembers as $member)
@@ -40,7 +42,7 @@
                         {{ $member->name }}
                     </a>
                     @if ($member->user_id !== $groupChat->owner_id)
-                        <form method="POST" action="{{ route('group-chats.removeMember.api', ['groupChat' => $groupChat->group_id]) }}" style="display: inline;">
+                        <form method="POST" action="{{ route('group-chats.removeMember', ['groupChat' => $groupChat->group_id]) }}" style="display: inline;">
                             @csrf
                             <input type="hidden" name="username" value="{{ $member->username }}">
                             <button type="submit" class="btn btn-danger">Remove</button>
@@ -92,8 +94,11 @@
             .then(data => {
                 // Handle the response data here
                 console.log(data);
+                // Update the message div
+                const updateMessage = document.querySelector('#updateMessage');
+                updateMessage.textContent = data;
                 // Remove the list item from the DOM
-                listItem.remove();
+                // listItem.remove();
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -103,7 +108,7 @@
 
     document.querySelector('#searchUserInput').addEventListener('input', function(event) {
         const query = this.value;
-        fetch(`{{ route('search_json.api') }}?query=${query}&groupChat={{ $groupChat->group_id }}`, {
+        fetch(`{{ route('search_json') }}?query=${query}&groupChat={{ $groupChat->group_id }}`, {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
             }
@@ -125,7 +130,7 @@
                     const addButton = document.createElement('button');
                     addButton.textContent = 'Add';
                     addButton.addEventListener('click', function() {
-                        fetch(`{{ route('group-chats.addMember.api', ['groupChat' => $groupChat->group_id]) }}`, {
+                        fetch(`{{ route('group-chats.addMember', ['groupChat' => $groupChat->group_id]) }}`, {
                             method: 'POST',
                             body: JSON.stringify({ username: user.username }),
                             headers: {
