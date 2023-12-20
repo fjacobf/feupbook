@@ -101,8 +101,9 @@ class GroupChatController extends Controller
         // Find the User model for the username
         $user = User::where('username', $validatedData['username'])->first();
 
-        // Add the user to the group chat
-        $groupChat->addMember($user);
+        if($groupChat->members->contains($user)) {
+            return response()->json('Member already added');
+        }
 
         // Save the group chat
         $groupChat->save();
