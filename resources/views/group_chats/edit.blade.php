@@ -32,6 +32,8 @@
 
             <button type="submit" class="btn btn-primary">Update</button>
         </form>
+        {{-- div to say if group-chat was updated or not --}}
+        <div id="updateMessage"></div>
         <h3 class="mt-2">Users accepted in this group chat:</h3>
         <ul>
             @foreach ($acceptedMembers as $member)
@@ -92,8 +94,11 @@
             .then(data => {
                 // Handle the response data here
                 console.log(data);
+                // Update the message div
+                const updateMessage = document.querySelector('#updateMessage');
+                updateMessage.textContent = data;
                 // Remove the list item from the DOM
-                listItem.remove();
+                // listItem.remove();
             })
             .catch(error => {
                 console.error('Error:', error);

@@ -144,7 +144,8 @@ class GroupChatController extends Controller
         $groupChat->save();
 
         // Redirect to the group chat page
-        return redirect('/group-chats/' . $groupChat->group_id);
+        // return redirect('/group-chats/' . $groupChat->group_id);
+        return response()->json('Group chat updated');
     }
 
     public function delete(Request $request, GroupChat $groupChat)
