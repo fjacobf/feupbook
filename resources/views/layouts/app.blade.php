@@ -19,10 +19,6 @@
         <script src="{{asset('js/app.js')}}"></script>
         @vite(['resources/js/app.js'])
         <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
-        <script type="text/javascript">
-            // Fix for Firefox autofocus CSS bug
-            // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
-        </script>
     </head>
     <body>
         <div class="d-flex vh-100 overflow-hidden">

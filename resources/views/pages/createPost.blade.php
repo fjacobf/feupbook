@@ -18,7 +18,7 @@
             <input type="file" class="form-control w-100 mt-3" id="image" name="image">
             <div class="w-25">
                 <button type="submit" class="btn btn-primary btn-sm mt-3">
-                    <p class="h5 mb-1"> Submit</p>
+                    <span class="h5 mb-1"> Submit</span>
                 </button>
             </div>
         </div>
