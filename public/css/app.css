@@ -21,6 +21,10 @@ body{
     color: #f92525;
 }
 
+.bi-heart-fill:hover{
+    color:#f92525
+}
+
 .card-footer .bi-bookmark-fill{
     color: rgba(0, 21, 255, 0.597);
 }
@@ -50,4 +54,18 @@ body{
 #side_nav.active{
     margin-left: 0;
     }
+}
+
+.comment-textarea:focus {
+    outline: none;
+  }
+
+.post-button{
+    font-weight: bold;
+    height: 27px;
+    display: none;
+    background-color: transparent;
+    color: #0062a4;
+    border: none;
+    cursor: pointer;
 }

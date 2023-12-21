@@ -30,6 +30,41 @@ function handleLikeDislike(postId, action) {
    })
 }
 
+function handleLikeDislikeComment(commentId, action) {
+    let url = '/comment/' + commentId + '/' + action;
+    let method = action === 'like' ? 'POST' : 'DELETE';
+
+    fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ comment_id: commentId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        var button = document.getElementById('btn-comment' + commentId)
+        if(action === 'like') {
+            button.setAttribute('onclick', 'handleLikeDislikeComment(' + commentId + ', \'dislike\')');
+            button.classList.remove('bi-heart');
+            button.classList.add('bi-heart-fill');
+            let likeCount = parseInt(document.getElementById('comment-like-count-' + commentId).textContent);
+            likeCount++;
+            document.getElementById('comment-like-count-' + commentId).textContent = likeCount + " likes";
+        } else {
+            button.setAttribute('onclick', 'handleLikeDislikeComment(' + commentId + ', \'like\')');
+            button.classList.remove('bi-heart-fill');
+            button.classList.add('bi-heart');
+            let likeCount = parseInt(document.getElementById('comment-like-count-' + commentId).textContent);
+            likeCount--;
+            document.getElementById('comment-like-count-' + commentId).textContent = likeCount + " likes";
+        }
+    })
+}
+
+
+
 function handleBookmark(postId, action) {
     let url = '/post/' + postId + '/' + action;
     let method = action === 'bookmark' ? 'POST' : 'DELETE';
@@ -144,3 +179,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+function reply(commentId)
+    {
+        let rep = document.getElementById('replyDiv' + commentId);
+
+        if (rep.style.display === "none") {
+            rep.style.display = "block";
+        } else {
+            rep.style.display = "none";
+        }
+    }
+
+const commentTextareas = document.querySelectorAll('.comment-textarea');
+
+commentTextareas.forEach(textarea => {
+textarea.addEventListener('input', function () {
+    const postButton = this.parentElement.querySelector('.post-button');
+    postButton.style.display = this.value.trim() !== '' ? 'block' : 'none';
+});
+});
+
+    

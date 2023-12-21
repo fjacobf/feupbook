@@ -70,7 +70,7 @@ Route::controller(CommentController::class)->group(function () {
     Route::post('/comment/create', 'store')->name('comment.store');
     Route::delete('/comment/{id}/delete', 'delete')->name('comment.delete');
     Route::post('/comment/{id}/like', 'like')->name('comment.like');
-    Route::post('/comment/{id}/dislike', 'dislike')->name('comment.dislike');
+    Route::delete('/comment/{id}/dislike', 'dislike')->name('comment.dislike');
 });
 
 
