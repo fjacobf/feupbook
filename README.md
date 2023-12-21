@@ -15,13 +15,13 @@ At the heart of our project vision for Feupbook is the unwavering commitment to 
 
 ## Usage
 
-### 2.1. Administration Credentials
+#### Administration Credentials
 
 | Email | Password |
 | -------- | -------- |
 | gcostell0@simplemachines.org | admin123 |
 
-### 2.2. User Credentials
+#### User Credentials
 
 | Type          | Username  | Password |
 | ------------- | --------- | -------- |
