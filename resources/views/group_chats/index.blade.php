@@ -33,14 +33,20 @@
                         <small>Owner: {{ $groupChat->owner->name }}</small>
                         {{-- check if user has status waiting in group-chats table --}}
                         @if ($groupChat->memberStatus(auth()->user()) == 'waiting')
-                            <div class="d-flex justify-content-around mt-2">
+                            <div class="d-flex justify-content-end mt-2">
                                 <form action="{{ route('group-chats.acceptInvite', $groupChat->group_id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="btn btn-success">Accept Invite</button>
+                                    <button type="submit" class="btn btn-success me-2">
+                                        <i class="bi bi-check d-block d-md-none"></i>
+                                        <span class="d-none d-sm-none d-md-block">Accept Invite</span>
+                                    </button>
                                 </form>
                                 <form action="{{ route('group-chats.rejectInvite', $groupChat->group_id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="btn btn-danger">Reject Invite</button>
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="bi bi-x d-block d-md-none"></i>
+                                        <span class="d-none d-sm-none d-md-block">Reject invite</span>
+                                    </button>
                                 </form>
                             </div>
                         @endif

@@ -21,11 +21,17 @@
                                 <div class="d-flex align-items-center buttons">
                                     <form class="" action="{{ route('follow-request.Accept.api', $notification->user_id) }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="btn btn-success me-2">Accept</button>
+                                        <button type="submit" class="btn btn-success me-2">
+                                            <i class="bi bi-check d-block d-md-none"></i>
+                                            <span class="d-none d-sm-none d-md-block">Accept</span>
+                                        </button>
                                     </form>
                                     <form action="{{ route('follow-request.Reject.api', $notification->user_id) }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="btn btn-danger">Reject</button>
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="bi bi-x d-block d-md-none"></i>
+                                            <span class="d-none d-sm-none d-md-block">Reject</span>
+                                        </button>
                                     </form>
                                 </div>
                             </div>
@@ -57,11 +63,17 @@
                             <div class="d-flex align-items-center buttons">
                                 <form action="{{ route('group-chats.acceptInvite', $group->group_id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="btn btn-success me-2">Accept</button>
+                                    <button type="submit" class="btn btn-success me-2">
+                                        <i class="bi bi-check d-block d-md-none"></i>
+                                        <span class="d-none d-sm-none d-md-block">Accept</span>
+                                    </button>
                                 </form>
                                 <form action="{{ route('group-chats.rejectInvite', $group->group_id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="btn btn-danger">Reject</button>
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="bi bi-x d-block d-md-none"></i>
+                                        <span class="d-none d-sm-none d-md-block">Reject</span>
+                                    </button>
                                 </form>
                             </div>
                         </div>
