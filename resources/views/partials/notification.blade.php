@@ -8,40 +8,42 @@
                     @php
                         $follow_request = $notification->notif_user->followRequestsRcv->where('req_id', $notification->user_id)->first();
                     @endphp
-                    @if ($follow_request->status == "waiting")
-                        <div class="d-flex justify-content-between align-items-center card-body" >
-                            <div class="d-flex align-items-center">
-                                <img src="{{ asset('images/profile_pics/' . $notification->request_user->avatar) }}" class="rounded-circle" style="width: 30px; height: 30px; margin: 10px">
-                                <a href="{{ route('user.profile', ['id' => $notification->user_id]) }}" class="text-decoration-none text-black">
-                                    <p class="card-text">{{ $notification->message }} <span class="card-text text-secondary">{{ time_since($notification->date)}}</span></p>
-                                </a>
+                    @if (isset($follow_request))
+                        @if ($follow_request->status == "waiting")
+                            <div class="d-flex justify-content-between align-items-center card-body" >
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ asset('images/profile_pics/' . $notification->request_user->avatar) }}" class="rounded-circle" style="width: 30px; height: 30px; margin: 10px">
+                                    <a href="{{ route('user.profile', ['id' => $notification->user_id]) }}" class="text-decoration-none text-black">
+                                        <p class="card-text">{{ $notification->message }} <span class="card-text text-secondary">{{ time_since($notification->date)}}</span></p>
+                                    </a>
+                                </div>
+                                
+                                <div class="d-flex align-items-center buttons">
+                                    <form class="" action="{{ route('follow-request.Accept.api', $notification->user_id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success me-2">Accept</button>
+                                    </form>
+                                    <form action="{{ route('follow-request.Reject.api', $notification->user_id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger">Reject</button>
+                                    </form>
+                                </div>
                             </div>
-                            
-                            <div class="d-flex align-items-center buttons">
-                                <form class="" action="{{ route('follow-request.Accept.api', $notification->user_id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn btn-success me-2">Accept</button>
-                                </form>
-                                <form action="{{ route('follow-request.Reject.api', $notification->user_id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn btn-danger">Reject</button>
-                                </form>
-                            </div>
-                        </div>
-                    @elseif ($follow_request->status == "accepted")
-                        <a href="{{ route('user.profile', ['id' => $notification->user_id]) }}" class="text-decoration-none text-black">
-                            <div class="d-flex align-items-center card-body">
-                                <img src="{{ asset('images/profile_pics/' . $notification->request_user->avatar) }}" class="rounded-circle" style="width: 30px; height: 30px; margin: 10px">
-                                <h5 class="card-text">You accepted {{$notification->request_user->username}} follow request <span class="card-text text-secondary">{{ time_since($notification->date)}}</span></h5>
-                            </div> 
-                        </a>
-                    @else {{--$follow_request->status == "rejected"--}}
-                        <a href="{{ route('user.profile', ['id' => $notification->user_id]) }}" class="text-decoration-none text-black">
-                            <div class="d-flex align-items-center card-body">
-                                <img src="{{ asset('images/profile_pics/' . $notification->request_user->avatar) }}" class="rounded-circle" style="width: 30px; height: 30px; margin: 10px">
-                                <h5 class="card-text">You rejected {{$notification->request_user->username}} follow request <span class="card-text text-secondary">{{ time_since($notification->date)}}</span></h5>
-                            </div>
-                        </a>
+                        @elseif ($follow_request->status == "accepted")
+                            <a href="{{ route('user.profile', ['id' => $notification->user_id]) }}" class="text-decoration-none text-black">
+                                <div class="d-flex align-items-center card-body">
+                                    <img src="{{ asset('images/profile_pics/' . $notification->request_user->avatar) }}" class="rounded-circle" style="width: 30px; height: 30px; margin: 10px">
+                                    <h5 class="card-text">You accepted {{$notification->request_user->username}} follow request <span class="card-text text-secondary">{{ time_since($notification->date)}}</span></h5>
+                                </div> 
+                            </a>
+                        @else {{--$follow_request->status == "rejected"--}}
+                            <a href="{{ route('user.profile', ['id' => $notification->user_id]) }}" class="text-decoration-none text-black">
+                                <div class="d-flex align-items-center card-body">
+                                    <img src="{{ asset('images/profile_pics/' . $notification->request_user->avatar) }}" class="rounded-circle" style="width: 30px; height: 30px; margin: 10px">
+                                    <h5 class="card-text">You rejected {{$notification->request_user->username}} follow request <span class="card-text text-secondary">{{ time_since($notification->date)}}</span></h5>
+                                </div>
+                            </a>
+                        @endif
                     @endif
                 @elseif ($notification->notification_type == 'group_invite')
                     @php

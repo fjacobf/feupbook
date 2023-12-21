@@ -732,6 +732,28 @@ BEFORE UPDATE ON group_chats
 FOR EACH ROW
 EXECUTE FUNCTION ensure_owner_is_member();
 
+-------
+
+CREATE OR REPLACE FUNCTION delete_related_notifications()
+RETURNS TRIGGER AS $$
+BEGIN
+    DELETE FROM notifications
+    WHERE (notification_type = 'request_follow' AND comment_id IS NULL AND post_id IS NULL AND group_id IS NULL)
+          AND (notified_user = OLD.rcv_id);
+    DELETE FROM notifications
+    WHERE (notification_type = 'accepted_follow' AND comment_id IS NULL AND post_id IS NULL AND group_id IS NULL)
+          AND (notified_user = OLD.req_id);
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger execution when a follow request is deleted
+CREATE TRIGGER delete_related_notifications_trigger
+AFTER DELETE ON follow_requests
+FOR EACH ROW
+EXECUTE FUNCTION delete_related_notifications();
+
 ------------------------------
 -- TRANSACTIONS
 ------------------------------
