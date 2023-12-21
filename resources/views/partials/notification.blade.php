@@ -3,7 +3,7 @@
 @else
     <div class="notifications d-flex flex-column align-items-center w-100">
         @foreach($notifications as $notification)
-            <div class="card mb-4 w-100" style="">
+            <div class="card mb-4 w-100" style="max-width: 800px">
                 @if ($notification->notification_type == 'request_follow')
                     @php
                         $follow_request = $notification->notif_user->followRequestsRcv->where('req_id', $notification->user_id)->first();
@@ -20,7 +20,7 @@
                             <div class="d-flex align-items-center buttons">
                                 <form class="" action="{{ route('follow-request.Accept.api', $notification->user_id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="btn btn-success ">Accept</button>
+                                    <button type="submit" class="btn btn-success me-2">Accept</button>
                                 </form>
                                 <form action="{{ route('follow-request.Reject.api', $notification->user_id) }}" method="POST">
                                     @csrf
@@ -55,7 +55,7 @@
                             <div class="d-flex align-items-center buttons">
                                 <form action="{{ route('group-chats.acceptInvite', $group->group_id) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="btn btn-success">Accept</button>
+                                    <button type="submit" class="btn btn-success me-2">Accept</button>
                                 </form>
                                 <form action="{{ route('group-chats.rejectInvite', $group->group_id) }}" method="POST">
                                     @csrf
