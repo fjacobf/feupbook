@@ -179,3 +179,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+function reply(commentId)
+    {
+        let rep = document.getElementById('replyDiv' + commentId);
+
+        if (rep.style.display === "none") {
+            rep.style.display = "block";
+        } else {
+            rep.style.display = "none";
+        }
+    }
+
+const commentTextareas = document.querySelectorAll('.comment-textarea');
+
+commentTextareas.forEach(textarea => {
+textarea.addEventListener('input', function () {
+    const postButton = this.parentElement.querySelector('.post-button');
+    postButton.style.display = this.value.trim() !== '' ? 'block' : 'none';
+});
+});
+
+    

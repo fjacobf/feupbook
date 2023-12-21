@@ -16,7 +16,7 @@
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         {{-- use mix to load app.js --}}
 
-        <script src="{{asset('js/app.js')}}"></script>
+        <script defer src="{{asset('js/app.js')}}"></script>
         @vite(['resources/js/app.js'])
         <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
     </head>

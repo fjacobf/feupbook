@@ -7,7 +7,7 @@
 @section('content')
 
 <div class="d-flex flex-column align-items-center ms-auto me-auto w-100 overflow-auto">
-    <div class="container-lg d-flex flex-column justify-content-center align-items-center w-75">
+    <div class="container-lg d-flex flex-column justify-content-center align-items-center w-100">
         <ul id="post-list" class="list-unstyled mb-4 w-100" style="max-width: 800px">
             <div class="post mt-4">
                 <div class="card">
@@ -80,14 +80,15 @@
                     </div>
 
                     <div class="card-body">
-                        <form class="d-flex justify-content-center" action="{{ route('comment.store') }}" method="POST">
+                        <form id="commentForm" class="d-flex justify-content-center" action="{{ route('comment.store') }}" method="POST">
                             @csrf
-                            <textarea style="resize:none" id="content" name="content" cols="30" rows="1"
-                                placeholder="Adicione um comentário..."></textarea> 
+                            <textarea class="comment-textarea border-0 w-100" style="resize:none" id="content" name="content" cols="30" rows="1"
+                                placeholder="Add a comment..."></textarea> 
                             <input type="hidden" name="post_id" id="post_id" value="{{ $post->post_id }}">
                             <input type="hidden" name="comment_id" id="comment_id" value="{{ NULL }}">
-                            <button type="submit" class="btn btn-primary ms-2">Comment</button>
+                            <button type="submit" class="post-button" style="display:none; background-color: none;">Comment</button>
                         </form>
+                        <hr>
                         <div id="comments">
                             @forelse($post->comments()->orderBy('created_at', 'desc')->get() as $comment)
                             @include('partials.comment', ['comment' => $comment])

@@ -107,7 +107,7 @@
         <section id="profile-feed" class="mt-4">
             <hr/>
             <h2 class="mb-2 text-center">Posts from this user</h2>
-            <div class="container-lg d-flex justify-content-center align-items-center w-75" style="max-width: 800px">
+            <div class="container-lg d-flex justify-content-center align-items-center w-100" style="max-width: 800px">
                 @if ((Auth::check() && Auth::user()->user_id == $user->user_id) || !$user->private || (Auth::Check() && Auth::user()->user_type == 'admin') || (Auth::check() && $user->isFollowing()))
                 @if ($user->user_type === 'deleted')
                     <div class="alert alert-danger mt-4 mb-4 w-75" style="max-width: 800px">

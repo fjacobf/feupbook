@@ -12,7 +12,7 @@
             <a href="{{ route('home') }}" class="btn btn-lg {{ request()->routeIs('home') ? 'btn-primary' : 'btn-secondary' }}" style="width: 150px;">Feed</a>
         </div>
     </div>
-    <div class="container-lg d-flex flex-column justify-content-center align-items-center w-75">
+    <div class="container-lg d-flex flex-column justify-content-center align-items-center w-100">
         <ul id="post-list" data-page-context="{{ $pageContext }}" data-current-page="{{ $posts->currentPage() }}" data-next-page-url="{{ $posts->nextPageUrl() }}" class="list-unstyled mb-4 w-100" style="max-width: 800px">
             @forelse($posts as $post)
                 @include('partials.post', ['post' => $post])
